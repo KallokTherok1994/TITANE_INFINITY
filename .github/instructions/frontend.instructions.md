@@ -26,6 +26,7 @@ If missing, skipped, partially executed, blocked, or replaced by narrative proof
 **BUILD is BLOCKED.**
 
 Also available as package scripts:
+
 - `pnpm run prebuild` — runs automatically before `pnpm run build`
 - `pnpm run prebuild:frontend-runtime` — explicit invocation
 - `pnpm run verify:frontend-runtime-prebuild` — verify-only alias
@@ -150,6 +151,7 @@ For any `src/**`, WebUI, route, page, component, CSS, asset, visual state, hook/
 Every visible UI/frontend change requires the full proof chain before commit.
 
 Required chain:
+
 ```
 source change
 → static tests (TypeScript, ESLint, Vitest)
@@ -170,6 +172,7 @@ source change
 ```
 
 Hard rules:
+
 - Browser preview proof is NOT Tauri proof.
 - dist/ is NOT the embedded binary. Rebuild Tauri after every UI change.
 - Launcher must be re-pointed to the fresh AppImage after stable build (update-desktop-icon.sh).

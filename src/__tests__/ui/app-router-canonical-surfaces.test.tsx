@@ -245,13 +245,7 @@ describe('AppRouter canonical active surfaces', () => {
       'tab=conversation',
     ],
     ['/dashboard', '/titane', 'page-titane', 'titane_core', undefined],
-    [
-      '/monitoring',
-      '/dev?tab=diagnostics',
-      'page-dev',
-      'dev_center',
-      'tab=diagnostics',
-    ],
+    ['/monitoring', '/dev?tab=diagnostics', 'page-dev', 'dev_center', 'tab=diagnostics'],
     [
       '/governance-center',
       '/admin?tab=governance',

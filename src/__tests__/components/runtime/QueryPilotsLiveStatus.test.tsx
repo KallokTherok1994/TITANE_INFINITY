@@ -37,7 +37,7 @@ describe('QueryPilotsLiveStatus (v34.2.0)', () => {
       'query-pilot-providers-status',
       'query-pilot-conversation-health',
       'query-pilot-devtools-memory-health',
-    ].forEach((id) => {
+    ].forEach(id => {
       expect(getByTestId(id)).toBeTruthy();
     });
   });
@@ -49,16 +49,16 @@ describe('QueryPilotsLiveStatus (v34.2.0)', () => {
       </TestProviders>
     );
     await waitFor(() => {
-      const calls = mocked.mock.calls.map((c) => c[0]);
+      const calls = mocked.mock.calls.map(c => c[0]);
       [
         'get_system_health',
         'get_engines_status',
         'chat_get_providers_status',
         'conversation_health_check',
         'devtools_memory_health',
-      ].forEach((cmd) => expect(calls).toContain(cmd));
+      ].forEach(cmd => expect(calls).toContain(cmd));
     });
-    mocked.mock.calls.forEach((c) => expect(c[1]).toEqual({}));
+    mocked.mock.calls.forEach(c => expect(c[1]).toEqual({}));
   });
 
   it('converges all tiles to data-state="success" after queries resolve', async () => {
@@ -68,17 +68,21 @@ describe('QueryPilotsLiveStatus (v34.2.0)', () => {
       </TestProviders>
     );
     await waitFor(() => {
-      expect(getByTestId('query-pilot-system-health').getAttribute('data-state')).toBe('success');
-      expect(getByTestId('query-pilot-engines-status').getAttribute('data-state')).toBe('success');
+      expect(getByTestId('query-pilot-system-health').getAttribute('data-state')).toBe(
+        'success'
+      );
+      expect(getByTestId('query-pilot-engines-status').getAttribute('data-state')).toBe(
+        'success'
+      );
       expect(getByTestId('query-pilot-providers-status').getAttribute('data-state')).toBe(
         'success'
       );
-      expect(getByTestId('query-pilot-conversation-health').getAttribute('data-state')).toBe(
-        'success'
-      );
-      expect(getByTestId('query-pilot-devtools-memory-health').getAttribute('data-state')).toBe(
-        'success'
-      );
+      expect(
+        getByTestId('query-pilot-conversation-health').getAttribute('data-state')
+      ).toBe('success');
+      expect(
+        getByTestId('query-pilot-devtools-memory-health').getAttribute('data-state')
+      ).toBe('success');
     });
   });
 });

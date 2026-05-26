@@ -833,7 +833,13 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         title: 'Mémoire Triple TITANE',
         status: persistentMemoryLoading ? 'partial' : 'live',
         source: 'tauri_ipc',
-        capabilities: ['stm-read', 'mtm-read', 'ltm-read', 'knowledge-base-search', 'memory-write'],
+        capabilities: [
+          'stm-read',
+          'mtm-read',
+          'ltm-read',
+          'knowledge-base-search',
+          'memory-write',
+        ],
         visibleMetrics: {
           stmCount: stm,
           mtmCount: mtm,
@@ -845,16 +851,30 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         actions: [
           { id: 'read_stm', label: 'Lire mémoire court terme', status: 'wired' },
           { id: 'read_ltm', label: 'Lire mémoire long terme', status: 'wired' },
-          { id: 'search_knowledge', label: 'Rechercher dans la base de connaissances', status: 'wired' },
+          {
+            id: 'search_knowledge',
+            label: 'Rechercher dans la base de connaissances',
+            status: 'wired',
+          },
           { id: 'sync_memory', label: 'Synchroniser la mémoire', status: 'wired' },
         ],
-        memoryRefs: ['titane_memory_session', 'titane_memory_intermediate', 'titane_memory_long_term'],
+        memoryRefs: [
+          'titane_memory_session',
+          'titane_memory_intermediate',
+          'titane_memory_long_term',
+        ],
         warnings: persistentMemoryLoading ? ['Memory loading'] : [],
       });
     }, [
-      stats.memoryShortTerm, stats.memoryMidTerm, stats.memoryLongTerm,
-      surfaceStats, ltmConvCount, knowledgeEntries.length,
-      surfaceSyncTimestamp, persistentMemoryLastUpdate, persistentMemoryLoading,
+      stats.memoryShortTerm,
+      stats.memoryMidTerm,
+      stats.memoryLongTerm,
+      surfaceStats,
+      ltmConvCount,
+      knowledgeEntries.length,
+      surfaceSyncTimestamp,
+      persistentMemoryLastUpdate,
+      persistentMemoryLoading,
     ]);
 
     const lastSurfaceSyncLabel = useMemo(() => {
@@ -1159,7 +1179,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                 border: 'none',
                 background:
                   activeTab === tab.id ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
-                color: activeTab === tab.id ? '#60a5fa' : 'var(--titanium-text-tertiary, #8a8a8a)',
+                color:
+                  activeTab === tab.id
+                    ? '#60a5fa'
+                    : 'var(--titanium-text-tertiary, #8a8a8a)',
                 cursor: 'pointer',
                 fontSize: 'var(--text-sm)',
                 fontWeight: activeTab === tab.id ? 600 : 400,
@@ -1263,7 +1286,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 Chargement de la mémoire persistante
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 TITANE synchronise actuellement les entrées locales et persistantes avant
                 d&apos;afficher le dashboard, l&apos;arbre et la recherche.
               </p>
@@ -1283,7 +1311,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 Aucune mémoire persistante consolidée
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 La LTM persistante n&apos;a pas encore reçu d&apos;entrée réelle pour ce
                 contexte. Les cartes, l&apos;arbre et la recherche restent donc
                 volontairement vides.
@@ -1314,7 +1347,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)', color: '#f59e0b' }}>
                 ⚠️ Surface connaissance partiellement dégradée
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 {knowledgeLoadWarning}
               </p>
             </div>
@@ -1330,7 +1368,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           >
             <div data-testid="memory-hybrid-overview-summary">
               <h3 style={{ marginBottom: 'var(--space-2)' }}>Hybrid memory rollout</h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 Preset actif:{' '}
                 <span data-testid="memory-hybrid-overview-active-preset">
                   {hybridDiagnostics.shadowReadActivePresetLabel}
@@ -1427,7 +1470,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 💬 Mémoires récentes issues du chat
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 Les dernières informations mémorisées depuis les conversations sont
                 affichées ici et restent sauvegardées de façon persistante.
               </p>
@@ -1462,7 +1510,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                       }}
                     >
                       <strong
-                        style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', display: 'block' }}
+                        style={{
+                          color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                          display: 'block',
+                        }}
                       >
                         {'title' in entry ? entry.title : entry.id}
                       </strong>
@@ -1489,7 +1540,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 🧩 Mémoire consolidée et synchronisée
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 {summaryEntries.length} résumé{summaryEntries.length > 1 ? 's' : ''} et{' '}
                 {bundleEntries.length} bundle{bundleEntries.length > 1 ? 's' : ''}{' '}
                 enrichissent la mémoire affichée pour refléter la totalité de la mémoire
@@ -1550,7 +1606,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                     }}
                   >
                     <strong
-                      style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', display: 'block' }}
+                      style={{
+                        color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                        display: 'block',
+                      }}
                     >
                       {'title' in entry ? entry.title : entry.id}
                     </strong>
@@ -1576,7 +1635,12 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
               <h3 style={{ marginBottom: 'var(--space-2)' }}>
                 📚 Bases de connaissances visibles dans la Mémoire
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+              <p
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                }}
+              >
                 {knowledgeSourceCounts.contextual} connaissance
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''} contextuelle
                 {knowledgeSourceCounts.contextual > 1 ? 's' : ''},{' '}

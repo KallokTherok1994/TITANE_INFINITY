@@ -60,7 +60,8 @@ function listPageFiles() {
         const rel = relative(PAGES_DIR, full).replace(/\\/g, '/');
         const segments = rel.split('/');
         const isTopLevelPage = segments.length === 1;
-        const isNestedIndexEntry = entry.name === 'index.tsx' || entry.name === 'index.jsx';
+        const isNestedIndexEntry =
+          entry.name === 'index.tsx' || entry.name === 'index.jsx';
         if (isTopLevelPage || isNestedIndexEntry) {
           out.push(full);
         }
@@ -119,7 +120,7 @@ function parseRoutes(src) {
         continue;
       }
 
-      if (char === '"' || char === '\'' || char === '`') {
+      if (char === '"' || char === "'" || char === '`') {
         quote = char;
         i += 1;
         continue;
@@ -181,8 +182,7 @@ function parsePageImports(src) {
   const imports = new Map(); // component → import path
   const importRe =
     /import\s+(?:\{[^}]+\}|[A-Za-z0-9_*,\s]+)\s+from\s+["'`]([^"'`]+)["'`]/g;
-  const exportRe =
-    /export\s+(?:\{[^}]+\}|\*)\s+from\s+["'`]([^"'`]+)["'`]/g;
+  const exportRe = /export\s+(?:\{[^}]+\}|\*)\s+from\s+["'`]([^"'`]+)["'`]/g;
   let m;
   while ((m = importRe.exec(src))) {
     imports.set(m[1], m[1]);
@@ -211,10 +211,10 @@ function normalizeImportSpec(spec, consumerFile) {
   }
 
   if (trimmed.startsWith('.')) {
-    return relative(resolve(ROOT, 'src'), resolve(dirname(consumerFile), trimmed)).replace(
-      /\\/g,
-      '/'
-    );
+    return relative(
+      resolve(ROOT, 'src'),
+      resolve(dirname(consumerFile), trimmed)
+    ).replace(/\\/g, '/');
   }
 
   return trimmed.replace(/^src\//, '').replace(/^\//, '');
@@ -366,7 +366,9 @@ function classify(pageFile, importedSpecs, embeddedConsumers, routes, appBinding
     return { category: 'MOUNTED_VISIBLE', reason: 'bound to an element route' };
   }
 
-  const wrapperBindings = matchingBindings.filter(component => countComponentTagUsage(src, component) > 0);
+  const wrapperBindings = matchingBindings.filter(
+    component => countComponentTagUsage(src, component) > 0
+  );
   if (wrapperBindings.length > 0) {
     return {
       category: 'REUSED_EMBEDDED',
@@ -475,13 +477,21 @@ function main() {
   ];
   writeFileSync(resolve(REPORTS_DIR, 'ui-orphan-pages.md'), lines.join('\n'), 'utf-8');
 
-  console.log('[orphan-pages] routes=%d element=%d redirect=%d pages=%d',
-    routes.length, elementCount, redirectCount, pageFiles.length);
+  console.log(
+    '[orphan-pages] routes=%d element=%d redirect=%d pages=%d',
+    routes.length,
+    elementCount,
+    redirectCount,
+    pageFiles.length
+  );
   console.log('[orphan-pages] breakdown:', summary);
   console.log('[orphan-pages] reports written to %s', relative(ROOT, REPORTS_DIR));
 
   if (STRICT && (summary.ORPHAN_DEAD || 0) > 0) {
-    console.error('[orphan-pages] --strict: %d ORPHAN_DEAD pages found', summary.ORPHAN_DEAD);
+    console.error(
+      '[orphan-pages] --strict: %d ORPHAN_DEAD pages found',
+      summary.ORPHAN_DEAD
+    );
     process.exit(1);
   }
 }

@@ -225,7 +225,8 @@ function EvolutionCenterPageContent(): JSX.Element {
 
         // Get progression state from canonical ExperienceState
         await initExperienceService();
-        const progressionState = createProgressionStateFromExperience(getExperienceState());
+        const progressionState =
+          createProgressionStateFromExperience(getExperienceState());
         setProgression(progressionState);
 
         // Get knowledge state

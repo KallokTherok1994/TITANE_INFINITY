@@ -81,7 +81,9 @@ describe('Ollama stream() — success path', () => {
   it('stream with system history yields response without memory reload', async () => {
     const { ollamaProvider } = await import('@/services/ai/providers/ollama');
     const chunks: string[] = [];
-    const history = [{ role: 'system' as const, content: 'Système TITANE', timestamp: Date.now() }];
+    const history = [
+      { role: 'system' as const, content: 'Système TITANE', timestamp: Date.now() },
+    ];
 
     for await (const chunk of ollamaProvider.stream('Question', history)) {
       chunks.push(chunk);
@@ -141,7 +143,11 @@ describe('Ollama stream() — error propagation', () => {
     ollamaCheckHealthMock.mockResolvedValue({
       ok: false,
       provider: 'ollama',
-      error: { code: 'OLLAMA_IPC_FAILED', message: 'Ollama unavailable', retryable: true },
+      error: {
+        code: 'OLLAMA_IPC_FAILED',
+        message: 'Ollama unavailable',
+        retryable: true,
+      },
     });
 
     const { ollamaProvider } = await import('@/services/ai/providers/ollama');

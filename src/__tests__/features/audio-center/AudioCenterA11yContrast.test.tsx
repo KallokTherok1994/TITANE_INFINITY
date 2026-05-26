@@ -22,7 +22,7 @@ import { resolve } from 'node:path';
 describe('AudioCenterPage A11y — contrast + form-label hardening', () => {
   const SRC = readFileSync(
     resolve(process.cwd(), 'src/features/audio-center/AudioCenterPage.tsx'),
-    'utf-8',
+    'utf-8'
   );
 
   it('cyan tab + Test button use bg-cyan-700 (no bg-cyan-600 active class)', () => {
@@ -31,7 +31,9 @@ describe('AudioCenterPage A11y — contrast + form-label hardening', () => {
     expect(SRC).toMatch(/bg-cyan-700\s+text-titanium-text-primary/);
     expect(SRC).toMatch(/bg-cyan-700\s+hover:bg-cyan-600\s+text-titanium-text-primary/);
     expect(SRC).not.toMatch(/'bg-cyan-600\s+text-titanium-text-primary'/);
-    expect(SRC).not.toMatch(/bg-cyan-600\s+hover:bg-cyan-500\s+text-titanium-text-primary/);
+    expect(SRC).not.toMatch(
+      /bg-cyan-600\s+hover:bg-cyan-500\s+text-titanium-text-primary/
+    );
   });
 
   it('voice engine badges and meta spans use AA-compliant tokens', () => {

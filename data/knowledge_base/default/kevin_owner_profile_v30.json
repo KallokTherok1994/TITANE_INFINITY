@@ -112,12 +112,7 @@
     "preferred_names": {
       "legal_or_public_name": "Kevin Thibault",
       "professional_identity": "Architecte de clarté et de cohérence. J’aide à y voir clair et à avancer.",
-      "symbolic_markers": [
-        "KAwen",
-        "Awen",
-        "passeur",
-        "gardien de seuil"
-      ],
+      "symbolic_markers": ["KAwen", "Awen", "passeur", "gardien de seuil"],
       "self_descriptors": [
         "entrepreneur créatif",
         "auteur",
@@ -136,9 +131,7 @@
       "timezone": "America/Montreal"
     },
     "education_and_learning": {
-      "current_training": [
-        "coach en ikigai"
-      ],
+      "current_training": ["coach en ikigai"],
       "long_term_study": "Depuis plus de neuf ans: développement personnel, psychologie, médecines holistiques, disciplines de régulation et systèmes vivants.",
       "other_information": "Aucune autre information disponible."
     },
@@ -202,11 +195,7 @@
         "art mural",
         "art vivant"
       ],
-      "other": [
-        "survie intermédiaire",
-        "tir à l’arc intermédiaire",
-        "lyre"
-      ]
+      "other": ["survie intermédiaire", "tir à l’arc intermédiaire", "lyre"]
     },
     "personal_context": {
       "family_and_household": "Kevin a mentionné une locataire et la fille de celle-ci dans un contexte artistique et émotionnel lié au garage. Aucune autre information disponible sur la famille proche.",
@@ -259,10 +248,7 @@
         "se motive par récits fondateurs, formulations puissantes, mantras et synthèses reliant vécu, mission et action concrète",
         "maintient généralement une stabilité intérieure importante même sous pression financière, logistique ou existentielle"
       ],
-      "inner_axes": [
-        "Je libère mon plein potentiel",
-        "Je débloque mon plein potentiel"
-      ]
+      "inner_axes": ["Je libère mon plein potentiel", "Je débloque mon plein potentiel"]
     },
     "memory_update": {
       "requested_by": "Kevin Thibault",

@@ -62,10 +62,12 @@ describe('UltimateOptimizationDashboard', () => {
 
   it('raises secondary labels above the low-contrast gray token', () => {
     renderPage();
-    expect(screen.getByText(/Métriques de performance — Recommandations — Benchmarks/i)).toHaveClass(
+    expect(
+      screen.getByText(/Métriques de performance — Recommandations — Benchmarks/i)
+    ).toHaveClass('text-titanium-text-secondary');
+    expect(screen.getByText(/Score optimisation/i)).toHaveClass(
       'text-titanium-text-secondary'
     );
-    expect(screen.getByText(/Score optimisation/i)).toHaveClass('text-titanium-text-secondary');
     expect(screen.getByText('Avant', { selector: 'th' }).closest('tr')).toHaveClass(
       'text-titanium-text-secondary'
     );

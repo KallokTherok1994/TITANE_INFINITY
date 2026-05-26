@@ -81,7 +81,9 @@ describe('GovernanceCenterPage', () => {
     render(<GovernanceCenterPage />);
 
     expect(screen.getByTestId('page-governance-center')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /actualiser toutes les données/i })).toHaveStyle({
+    expect(
+      screen.getByRole('button', { name: /actualiser toutes les données/i })
+    ).toHaveStyle({
       color: '#93b399',
     });
   });

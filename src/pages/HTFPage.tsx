@@ -30,7 +30,10 @@ export function HTFPage() {
   ];
 
   return (
-    <div data-testid="htf-module-page" className="htf-page min-h-screen bg-titanium-bg-base">
+    <div
+      data-testid="htf-module-page"
+      className="htf-page min-h-screen bg-titanium-bg-base"
+    >
       <SurfaceTruthBadge variant={submissions.length > 0 ? 'LIVE' : 'PARTIAL'} />
       {/* Header */}
       <div className="htf-page__header bg-green-700 text-titanium-text-primary px-6 py-4">

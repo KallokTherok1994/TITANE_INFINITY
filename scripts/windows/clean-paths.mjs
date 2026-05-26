@@ -12,7 +12,9 @@ const profiles = {
 
 const profile = process.argv[2];
 if (!profile || !Object.hasOwn(profiles, profile)) {
-  console.error('[clean-paths] usage: node scripts/windows/clean-paths.mjs <base|vite|all>');
+  console.error(
+    '[clean-paths] usage: node scripts/windows/clean-paths.mjs <base|vite|all>'
+  );
   process.exit(1);
 }
 

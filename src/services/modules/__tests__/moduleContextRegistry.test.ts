@@ -53,7 +53,10 @@ describe('moduleContextRegistry', () => {
       warnings: [],
     });
 
-    expect(listener).toHaveBeenCalledWith('listener.test', expect.objectContaining({ status: 'partial' }));
+    expect(listener).toHaveBeenCalledWith(
+      'listener.test',
+      expect.objectContaining({ status: 'partial' })
+    );
     unsub();
   });
 

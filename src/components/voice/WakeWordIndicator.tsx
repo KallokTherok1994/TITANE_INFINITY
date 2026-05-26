@@ -155,7 +155,9 @@ export const WakeWordIndicator: React.FC<WakeWordIndicatorProps> = ({
           )}
         >
           {/* Icône */}
-          <span className="text-titanium-text-inverse text-lg font-bold">{config.icon}</span>
+          <span className="text-titanium-text-inverse text-lg font-bold">
+            {config.icon}
+          </span>
         </div>
       </div>
 
@@ -199,7 +201,9 @@ export const WakeWordBadge: React.FC<{
       title={config.label}
     >
       <span className="text-titanium-text-inverse text-sm">{config.icon}</span>
-      <span className="text-titanium-text-inverse text-xs font-medium">{config.label}</span>
+      <span className="text-titanium-text-inverse text-xs font-medium">
+        {config.label}
+      </span>
     </button>
   );
 };

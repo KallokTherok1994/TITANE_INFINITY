@@ -48,15 +48,9 @@
       ]
     ],
     "byType": {
-      "preference": [
-        "stm-001"
-      ],
-      "conversation": [
-        "stm-002"
-      ],
-      "context": [
-        "stm-003"
-      ]
+      "preference": ["stm-001"],
+      "conversation": ["stm-002"],
+      "context": ["stm-003"]
     }
   },
   "mtm": {
@@ -172,23 +166,10 @@
       ]
     ],
     "byType": {
-      "knowledge": [
-        "mtm-001"
-      ],
-      "preference": [
-        "mtm-002",
-        "mtm-003",
-        "mtm-004"
-      ],
-      "context": [
-        "mtm-005",
-        "mtm-006"
-      ],
-      "strategy": [
-        "mtm-007",
-        "mtm-008",
-        "mtm-009"
-      ]
+      "knowledge": ["mtm-001"],
+      "preference": ["mtm-002", "mtm-003", "mtm-004"],
+      "context": ["mtm-005", "mtm-006"],
+      "strategy": ["mtm-007", "mtm-008", "mtm-009"]
     }
   },
   "ltm": {
@@ -449,9 +430,7 @@
       ]
     ],
     "byType": {
-      "license": [
-        "ltm-001"
-      ],
+      "license": ["ltm-001"],
       "knowledge": [
         "ltm-002",
         "ltm-003",
@@ -469,17 +448,9 @@
         "ltm-019",
         "ltm-021"
       ],
-      "identity": [
-        "ltm-012",
-        "ltm-017"
-      ],
-      "methodology": [
-        "ltm-014"
-      ],
-      "preference": [
-        "ltm-018",
-        "ltm-020"
-      ]
+      "identity": ["ltm-012", "ltm-017"],
+      "methodology": ["ltm-014"],
+      "preference": ["ltm-018", "ltm-020"]
     }
   }
 }

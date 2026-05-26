@@ -91,9 +91,8 @@ vi.mock('@/services/chatMemoryCompactor', () => ({
 const recordTwinChatReviewItemsMock = vi.fn();
 
 vi.mock('@/services/twin_chat', async () => {
-  const actual = await vi.importActual<typeof import('@/services/twin_chat')>(
-    '@/services/twin_chat'
-  );
+  const actual =
+    await vi.importActual<typeof import('@/services/twin_chat')>('@/services/twin_chat');
 
   return {
     ...actual,

@@ -234,7 +234,8 @@ let transportCache: { value: ActiveTransport; at: number } | null = null;
 function readRemoteUrl(): string {
   const viteEnv =
     typeof import.meta !== 'undefined' &&
-    typeof (import.meta as ImportMeta & { env?: Record<string, string> }).env !== 'undefined'
+    typeof (import.meta as ImportMeta & { env?: Record<string, string> }).env !==
+      'undefined'
       ? ((import.meta as ImportMeta & { env: Record<string, string> }).env
           .VITE_TITANE_REMOTE_URL as string | undefined)
       : undefined;
@@ -252,8 +253,7 @@ async function probeRemoteHealth(
   timeoutMs: number
 ): Promise<boolean> {
   if (!remoteUrl) return false;
-  const ctrl =
-    typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
   const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
   try {
     const res = await fetchImpl(`${remoteUrl}/api/health`, {
@@ -279,11 +279,7 @@ export async function getActiveTransport(
   opts: GetActiveTransportOptions = {}
 ): Promise<ActiveTransport> {
   const now = Date.now();
-  if (
-    !opts.force &&
-    transportCache &&
-    now - transportCache.at < TRANSPORT_CACHE_TTL_MS
-  ) {
+  if (!opts.force && transportCache && now - transportCache.at < TRANSPORT_CACHE_TTL_MS) {
     return transportCache.value;
   }
 
@@ -292,8 +288,7 @@ export async function getActiveTransport(
     resolved = 'tauri';
   } else {
     const fetchImpl =
-      opts.fetchImpl ??
-      (typeof fetch !== 'undefined' ? fetch.bind(globalThis) : null);
+      opts.fetchImpl ?? (typeof fetch !== 'undefined' ? fetch.bind(globalThis) : null);
     const remoteUrl = opts.remoteUrl ?? readRemoteUrl();
     if (fetchImpl && remoteUrl) {
       const healthy = await probeRemoteHealth(

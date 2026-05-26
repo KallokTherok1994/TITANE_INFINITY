@@ -47,7 +47,7 @@ export async function loadWithRetry<T extends ComponentType<any>>(
   factory: Factory<T>,
   cacheKey?: string,
   retries: number = DEFAULT_RETRIES,
-  backoffMs: readonly number[] = DEFAULT_BACKOFF_MS,
+  backoffMs: readonly number[] = DEFAULT_BACKOFF_MS
 ): Promise<{ default: T }> {
   if (cacheKey) {
     const cached = resolvedCache.get(cacheKey);
@@ -90,7 +90,7 @@ export function lazyWithRetry<T extends ComponentType<any>>(
   factory: Factory<T>,
   cacheKey?: string,
   retries: number = DEFAULT_RETRIES,
-  backoffMs: readonly number[] = DEFAULT_BACKOFF_MS,
+  backoffMs: readonly number[] = DEFAULT_BACKOFF_MS
 ): ReturnType<typeof lazy<T>> {
   return lazy<T>(() => loadWithRetry(factory, cacheKey, retries, backoffMs));
 }

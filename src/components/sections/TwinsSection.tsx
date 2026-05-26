@@ -128,7 +128,10 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
               {chatStatusMeta.label}
             </span>
             <span
-              style={{ fontSize: 'var(--text-xs)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}
+              style={{
+                fontSize: 'var(--text-xs)',
+                color: 'var(--titanium-text-tertiary, #8a8a8a)',
+              }}
               data-testid="twins-context-meta"
             >
               {lastSyncDisplay ? `Dernière sync : ${lastSyncDisplay}` : 'Sync en attente'}
@@ -242,7 +245,12 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
         <h3 style={{ marginBottom: 'var(--space-4)' }}>
           📜 Pacte Fondateur — Alignement TWINS
         </h3>
-        <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
+        <p
+          style={{
+            color: 'var(--titanium-text-tertiary, #8a8a8a)',
+            fontSize: 'var(--text-sm)',
+          }}
+        >
           <strong>🏗️ Excellence Systémique</strong>
           <br />
           Architecture cohérente et maintenable — Orchestration IA automatique optimale
@@ -264,7 +272,12 @@ export const TwinsSection: React.FC<TwinsSectionProps> = memo(() => {
       {/* ═══ TWINS SURFACE SUMMARY ═══ */}
       <Card style={{ marginTop: 'var(--space-4)' }}>
         <h3 style={{ marginBottom: 'var(--space-4)' }}>⚙️ Surface TWINS canonique</h3>
-        <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
+        <p
+          style={{
+            color: 'var(--titanium-text-tertiary, #8a8a8a)',
+            fontSize: 'var(--text-sm)',
+          }}
+        >
           Les anciennes surfaces <strong>Identity</strong> et <strong>Symbiose</strong>
           sont maintenant consolidées ici. Toute navigation legacy redirige vers le point
           d&apos;entrée unique <code>/twins</code>.

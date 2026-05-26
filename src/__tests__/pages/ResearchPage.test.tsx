@@ -33,7 +33,13 @@ vi.mock('@/services/userPreferencesEngine', () => ({
 }));
 
 vi.mock('react-router-dom', () => ({
-  useLocation: () => ({ pathname: '/research', state: null, search: '', hash: '', key: 'test' }),
+  useLocation: () => ({
+    pathname: '/research',
+    state: null,
+    search: '',
+    hash: '',
+    key: 'test',
+  }),
 }));
 
 vi.mock('@/components/system/SurfaceTruthBadge', () => ({

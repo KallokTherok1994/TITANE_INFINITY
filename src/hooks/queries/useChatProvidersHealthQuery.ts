@@ -8,7 +8,11 @@
  *
  * staleTime 15s — provider liveness can flip quickly when Ollama restarts.
  */
-import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
+import {
+  useQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import { secureInvoke } from '../../lib/security';
 import { TAURI_COMMANDS } from '../../lib/tauriCommands';
 import { queryKeys } from '../../lib/queryKeys';
@@ -16,7 +20,12 @@ import { queryKeys } from '../../lib/queryKeys';
 export type ChatProvidersHealth = unknown;
 
 type QueryOpts = Omit<
-  UseQueryOptions<ChatProvidersHealth, Error, ChatProvidersHealth, ReturnType<typeof queryKeys.chat.providersHealth>>,
+  UseQueryOptions<
+    ChatProvidersHealth,
+    Error,
+    ChatProvidersHealth,
+    ReturnType<typeof queryKeys.chat.providersHealth>
+  >,
   'queryKey' | 'queryFn'
 >;
 
@@ -25,7 +34,8 @@ export function useChatProvidersHealthQuery(
 ): UseQueryResult<ChatProvidersHealth, Error> {
   return useQuery({
     queryKey: queryKeys.chat.providersHealth(),
-    queryFn: () => secureInvoke<ChatProvidersHealth>(TAURI_COMMANDS.CHAT_CHECK_PROVIDERS, {}),
+    queryFn: () =>
+      secureInvoke<ChatProvidersHealth>(TAURI_COMMANDS.CHAT_CHECK_PROVIDERS, {}),
     staleTime: 15_000,
     ...options,
   });

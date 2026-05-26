@@ -7,7 +7,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Command Palette ⌘K', () => {
-  test('opens with Ctrl+K, filters, navigates to monitoring dashboard', async ({ page }) => {
+  test('opens with Ctrl+K, filters, navigates to monitoring dashboard', async ({
+    page,
+  }) => {
     await page.goto('/titane');
     await page.waitForLoadState('domcontentloaded');
     // v35.1.2 — wait for React app-ready beacon before keyboard event;

@@ -89,12 +89,12 @@ const SURFACES: A11ySurface[] = [
 const BLOCKING_IMPACTS = new Set(['serious', 'critical']);
 
 /**
-  * Regression baseline — total blocking violations (critical+serious) summed
+ * Regression baseline — total blocking violations (critical+serious) summed
  * across all 56 routes. Initial measurement on 2026-05-13: 25 blocking.
  * Tightened further to 3 after a second governed tranche confirmed
  * sustained zero-blocking inventory across audited and candidate routes.
  * Never increase without an explicit AutoHeal governance entry.
-  */
+ */
 const AGGREGATE_BLOCKING_BASELINE = 3;
 
 test.describe.configure({ mode: 'serial' });
@@ -111,10 +111,10 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (56 critical routes)', () => {
         .analyze();
 
       const byImpact = {
-        critical: axeResults.violations.filter((v) => v.impact === 'critical').length,
-        serious: axeResults.violations.filter((v) => v.impact === 'serious').length,
-        moderate: axeResults.violations.filter((v) => v.impact === 'moderate').length,
-        minor: axeResults.violations.filter((v) => v.impact === 'minor').length,
+        critical: axeResults.violations.filter(v => v.impact === 'critical').length,
+        serious: axeResults.violations.filter(v => v.impact === 'serious').length,
+        moderate: axeResults.violations.filter(v => v.impact === 'moderate').length,
+        minor: axeResults.violations.filter(v => v.impact === 'minor').length,
       };
 
       writeFileSync(
@@ -126,7 +126,7 @@ test.describe('v34.0.7 A11y WCAG 2.1 AA (56 critical routes)', () => {
             timestamp: new Date().toISOString(),
             totalViolations: axeResults.violations.length,
             byImpact,
-            violations: axeResults.violations.map((v) => ({
+            violations: axeResults.violations.map(v => ({
               id: v.id,
               impact: v.impact,
               help: v.help,
@@ -180,7 +180,9 @@ test('v34.0.7 a11y aggregate baseline regression guard', () => {
     'utf-8'
   );
 
-  console.log(`[a11y:aggregate] blocking=${aggregate} baseline=${AGGREGATE_BLOCKING_BASELINE}`);
+  console.log(
+    `[a11y:aggregate] blocking=${aggregate} baseline=${AGGREGATE_BLOCKING_BASELINE}`
+  );
   expect(
     aggregate,
     `Total blocking a11y violations (${aggregate}) exceeds baseline ${AGGREGATE_BLOCKING_BASELINE}. New a11y debt detected.`

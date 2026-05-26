@@ -11,15 +11,21 @@ import { vi } from 'vitest';
 export async function cleanupAiSingletons(): Promise<void> {
   // Modules may not be loaded in all test contexts — silently skip if absent
   await import('@/services/cache/responseCache')
-    .then(m => { (m.responseCache as { destroy?: () => void }).destroy?.(); })
+    .then(m => {
+      (m.responseCache as { destroy?: () => void }).destroy?.();
+    })
     .catch(() => undefined);
 
   await import('@/services/ai/orchestrator')
-    .then(m => { (m.aiOrchestrator as { destroy?: () => void }).destroy?.(); })
+    .then(m => {
+      (m.aiOrchestrator as { destroy?: () => void }).destroy?.();
+    })
     .catch(() => undefined);
 
   await import('@/services/ai/healthMonitor')
-    .then(m => { (m.aiHealthMonitor as { stopMonitoring?: () => void }).stopMonitoring?.(); })
+    .then(m => {
+      (m.aiHealthMonitor as { stopMonitoring?: () => void }).stopMonitoring?.();
+    })
     .catch(() => undefined);
 
   vi.clearAllTimers();

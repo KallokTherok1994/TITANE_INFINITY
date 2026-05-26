@@ -159,9 +159,7 @@ describe('time-page-tabs (WDIO desktop)', () => {
     it('L11c — tab-time-twin is clickable and becomes active', async () => {
       await $(testId('tab-time-twin')).click();
       await waitForTabActive(testId('tab-time-twin'), TIMEOUT);
-      expect(await $(testId('tab-time-twin')).getAttribute('aria-selected')).toBe(
-        'true'
-      );
+      expect(await $(testId('tab-time-twin')).getAttribute('aria-selected')).toBe('true');
     });
 
     it('L12 — all 7 time tab data-testids are present in DOM', async () => {

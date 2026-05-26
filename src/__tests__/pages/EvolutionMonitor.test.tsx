@@ -64,7 +64,9 @@ describe('EvolutionMonitor', () => {
   it('keeps evolution meta labels above low-contrast tokens', () => {
     renderPage();
 
-    expect(screen.getAllByText(/sur \d+ versions/i)[0]).toHaveClass('text-titanium-text-secondary');
+    expect(screen.getAllByText(/sur \d+ versions/i)[0]).toHaveClass(
+      'text-titanium-text-secondary'
+    );
     expect(screen.getByText('Cycles')).toHaveClass('text-titanium-text-secondary');
     expect(screen.getByText('Version')).toHaveClass('text-titanium-text-secondary');
   });

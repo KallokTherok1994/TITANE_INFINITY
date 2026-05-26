@@ -11,9 +11,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('@/lib/security', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/security')>(
-    '@/lib/security'
-  );
+  const actual = await vi.importActual<typeof import('@/lib/security')>('@/lib/security');
   return {
     ...actual,
     secureInvoke: vi.fn(async () => ({
@@ -51,9 +49,8 @@ describe('AdminClearWebviewCacheButton — wiring contract (v34.1.0)', () => {
   });
 
   it('ALLOWED_COMMANDS allowlist contains clear_webview_cache', async () => {
-    const security = await vi.importActual<typeof import('@/lib/security')>(
-      '@/lib/security'
-    );
+    const security =
+      await vi.importActual<typeof import('@/lib/security')>('@/lib/security');
     expect(security.ALLOWED_COMMANDS.has('clear_webview_cache')).toBe(true);
   });
 });

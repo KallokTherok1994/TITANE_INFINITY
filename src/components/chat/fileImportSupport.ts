@@ -95,8 +95,8 @@ function buildStructuredFallbackContent(file: File): string {
   const note = isPdf
     ? 'Note: extraction texte PDF indisponible dans ce runtime (pdftotext requis sur le système hôte). Exportez le document en .docx ou .txt pour une analyse complète du contenu.'
     : isDocx
-    ? 'Note: le texte du document DOCX n\'a pas pu être extrait (parsing Tauri indisponible). Vérifiez que le backend Tauri est actif.'
-    : 'Note: le texte complet n\'a pas pu être extrait automatiquement dans ce runtime.';
+      ? "Note: le texte du document DOCX n'a pas pu être extrait (parsing Tauri indisponible). Vérifiez que le backend Tauri est actif."
+      : "Note: le texte complet n'a pas pu être extrait automatiquement dans ce runtime.";
 
   return [
     `Document importé: ${file.name}`,

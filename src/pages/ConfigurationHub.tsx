@@ -389,21 +389,20 @@ const normalizeConfigSnapshot = (value: unknown): ConfigSnapshot => {
   }
 
   const runtime = normalizeRuntimeConfig(raw.runtime);
-  const rawChatEngine = pickDefined(toRecord(raw.chat_engine), toRecord(raw.chatEngine)) ?? {};
+  const rawChatEngine =
+    pickDefined(toRecord(raw.chat_engine), toRecord(raw.chatEngine)) ?? {};
 
-  const timeout_ms = pickDefined(
-    asNumber(rawChatEngine.timeout_ms),
-    asNumber(rawChatEngine.timeoutMs)
-  ) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.timeout_ms;
-  const chunk_size = pickDefined(
-    asNumber(rawChatEngine.chunk_size),
-    asNumber(rawChatEngine.chunkSize)
-  ) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.chunk_size;
-  const max_tokens = pickDefined(
-    asNumber(rawChatEngine.max_tokens),
-    asNumber(rawChatEngine.maxTokens)
-  ) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.max_tokens;
-  const temperature = asNumber(rawChatEngine.temperature) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.temperature;
+  const timeout_ms =
+    pickDefined(asNumber(rawChatEngine.timeout_ms), asNumber(rawChatEngine.timeoutMs)) ??
+    DEFAULT_SNAPSHOT_CHAT_ENGINE.timeout_ms;
+  const chunk_size =
+    pickDefined(asNumber(rawChatEngine.chunk_size), asNumber(rawChatEngine.chunkSize)) ??
+    DEFAULT_SNAPSHOT_CHAT_ENGINE.chunk_size;
+  const max_tokens =
+    pickDefined(asNumber(rawChatEngine.max_tokens), asNumber(rawChatEngine.maxTokens)) ??
+    DEFAULT_SNAPSHOT_CHAT_ENGINE.max_tokens;
+  const temperature =
+    asNumber(rawChatEngine.temperature) ?? DEFAULT_SNAPSHOT_CHAT_ENGINE.temperature;
 
   return {
     runtime,

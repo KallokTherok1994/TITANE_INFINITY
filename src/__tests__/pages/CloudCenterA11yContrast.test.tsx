@@ -16,14 +16,11 @@ import { resolve } from 'node:path';
  */
 describe('CloudCenter A11y — primary CTA contrast hardening', () => {
   it('CloudCenter.css declares a scoped AA-compliant background for .btn-primary', () => {
-    const cssPath = resolve(
-      process.cwd(),
-      'src/pages/CloudCenter/CloudCenter.css',
-    );
+    const cssPath = resolve(process.cwd(), 'src/pages/CloudCenter/CloudCenter.css');
     const css = readFileSync(cssPath, 'utf-8');
 
     expect(css).toMatch(
-      /\.cloud-center\s+\.btn-primary[^{]*\{[^}]*background:\s*var\(--accent-primary,\s*#1d4ed8\)/,
+      /\.cloud-center\s+\.btn-primary[^{]*\{[^}]*background:\s*var\(--accent-primary,\s*#1d4ed8\)/
     );
     // The original under-contrast fallback must no longer be the only source
     // of truth for the cloud primary button.

@@ -13,18 +13,21 @@
 ## 2026-05-17 — OLLAMA_DEV_4_ROUTER_UNIFICATION — Cline + Console CLI activés
 
 > La stack Ollama Dev est maintenant operationnelle depuis 4 routeurs unifies:
+>
 > - **VSCode/Copilot** (MCP) : `.vscode/mcp.json` -> `scripts/mcp/start-ollama-dev-mcp.sh` -> `qwen3.5:9b`
 > - **Cline** : `.clinerules/50-ollama-dev.md` + hooks TaskStart/PreToolUse/PostToolUse -> `qwen3.5:9b`
 > - **Total Dev** : `/total-dev` route + IPC `total_dev_*` -> `qwen3.5:9b`
 > - **Console CLI** : `scripts/dev/ollama-dev-cli.sh` -> `ollama run qwen3.5:9b`
 >
 > Nouveaux gates:
+>
 > - `bash scripts/dev/ollama-dev-verify.sh --router=all` (verification cross-routeur statique)
 > - `pnpm vitest run tests/unit/scripts/ollamaDevAllRouters.test.ts` (6 lanes, 35+ checks)
 > - `bash scripts/dev/ollama-dev-cli.sh status` (verification runtime live)
 > - Nouvelles lanes dans `scripts/verify/verify-ollama-dev-stack.sh`
 >
 > Integration Cline renforcee:
+>
 > - TaskStart injecte `OLLAMA_DEV_AVAILABLE`, `OLLAMA_DEV_MODEL`, `OLLAMA_DEV_HOST`
 > - PreToolUse verifie la disponibilite Ollama avant les commandes liees
 > - PostToolUse logue les operations Ollama dans `.clinerules/logs/ollama-dev.log`
@@ -37,6 +40,7 @@
 > Le panneau CHAT DEV de `/total-dev` utilisait `chat_generate` (mock-only, `input: String`) au lieu de la commande Ollama unifiee de production `ollama_generate` (`OllamaRequest { model, prompt, timeout_secs, system_prompt, temperature }`). Ceci causait l'erreur `[Erreur provider: invalid args 'input' for command 'chat_generate': command chat_generate missing required key input]`.
 >
 > Correction:
+>
 > - `src/core/commands/TAURI_COMMANDS.ts`: ajout constante `OLLAMA_GENERATE: 'ollama_generate'`
 > - `src/pages/TotalDevPage.tsx` `sendMessage()`: remplacement de `secureInvoke(TAURI_COMMANDS.CHAT_GENERATE, { message, context })` par `secureInvoke(TAURI_COMMANDS.OLLAMA_GENERATE, { model: 'qwen3.5:9b', prompt, timeout_secs: 90, system_prompt, temperature: 0.7 })`
 > - Le type de retour `OllamaResponse { ok, content, error?, ... }` est strict et Rule 6-compliant
@@ -130,19 +134,19 @@
 
 ## 2. OLLAMA MODELS AVAILABLE — 2026-05-17
 
-| Model                    | Size   | Modified    | Status                       |
-| ------------------------ | ------ | ----------- | ---------------------------- |
-| qwen3.5:9b               | 6.6 GB | 2026-05-17  | ✅ ACTIVE (dev model)        |
-| qwen2.5-coder:7b         | 4.7 GB | 2026-05-17  | ✅ Available                 |
-| qwen2.5:latest           | 4.7 GB | 2026-05-17  | ✅ Available                 |
-| llama3.1:8b              | 4.9 GB | 2026-05-17  | ✅ Available                 |
-| llama3.1:latest          | 4.9 GB | 2026-05-17  | ✅ Available                 |
-| mistral:7b               | 4.4 GB | 2026-05-17  | ✅ Available                 |
-| gemma2:2b                | 1.6 GB | 2026-05-17  | ✅ ACTIVE (runtime product)  |
-| titane-key-agent:latest  | 1.6 GB | 2026-04-27  | ⚠️ Available (custom agent)  |
-| qwen2.5:cline-fr         | 4.7 GB | 2026-04-16  | ⚠️ Available (dev legacy)    |
-| qwen2.5:latest-fr        | 4.7 GB | 2026-04-16  | ⚠️ Available (dev legacy)    |
-| gemma2:2b-fr             | 1.6 GB | 2026-04-16  | ⚠️ Available (dev legacy)    |
+| Model                   | Size   | Modified   | Status                      |
+| ----------------------- | ------ | ---------- | --------------------------- |
+| qwen3.5:9b              | 6.6 GB | 2026-05-17 | ✅ ACTIVE (dev model)       |
+| qwen2.5-coder:7b        | 4.7 GB | 2026-05-17 | ✅ Available                |
+| qwen2.5:latest          | 4.7 GB | 2026-05-17 | ✅ Available                |
+| llama3.1:8b             | 4.9 GB | 2026-05-17 | ✅ Available                |
+| llama3.1:latest         | 4.9 GB | 2026-05-17 | ✅ Available                |
+| mistral:7b              | 4.4 GB | 2026-05-17 | ✅ Available                |
+| gemma2:2b               | 1.6 GB | 2026-05-17 | ✅ ACTIVE (runtime product) |
+| titane-key-agent:latest | 1.6 GB | 2026-04-27 | ⚠️ Available (custom agent) |
+| qwen2.5:cline-fr        | 4.7 GB | 2026-04-16 | ⚠️ Available (dev legacy)   |
+| qwen2.5:latest-fr       | 4.7 GB | 2026-04-16 | ⚠️ Available (dev legacy)   |
+| gemma2:2b-fr            | 1.6 GB | 2026-04-16 | ⚠️ Available (dev legacy)   |
 
 **Active Models**: `qwen3.5:9b` (dev/Cline/Copilot) + `gemma2:2b` (runtime product chat)
 **Runtime boundary** intacte : aucun modèle DEV dans les defaults produit.

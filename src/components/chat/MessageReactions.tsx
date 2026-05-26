@@ -81,7 +81,8 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
               onClick={() => handleToggleReaction(type as ReactionType)}
               style={{
                 background: 'var(--titanium-bg-interactive, rgba(255,255,255,0.06))',
-                border: '1px solid var(--titanium-border-default, rgba(255,255,255,0.12))',
+                border:
+                  '1px solid var(--titanium-border-default, rgba(255,255,255,0.12))',
                 borderRadius: '12px',
                 padding: compact ? '2px 6px' : '4px 8px',
                 display: 'flex',
@@ -92,10 +93,12 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
                 transition: 'all 0.2s',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = 'var(--titanium-border-default, rgba(255,255,255,0.12))';
+                e.currentTarget.style.background =
+                  'var(--titanium-border-default, rgba(255,255,255,0.12))';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'var(--titanium-bg-interactive, rgba(255,255,255,0.06))';
+                e.currentTarget.style.background =
+                  'var(--titanium-bg-interactive, rgba(255,255,255,0.06))';
               }}
               title={`Remove ${type} reaction`}
             >
@@ -125,12 +128,14 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
         }}
         onMouseEnter={e => {
           if (!showPicker) {
-            e.currentTarget.style.background = 'var(--titanium-bg-interactive, rgba(255,255,255,0.08))';
+            e.currentTarget.style.background =
+              'var(--titanium-bg-interactive, rgba(255,255,255,0.08))';
           }
         }}
         onMouseLeave={e => {
           if (!showPicker) {
-            e.currentTarget.style.background = 'var(--titanium-bg-subtle, rgba(255,255,255,0.04))';
+            e.currentTarget.style.background =
+              'var(--titanium-bg-subtle, rgba(255,255,255,0.04))';
           }
         }}
         title="Add reaction"
@@ -171,7 +176,9 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
                   setShowPicker(false);
                 }}
                 style={{
-                  background: isActive ? 'var(--titanium-border-default, rgba(255,255,255,0.12))' : 'transparent',
+                  background: isActive
+                    ? 'var(--titanium-border-default, rgba(255,255,255,0.12))'
+                    : 'transparent',
                   border: 'none',
                   borderRadius: '8px',
                   padding: '6px',
@@ -183,7 +190,8 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
                   justifyContent: 'center',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = 'var(--titanium-bg-overlay, rgba(255,255,255,0.14))';
+                  e.currentTarget.style.background =
+                    'var(--titanium-bg-overlay, rgba(255,255,255,0.14))';
                   e.currentTarget.style.transform = 'scale(1.2)';
                 }}
                 onMouseLeave={e => {

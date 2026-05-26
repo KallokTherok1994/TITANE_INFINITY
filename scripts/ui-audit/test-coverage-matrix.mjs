@@ -57,8 +57,8 @@ async function walk(dir, out = []) {
 
 export async function collectTsSources() {
   const all = await walk(SRC_DIR);
-  return all.filter((f) => {
-    if (SKIP_SUFFIXES.some((s) => f.endsWith(s))) return false;
+  return all.filter(f => {
+    if (SKIP_SUFFIXES.some(s => f.endsWith(s))) return false;
     const ext = extname(f);
     return ext === '.ts' || ext === '.tsx';
   });
@@ -66,14 +66,14 @@ export async function collectTsSources() {
 
 export async function collectRustSources() {
   const all = await walk(RUST_SRC_DIR);
-  return all.filter((f) => f.endsWith('.rs'));
+  return all.filter(f => f.endsWith('.rs'));
 }
 
 export async function indexTsTests() {
   const all = await walk(SRC_DIR);
   const tests = new Set();
   for (const file of all) {
-    if (SKIP_SUFFIXES.slice(0, 4).some((s) => file.endsWith(s))) {
+    if (SKIP_SUFFIXES.slice(0, 4).some(s => file.endsWith(s))) {
       const base = basename(file).replace(/\.(test|spec)\.(ts|tsx)$/, '');
       tests.add(base);
     }
@@ -92,7 +92,7 @@ export async function buildCoverageMatrix() {
     indexTsTests(),
   ]);
 
-  const tsRows = tsSources.map((file) => {
+  const tsRows = tsSources.map(file => {
     const base = basename(file).replace(/\.(ts|tsx)$/, '');
     const covered = tsTestsIndex.has(base);
     return {
@@ -115,14 +115,15 @@ export async function buildCoverageMatrix() {
   const rows = [...tsRows, ...rustRows];
   const totals = {
     total: rows.length,
-    covered: rows.filter((r) => r.covered).length,
-    uncovered: rows.filter((r) => !r.covered).length,
+    covered: rows.filter(r => r.covered).length,
+    uncovered: rows.filter(r => !r.covered).length,
     tsTotal: tsRows.length,
-    tsCovered: tsRows.filter((r) => r.covered).length,
+    tsCovered: tsRows.filter(r => r.covered).length,
     rustTotal: rustRows.length,
-    rustCovered: rustRows.filter((r) => r.covered).length,
+    rustCovered: rustRows.filter(r => r.covered).length,
   };
-  totals.coverageRatio = totals.total === 0 ? 0 : Number((totals.covered / totals.total).toFixed(4));
+  totals.coverageRatio =
+    totals.total === 0 ? 0 : Number((totals.covered / totals.total).toFixed(4));
 
   return {
     generatedAt: new Date().toISOString(),
@@ -143,13 +144,19 @@ async function renderMarkdown(report) {
   lines.push(`| Total fichiers source | ${report.totals.total} |`);
   lines.push(`| Couverts (test trouvé) | ${report.totals.covered} |`);
   lines.push(`| Non couverts | ${report.totals.uncovered} |`);
-  lines.push(`| Ratio couverture | ${(report.totals.coverageRatio * 100).toFixed(2)} % |`);
-  lines.push(`| TS/TSX (couverts / total) | ${report.totals.tsCovered} / ${report.totals.tsTotal} |`);
-  lines.push(`| Rust (couverts / total) | ${report.totals.rustCovered} / ${report.totals.rustTotal} |`);
+  lines.push(
+    `| Ratio couverture | ${(report.totals.coverageRatio * 100).toFixed(2)} % |`
+  );
+  lines.push(
+    `| TS/TSX (couverts / total) | ${report.totals.tsCovered} / ${report.totals.tsTotal} |`
+  );
+  lines.push(
+    `| Rust (couverts / total) | ${report.totals.rustCovered} / ${report.totals.rustTotal} |`
+  );
   lines.push('');
   lines.push('## Top 50 fichiers non couverts');
   lines.push('');
-  const uncovered = report.rows.filter((r) => !r.covered).slice(0, 50);
+  const uncovered = report.rows.filter(r => !r.covered).slice(0, 50);
   for (const row of uncovered) {
     lines.push(`- [${row.lang}] \`${row.file}\``);
   }
@@ -173,7 +180,7 @@ async function main() {
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
-  main().catch((err) => {
+  main().catch(err => {
     console.error('[coverage] FAIL:', err);
     process.exit(1);
   });

@@ -20,7 +20,12 @@
  *   - PROD model stays `gemma2:2b` (Ollama boundary truth) — never reads
  *     `OLLAMA_MODEL` dev env var.
  */
-import { useMutation, useQueryClient, type UseMutationOptions, type UseMutationResult } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationOptions,
+  type UseMutationResult,
+} from '@tanstack/react-query';
 import { secureInvoke } from '../../lib/security';
 import { TAURI_COMMANDS } from '../../lib/tauriCommands';
 import { queryKeys } from '../../lib/queryKeys';
@@ -49,8 +54,10 @@ export function useChatSendMutation(
 ): UseMutationResult<ChatSendResponse, Error, ChatSendVariables> {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (variables) =>
-      secureInvoke<ChatSendResponse>(TAURI_COMMANDS.CONVERSATION_GENERATE, { ...variables }),
+    mutationFn: variables =>
+      secureInvoke<ChatSendResponse>(TAURI_COMMANDS.CONVERSATION_GENERATE, {
+        ...variables,
+      }),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       void queryClient.invalidateQueries({

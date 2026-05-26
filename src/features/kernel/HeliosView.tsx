@@ -136,7 +136,9 @@ export function HeliosView() {
         {/* Disk Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-titanium-text-tertiary">Utilisation disque</span>
+            <span className="text-sm text-titanium-text-tertiary">
+              Utilisation disque
+            </span>
             <Badge color="blue" size="sm">
               {helios.disk_usage[0].toFixed(1)} GB
             </Badge>

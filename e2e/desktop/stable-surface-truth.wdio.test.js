@@ -69,7 +69,11 @@ describe('Stable SurfaceTruth DOM proof (WDIO/Tauri)', () => {
 
     assert.ok(surfaceTruth, 'data-surface-truth attribute must be present');
     assert.ok(surfaceRing, 'data-surface-ring attribute must be present');
-    assert.strictEqual(surfaceTruth, 'app-root', 'root surface identity must be "app-root"');
+    assert.strictEqual(
+      surfaceTruth,
+      'app-root',
+      'root surface identity must be "app-root"'
+    );
     assert.strictEqual(surfaceRing, 'core', 'root surface ring must be "core"');
   });
 

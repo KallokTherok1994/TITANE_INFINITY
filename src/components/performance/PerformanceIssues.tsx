@@ -509,7 +509,9 @@ export const PerformanceIssues: React.FC<PerformanceIssuesProps> = ({
           )}
 
           <div>
-            <h3 className="font-semibold text-titanium-text-primary">Problèmes détectés</h3>
+            <h3 className="font-semibold text-titanium-text-primary">
+              Problèmes détectés
+            </h3>
             <div className="flex items-center gap-3 mt-1 text-xs">
               {stats.critical > 0 && (
                 <span className="flex items-center gap-1 text-red-400">

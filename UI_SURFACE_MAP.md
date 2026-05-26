@@ -31,7 +31,7 @@
 
 - **Surface modifiee** : [src/features/identity/userCoreModelFeatureDecisions.ts](src/features/identity/userCoreModelFeatureDecisions.ts) ajoute un registre centralise de decisions UCM (core/evidence/replay/recall/prompt-projection/consent/subsystem/channel/observability) sans ouverture de nouvelle route UI.
 - **Politique appliquee** : priorite `runtime > env > default` puis garde de politique (`ucmCore` maitre, consentement requis pour les flags donnees personnelles, `internalUser` requis pour convergence/unification).
-- **Tests Vitest** : [src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts](src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts) couvre OFF par defaut, precedence runtime, env toggles, garde consentement et garde internal-only.
+- **Tests Vitest** : [src/features/identity/**tests**/userCoreModelFeatureDecisions.test.ts](src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts) couvre OFF par defaut, precedence runtime, env toggles, garde consentement et garde internal-only.
 - **Export feature** : [src/features/identity/index.ts](src/features/identity/index.ts) expose le registre et ses resolvers pour integration progressive UCM.
 - **Rollback** : `git restore -- src/features/identity/userCoreModelFeatureDecisions.ts src/features/identity/__tests__/userCoreModelFeatureDecisions.test.ts src/features/identity/index.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md scripts/autoheal/autoheal_rules.jsonl`
 
@@ -52,14 +52,14 @@
 ## 2026-05-15 — A11Y aggregate baseline tightening (5 -> 3) on canonical WCAG gate
 
 - **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre uniquement `AGGREGATE_BLOCKING_BASELINE` de `5` à `3` sur l'inventaire canonique déjà stabilisé à `blocking=0`.
-- **Test Vitest** : [src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante `= 3` et interdit le retour à `= 5` ou `= 30`.
+- **Test Vitest** : [src/**tests**/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante `= 3` et interdit le retour à `= 5` ou `= 30`.
 - **Preuve gate** : rerun Playwright canonique sur 34 routes, `36 passed`, `[a11y:aggregate] blocking=0 baseline=3`.
 - **Rollback** : `git restore -- e2e/a11y/wcag-aa-core.spec.ts src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_BASELINE_TIGHTEN_5_TO_3.md proof_packs/A11Y_REDUCTION_2026-05-15_BASELINE_TIGHTEN_5_TO_3`
 
 ## 2026-05-15 — A11Y aggregate baseline tightening (30 -> 5) on canonical WCAG gate
 
 - **Surface modifiée** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) resserre uniquement `AGGREGATE_BLOCKING_BASELINE` de `30` à `5` sur l'inventaire canonique déjà stabilisé à `blocking=0`.
-- **Test Vitest** : [src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante `= 5` et interdit le retour à `= 30`.
+- **Test Vitest** : [src/**tests**/a11y/WcagAggregateBaselineGuard.test.ts](src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts) verrouille la constante `= 5` et interdit le retour à `= 30`.
 - **Preuve gate** : rerun Playwright canonique sur 34 routes, `36 passed`, `[a11y:aggregate] blocking=0 baseline=5`.
 - **Rollback** : `git restore -- e2e/a11y/wcag-aa-core.spec.ts src/__tests__/a11y/WcagAggregateBaselineGuard.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_BASELINE_TIGHTEN_30_TO_5.md proof_packs/A11Y_REDUCTION_2026-05-15_BASELINE_TIGHTEN_30_TO_5`
 
@@ -70,7 +70,7 @@
   - Badge moteur voix (PIPER / ELEVENLABS / autre) : `text-purple-400`/`text-amber-400`/`text-neutral-400` (4.18:1 et moins) → `text-purple-200`/`text-amber-200`/`text-neutral-200` (>=5.5:1, AA stable sur le bleed alpha-20).
   - Méta voix `language` / séparateur / `gender` : `text-neutral-500` (2.97:1 sur `bg-neutral-800/50`) → `text-neutral-400` (~7:1, AA).
   - Slider `<input type="range">` : ajout `aria-label={label}` pour corriger `axe:label` (critical) sur les 3 instances Pitch/Volume/Rate du panneau Voix.
-- **Test Vitest** : [src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx](src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx) verrouille les 4 zones (tab/bouton cyan-700, badges -200, méta neutral-400, slider aria-label) et l'absence des tokens fautifs (`bg-cyan-600 text-white`, `text-purple-400`, `text-amber-400`).
+- **Test Vitest** : [src/**tests**/features/audio-center/AudioCenterA11yContrast.test.tsx](src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx) verrouille les 4 zones (tab/bouton cyan-700, badges -200, méta neutral-400, slider aria-label) et l'absence des tokens fautifs (`bg-cyan-600 text-white`, `text-purple-400`, `text-amber-400`).
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `33` à `34` routes avec `/admin?tab=audio` (surface `admin-audio`), et conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/features/audio-center/AudioCenterPage.tsx src/__tests__/features/audio-center/AudioCenterA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_ADMIN_AUDIO_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_ADMIN_AUDIO_GATE_EXPANSION`
 
@@ -78,7 +78,7 @@
 
 - **Surface modifiée** : [src/components/system/SurfaceTruthBadge.tsx](src/components/system/SurfaceTruthBadge.tsx) durcit la variante `PARTIAL` en remplaçant `bg-amber-900/60 text-amber-300 border border-amber-700/50` par `bg-amber-900 text-amber-100 border border-amber-700/50`. Le combo précédent mesurait ~`2.26:1` sur `/htf` (Axe `color-contrast` serious, `text-amber-300` #fcd34d sur fond blendé #b0856a), sous le seuil WCAG AA `4.5:1`.
 - **Contraste local** : `text-amber-100` (#fef3c7) sur `bg-amber-900` (#78350f) plein ≈ `10:1` (AA large+normal), AA stable sur toutes les pages où le badge global rend en état `PARTIAL` (AdminPage, Nexus, Helios, TwinsPage, PerfectFusionDashboard, CognitivePage, EvoPage, AgendaPage, Harmonia). Le `data-testid="surface-truth-badge-partial"` est conservé, aucun snapshot existant n'asserte les classes de couleur.
-- **Test Vitest** : [src/__tests__/components/system/SurfaceTruthBadgeA11yContrast.test.tsx](src/__tests__/components/system/SurfaceTruthBadgeA11yContrast.test.tsx) verrouille la présence du combo durci dans le `colorClass` `PARTIAL` et l'absence des tokens `bg-amber-900/60` / `text-amber-300` (la ligne de regex isole le `colorClass:` afin d'autoriser la trace historique dans les commentaires).
+- **Test Vitest** : [src/**tests**/components/system/SurfaceTruthBadgeA11yContrast.test.tsx](src/__tests__/components/system/SurfaceTruthBadgeA11yContrast.test.tsx) verrouille la présence du combo durci dans le `colorClass` `PARTIAL` et l'absence des tokens `bg-amber-900/60` / `text-amber-300` (la ligne de regex isole le `colorClass:` afin d'autoriser la trace historique dans les commentaires).
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `32` à `33` routes avec `/htf`, et conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/components/system/SurfaceTruthBadge.tsx src/__tests__/components/system/SurfaceTruthBadgeA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_SURFACE_TRUTH_BADGE_PARTIAL_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_SURFACE_TRUTH_BADGE_PARTIAL_GATE_EXPANSION`
 
@@ -86,7 +86,7 @@
 
 - **Surface modifiée** : [src/modules/OrchestrationIntelligenceCenter.tsx](src/modules/OrchestrationIntelligenceCenter.tsx) retire le modificateur `opacity-70` sur le span `text-xs` de description d'onglet (7 onglets), qui faisait chuter le contraste à `3.26:1` (état actif `bg-purple-600`) et `3.52:1` (état inactif `bg-gray-800`), sous le seuil WCAG AA 4.5:1.
 - **Contraste local** : le span hérite désormais de la couleur d'état parent à alpha plein — `text-white` sur `bg-purple-600` (~5.9:1, AA) en actif, `text-gray-400` sur `bg-gray-800` (~4.83:1, AA) en inactif. La hiérarchie visuelle est conservée via `text-xs` seul.
-- **Test Vitest** : [src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx](src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx) verrouille l'absence du combo `text-xs opacity-70` dans le module source.
+- **Test Vitest** : [src/**tests**/pages/OrchestrationIntelligenceA11yContrast.test.tsx](src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx) verrouille l'absence du combo `text-xs opacity-70` dans le module source.
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `31` à `32` routes avec `/orchestration-intelligence`, et conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/modules/OrchestrationIntelligenceCenter.tsx src/__tests__/pages/OrchestrationIntelligenceA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_ORCHESTRATION_INTELLIGENCE_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_ORCHESTRATION_INTELLIGENCE_GATE_EXPANSION`
 
@@ -102,7 +102,7 @@
 
 - **Surface modifiée** : [src/pages/CloudCenter/CloudCenter.css](src/pages/CloudCenter/CloudCenter.css) durcit uniquement le fond du CTA principal `.btn-primary` scopé sous `.cloud-center` / `.cc-container`, qui rendait à `#8899aa` (~3.2:1) via le fallback `--cloud-accent` et faisait échouer Axe `color-contrast` sur `/cloud`.
 - **Contraste local** : le bouton `Initialiser le Cloud Sync` et les autres CTA `.btn-primary` du Cloud Center utilisent désormais `var(--accent-primary, #1d4ed8)` (~8:1 contre blanc), sans toucher au scope `.cloud-center` global ni aux autres tokens.
-- **Test Vitest** : [src/__tests__/pages/CloudCenterA11yContrast.test.tsx](src/__tests__/pages/CloudCenterA11yContrast.test.tsx) verrouille la présence de la règle scoped hardenée dans la feuille de styles.
+- **Test Vitest** : [src/**tests**/pages/CloudCenterA11yContrast.test.tsx](src/__tests__/pages/CloudCenterA11yContrast.test.tsx) verrouille la présence de la règle scoped hardenée dans la feuille de styles.
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) étend l'inventaire WCAG officiel de `22` à `23` routes avec `/cloud`, puis conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/pages/CloudCenter/CloudCenter.css src/__tests__/pages/CloudCenterA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_CLOUD_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_CLOUD_GATE_EXPANSION`
 
@@ -110,7 +110,7 @@
 
 - **Surface modifiée** : [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) relève uniquement le libellé secondaire `Thèmes propriétaire` signalé par Axe sur `/twins`.
 - **Contraste local** : le libellé passe de `text-gray-500` vers `text-gray-300` sans mutation fonctionnelle du module Twins.
-- **Test Vitest** : [src/__tests__/pages/TwinsPageA11yContrast.test.tsx](src/__tests__/pages/TwinsPageA11yContrast.test.tsx) verrouille le token de contraste durci du libellé propriétaire.
+- **Test Vitest** : [src/**tests**/pages/TwinsPageA11yContrast.test.tsx](src/__tests__/pages/TwinsPageA11yContrast.test.tsx) verrouille le token de contraste durci du libellé propriétaire.
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `21` a `22` routes avec `/twins`, puis conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/pages/TwinsPage.tsx src/__tests__/pages/TwinsPageA11yContrast.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-14_TWINS_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-14_TWINS_GATE_EXPANSION`
 
@@ -118,7 +118,7 @@
 
 - **Surface modifiée** : [src/ui/pages/Skills/SkillManager.tsx](src/ui/pages/Skills/SkillManager.tsx) relève uniquement le bouton d action principal de `/skills` signalé par Axe.
 - **Contraste local** : le bouton `+ Importer une Skill` passe de `#6366f1` vers `#4f46e5` pour refermer le seuil WCAG AA sans changer la logique Skill OS.
-- **Test Vitest** : [src/ui/pages/Skills/__tests__/SkillManager.test.tsx](src/ui/pages/Skills/__tests__/SkillManager.test.tsx) verrouille le token de contraste du bouton et la stabilité du root `page-skills`.
+- **Test Vitest** : [src/ui/pages/Skills/**tests**/SkillManager.test.tsx](src/ui/pages/Skills/__tests__/SkillManager.test.tsx) verrouille le token de contraste du bouton et la stabilité du root `page-skills`.
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `20` a `21` routes avec `/skills`, puis conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/ui/pages/Skills/SkillManager.tsx src/ui/pages/Skills/__tests__/SkillManager.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_SKILLS_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_SKILLS_GATE_EXPANSION`
 
@@ -126,7 +126,7 @@
 
 - **Surface modifiée** : [src/pages/CreationStudio.tsx](src/pages/CreationStudio.tsx) relève uniquement les meta-libelles secondaires encore sous le seuil Axe sur `/creation`.
 - **Contraste local** : `Outils de création`, `Studio actif` et `Statistiques` passent de `text-gray-500` à `text-gray-300` sans mutation de layout ni de logique.
-- **Test Vitest** : [src/__tests__/pages/CreationStudio.test.tsx](src/__tests__/pages/CreationStudio.test.tsx) verrouille le non-retour des tokens `text-gray-500` sur ces libelles critiques.
+- **Test Vitest** : [src/**tests**/pages/CreationStudio.test.tsx](src/__tests__/pages/CreationStudio.test.tsx) verrouille le non-retour des tokens `text-gray-500` sur ces libelles critiques.
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `19` a `20` routes avec `/creation`, puis conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/pages/CreationStudio.tsx src/__tests__/pages/CreationStudio.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_CREATION_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_CREATION_GATE_EXPANSION`
 
@@ -135,7 +135,7 @@
 - **Surfaces modifiées** : [src/pages/SingularityMonitor.tsx](src/pages/SingularityMonitor.tsx) et [src/pages/RealityCenter.tsx](src/pages/RealityCenter.tsx) relèvent uniquement les meta-libelles secondaires et en-tetes encore sous le seuil sur les surfaces `/singularity` et `/reality-center`.
 - **Singularity** : les libelles `Energie normalisee`, `Niveau fatigue`, `Homeostasie`, `Historique` et `Signature` quittent les tokens `text-gray-500` pour un contraste conforme sans changer la structure du dashboard.
 - **Reality Center** : `Derniere mise a jour`, les KPI `modules`, les labels `Conversation`, `Memoire`, `Singularite`, `Systeme`, les en-tetes de table et les meta-indicateurs infra passent sur des tokens plus lisibles.
-- **Tests Vitest** : [src/__tests__/pages/SingularityMonitor.test.tsx](src/__tests__/pages/SingularityMonitor.test.tsx) et [src/__tests__/pages/RealityCenter.test.tsx](src/__tests__/pages/RealityCenter.test.tsx) verrouillent les tokens corriges et la presence tolerante des libelles repetes `modules`.
+- **Tests Vitest** : [src/**tests**/pages/SingularityMonitor.test.tsx](src/__tests__/pages/SingularityMonitor.test.tsx) et [src/**tests**/pages/RealityCenter.test.tsx](src/__tests__/pages/RealityCenter.test.tsx) verrouillent les tokens corriges et la presence tolerante des libelles repetes `modules`.
 - **Gate canonique** : [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) etend l inventaire WCAG officiel de `17` a `19` routes avec `/singularity` et `/reality-center`, puis conserve `blocking=0 baseline=30`.
 - **Rollback** : `git restore -- src/pages/SingularityMonitor.tsx src/pages/RealityCenter.tsx src/__tests__/pages/SingularityMonitor.test.tsx src/__tests__/pages/RealityCenter.test.tsx e2e/a11y/wcag-aa-core.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl reports/A11Y_REDUCTION_2026-05-15_SINGULARITY_REALITY_CENTER_GATE_EXPANSION.md proof_packs/A11Y_REDUCTION_2026-05-15_SINGULARITY_REALITY_CENTER_GATE_EXPANSION`
 
@@ -146,19 +146,17 @@
 - **Hooks** : nouveaux `src/hooks/queries/use*Query.ts` (5 fichiers) — chaque hook appelle `secureInvoke(<command>, {})` via `TAURI_COMMANDS.<NAME>` et utilise `queryKeys.<cluster>.<leaf>()` issus de [src/lib/queryKeys.ts](src/lib/queryKeys.ts).
 - **DevTools** : `@tanstack/react-query-devtools` monté DEV-only (lazy via `React.lazy`, `import.meta.env.DEV`) dans [src/App.tsx](src/App.tsx#L130), bouton position `bottom-left`. Tree-shaken en production.
 - **Tests Vitest** :
-  - [src/__tests__/lib/queryKeys.test.ts](src/__tests__/lib/queryKeys.test.ts) — 6 cas.
-  - [src/__tests__/hooks/queries/pilots.test.tsx](src/__tests__/hooks/queries/pilots.test.tsx) — 6 cas (un par hook + override `enabled:false`).
-  - [src/__tests__/components/runtime/QueryPilotsLiveStatus.test.tsx](src/__tests__/components/runtime/QueryPilotsLiveStatus.test.tsx) — 3 cas (5 tuiles + 5 IPC + convergence success).
+  - [src/**tests**/lib/queryKeys.test.ts](src/__tests__/lib/queryKeys.test.ts) — 6 cas.
+  - [src/**tests**/hooks/queries/pilots.test.tsx](src/__tests__/hooks/queries/pilots.test.tsx) — 6 cas (un par hook + override `enabled:false`).
+  - [src/**tests**/components/runtime/QueryPilotsLiveStatus.test.tsx](src/__tests__/components/runtime/QueryPilotsLiveStatus.test.tsx) — 3 cas (5 tuiles + 5 IPC + convergence success).
 - **Discipline** : strictement additif (`src/components/ui/*` custom intacts, dashboards existants non modifiés en logique métier — seul ajout d'un import + d'un mount).
 - **Rollback** : retirer le mount `<QueryPilotsLiveStatus />` dans MonitoringDashboard ; les 5 hooks et `queryKeys` restent isolés.
-
-
 
 - **Surface** : Configuration Hub → toolbar action `Maintenance avancée`.
 - **Bouton** : `data-testid="admin-clear-webview-cache"` — handler `handleClearWebviewCache` (confirm() + `tauriClient.clearWebviewCache()`) — toast succès/erreur.
 - **Surface Truth Badge** : `data-testid="surface-truth-badge"` — affiche désormais `transport` en live (`tauri | remote | degraded`) alimenté par `useTransportState` (Zustand volatile).
 - **Wiring frontend** : [src/lib/tauriCommands.ts](src/lib/tauriCommands.ts) `CLEAR_WEBVIEW_CACHE: 'clear_webview_cache'` + [src/lib/tauriClient.ts](src/lib/tauriClient.ts) `clearWebviewCache()` + [src/lib/security.ts](src/lib/security.ts) allowlist + [src/pages/ConfigurationHub.tsx](src/pages/ConfigurationHub.tsx) bouton.
-- **Tests** : [src/__tests__/pages/AdminClearWebviewCacheButton.test.tsx](src/__tests__/pages/AdminClearWebviewCacheButton.test.tsx) 3 wiring contract PASS.
+- **Tests** : [src/**tests**/pages/AdminClearWebviewCacheButton.test.tsx](src/__tests__/pages/AdminClearWebviewCacheButton.test.tsx) 3 wiring contract PASS.
 
 # [2026-04-16] Stale-pages hotfix v34.0.13 — SW NetworkFirst + Surface Truth canonique
 
@@ -170,9 +168,9 @@
 - Zustand persist : [src/core/state/SingularityState.ts](src/core/state/SingularityState.ts) — bump `name: 'titane-singularity-state-v19'` → `'titane-singularity-state-v34'`, ajout `version: 34` + `migrate(persistedState, fromVersion)` défensif droppant `ai/engines/enginesData/globalHealth` pour les snapshots pré-v34.
 - Wiring : [src/App.tsx](src/App.tsx) — `<UpdateAvailableToast />` + `<SurfaceTruthBadge />` montés à côté de `<GlobalRuntimePulse />` et `<BackendDownIndicator />`.
 - Tests Vitest PASS (9/9) :
-  - [src/__tests__/components/system/UpdateAvailableToast.test.tsx](src/__tests__/components/system/UpdateAvailableToast.test.tsx) — 4 tests.
-  - [src/__tests__/components/dev/SurfaceTruthBadge.test.tsx](src/__tests__/components/dev/SurfaceTruthBadge.test.tsx) — 3 tests.
-  - [src/__tests__/core/state/SingularityState.migrate.test.ts](src/__tests__/core/state/SingularityState.migrate.test.ts) — 2 tests.
+  - [src/**tests**/components/system/UpdateAvailableToast.test.tsx](src/__tests__/components/system/UpdateAvailableToast.test.tsx) — 4 tests.
+  - [src/**tests**/components/dev/SurfaceTruthBadge.test.tsx](src/__tests__/components/dev/SurfaceTruthBadge.test.tsx) — 3 tests.
+  - [src/**tests**/core/state/SingularityState.migrate.test.ts](src/__tests__/core/state/SingularityState.migrate.test.ts) — 2 tests.
 - Scripts d'audit déterministes :
   - [scripts/audit/orphan-pages.mjs](scripts/audit/orphan-pages.mjs) — parse `<Route>` + `<Navigate>` + `src/pages/**`, catégorise `MOUNTED_VISIBLE / MOUNTED_HIDDEN / ORPHAN_DEAD`, écrit `reports/ui-orphan-pages.{json,md}`. Premier run : 96 routes (29 element, 67 redirect = 69.8% legacy), 72 fichiers `src/pages/**`, breakdown 10/13/49.
   - [scripts/audit/sync-allowed-commands.mjs](scripts/audit/sync-allowed-commands.mjs) — diff `generate_handler!` Rust ↔ `ALLOWED_COMMANDS` Frontend ↔ Remote Gateway, écrit `reports/ipc-allowed-commands.{json,md}`. Premier run : drift confirmé.
@@ -188,7 +186,7 @@
   - `log-analysis-dashboard-{live,live-dot,live-label,refresh-now}` (scan async + state `lastUpdate` en parité).
   - `explainability-dashboard-*`, `orchestrator-dashboard-*`, `security-dashboard-*` (déjà via hook, label harmonisé `Live - maj HH:MM:SS - refresh Ns`).
 - Test E2E uniformité : [e2e/critical/agent-live-uniformity.spec.ts](e2e/critical/agent-live-uniformity.spec.ts) — 2 tests PASS, screenshot `proof_packs/v34.0.8-live-uniformity/agent-live-indicators.png`.
-- Test Vitest non-régression `React.memo` : [src/__tests__/perf/react-memo-non-regression.test.tsx](src/__tests__/perf/react-memo-non-regression.test.tsx) — 2 tests PASS (mock module + fake timers, prouve `renderCount=1` après 5 rerenders parent et `renderCount>1` après 65 s).
+- Test Vitest non-régression `React.memo` : [src/**tests**/perf/react-memo-non-regression.test.tsx](src/__tests__/perf/react-memo-non-regression.test.tsx) — 2 tests PASS (mock module + fake timers, prouve `renderCount=1` après 5 rerenders parent et `renderCount>1` après 65 s).
 - AutoHeal : entrée `AH-v117-2026-05-13-LIVE_SNAPSHOT_CONVERGENCE_MEMO_REGRESSION_v34_0_8`.
 
 # [2026-05-13] UI Vivante + E2E Expansion v34.0.8 — 100/100 PASS
@@ -201,7 +199,7 @@
 ## UI vivante (Phase L+M)
 
 - Hook canonique : [src/hooks/useAgentLiveSnapshot.ts](src/hooks/useAgentLiveSnapshot.ts) — refresh agent générique, plancher 1000 ms, SSR-safe.
-- Test hook : [src/__tests__/hooks/useAgentLiveSnapshot.test.tsx](src/__tests__/hooks/useAgentLiveSnapshot.test.tsx) — 6 tests Vitest PASS.
+- Test hook : [src/**tests**/hooks/useAgentLiveSnapshot.test.tsx](src/__tests__/hooks/useAgentLiveSnapshot.test.tsx) — 6 tests Vitest PASS.
 - Dashboards vivants équipés (testids stables) :
   - `explainability-dashboard-live`, `explainability-dashboard-live-dot`, `explainability-dashboard-live-label`, `explainability-dashboard-refresh-now`.
   - `orchestrator-dashboard-live`, `orchestrator-dashboard-live-dot`, `orchestrator-dashboard-live-label`, `orchestrator-dashboard-refresh-now`.
@@ -366,7 +364,7 @@
 - Vérité runtime: des dépendances runtime injectaient encore une feuille externe `fonts.googleapis.com`, bloquée par CSP et visible dans la capture browser de la surface transformation.
 - Point de contrôle canonique: [src/utils/googleFontStylesheetGuard.ts](src/utils/googleFontStylesheetGuard.ts) bloque et purge toute feuille Google Fonts injectée (`link[rel="stylesheet"]` et `style @import`) avant insertion DOM, puis surveille les mutations pour empêcher toute réinjection.
 - Bootstrap actif: [src/main.tsx](src/main.tsx) installe le garde avant le rendu React pour que la surface transformation reste sur des polices locales/system sans bruit CSP.
-- Preuve unitaire: [src/__tests__/utils/googleFontStylesheetGuard.test.ts](src/__tests__/utils/googleFontStylesheetGuard.test.ts) verrouille la purge des liens existants, l interdiction pre-insertion et la suppression des `@import` Google Fonts.
+- Preuve unitaire: [src/**tests**/utils/googleFontStylesheetGuard.test.ts](src/__tests__/utils/googleFontStylesheetGuard.test.ts) verrouille la purge des liens existants, l interdiction pre-insertion et la suppression des `@import` Google Fonts.
 - Preuve browser: `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture titane-transformation'` repasse sans l erreur CSP `Loading the stylesheet 'https://fonts.googleapis.com/...`.
 
 # [2026-05-14] Twins owner portrait — local asset only
@@ -375,7 +373,7 @@
 - Vérité runtime: la carte portrait du Numeric Twin référençait encore une image distante Wix, immédiatement bloquée par `img-src 'self' data: blob:` et visible comme bruit CSP dans la capture browser.
 - Point de vérité canonique: [src/services/api/numericTwin.ts](src/services/api/numericTwin.ts) publie désormais `OWNER_TWIN_RESONANCE.portraitUrl` sur l asset local `/kevin-owner-portrait.svg`, aligné avec `portraitFallbackUrl`.
 - Persistance alignée: `persistTwinChatContextSnapshot()` diffuse maintenant aussi le portrait local dans le snapshot `titane_twin_fusion_v1`, ce qui évite toute réinjection d URL externe par la surface chat/twins.
-- Preuve unitaire: [src/__tests__/services/api/numericTwin.test.ts](src/__tests__/services/api/numericTwin.test.ts) verrouille le contrat du portrait local et du snapshot persisté.
+- Preuve unitaire: [src/**tests**/services/api/numericTwin.test.ts](src/__tests__/services/api/numericTwin.test.ts) verrouille le contrat du portrait local et du snapshot persisté.
 - Preuve browser: `e2e/critical/ui-prod-capture-v34_0_6.spec.ts --grep 'capture twins'` repasse sans la violation CSP `Loading the image 'https://static.wixstatic.com/...`.
 - Preuve d’intégration associée: [src/**tests**/services/ai/chatEngineCanonicalIntegration.test.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts).
 
@@ -384,7 +382,7 @@
 - Surface canonique: `/experience`.
 - Vérité runtime: la seule dette Axe bloquante hors gate courant venait de `experience-runtime-source`, rendu par `.exp-source-label` avec `opacity: 0.6` sur fond `#0a0a0a`, soit un contraste 3.43:1 insuffisant.
 - Point de contrôle canonique: [src/pages/Experience.tsx](src/pages/Experience.tsx) remplace cette opacité faible par une couleur explicite `rgb(191, 199, 210)` sur le libellé runtime existant, sans changer la structure de la page.
-- Garde locale: [src/pages/__tests__/Experience.test.tsx](src/pages/__tests__/Experience.test.tsx) verrouille le texte runtime et la couleur attendue.
+- Garde locale: [src/pages/**tests**/Experience.test.tsx](src/pages/__tests__/Experience.test.tsx) verrouille le texte runtime et la couleur attendue.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 11 routes critiques avec ajout de `experience`, et publie `experience=0` puis `aggregate blocking=0 baseline=30`.
 
 # [2026-05-14] TotalDev contrast cluster + WCAG gate expansion
@@ -392,7 +390,7 @@
 - Surface canonique: `/total-dev`.
 - Vérité runtime: la route visible gardait un cluster local de 2 violations Axe, limité à quelques textes secondaires trop faibles (`unlock-hint`, métadonnées chat, footer) et à la région scrollable `total-dev-chat-messages` non focusable.
 - Point de contrôle canonique: [src/pages/TotalDevPage.tsx](src/pages/TotalDevPage.tsx) rend désormais l historique chat focusable et nommé via `data-testid="total-dev-chat-messages"`, `tabIndex=0` et `aria-label`, tandis que [src/pages/TotalDevPage.css](src/pages/TotalDevPage.css) relève uniquement les couleurs des tokens contrastés concernés.
-- Garde locale: [src/__tests__/pages/TotalDevPage.test.tsx](src/__tests__/pages/TotalDevPage.test.tsx) verrouille l accessibilité clavier du conteneur scrollable en mode LOCKED.
+- Garde locale: [src/**tests**/pages/TotalDevPage.test.tsx](src/__tests__/pages/TotalDevPage.test.tsx) verrouille l accessibilité clavier du conteneur scrollable en mode LOCKED.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 12 routes critiques avec ajout de `total-dev`, et publie `total-dev=0` puis `aggregate blocking=0 baseline=30`.
 
 # [2026-05-14] Quantum Center scroll focus + WCAG gate expansion
@@ -400,7 +398,7 @@
 - Surface canonique: `/quantum-center`.
 - Vérité runtime: le reliquat local était purement clavier, avec `.quantum-content` signalé comme région scrollable non focusable.
 - Point de contrôle canonique: [src/components/QuantumCenter/QuantumCenter.tsx](src/components/QuantumCenter/QuantumCenter.tsx) rend désormais `main.quantum-content` focusable et nommé via `tabIndex=0` et `aria-label="Contenu Quantum Center"`, sans modifier le contenu des onglets.
-- Garde locale: [src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx](src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx) verrouille la présence de cette région focusable.
+- Garde locale: [src/**tests**/components/QuantumCenter/QuantumCenter.test.tsx](src/__tests__/components/QuantumCenter/QuantumCenter.test.tsx) verrouille la présence de cette région focusable.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 13 routes critiques avec ajout de `quantum-center`, et publie `quantum-center=0` puis `aggregate blocking=0 baseline=30`.
 
 # [2026-05-14] MultiProject + Optimization contrast cluster hardening
@@ -408,14 +406,14 @@
 - Surfaces canoniques: `/multiproject` et `/optimization`.
 - Vérité runtime: ces deux routes visibles partageaient un reliquat contraste porté par des textes secondaires et méta-informations trop faibles, sans dette structurelle ou clavier supplémentaire après les tranches précédentes.
 - Points de contrôle canoniques: [src/pages/MultiProjectDashboard.tsx](src/pages/MultiProjectDashboard.tsx) relève le contraste de l état vide, de la liste d evidence et du sommaire d archivage; [src/pages/UltimateOptimizationDashboard.tsx](src/pages/UltimateOptimizationDashboard.tsx) relève les labels et méta-textes gris faibles dans les KPI, benchmarks, recommandations et barres de profil.
-- Gardes locales: [src/__tests__/pages/MultiProjectDashboard.test.tsx](src/__tests__/pages/MultiProjectDashboard.test.tsx) et [src/__tests__/pages/UltimateOptimizationDashboard.test.tsx](src/__tests__/pages/UltimateOptimizationDashboard.test.tsx) verrouillent les tokens relevés.
+- Gardes locales: [src/**tests**/pages/MultiProjectDashboard.test.tsx](src/__tests__/pages/MultiProjectDashboard.test.tsx) et [src/**tests**/pages/UltimateOptimizationDashboard.test.tsx](src/__tests__/pages/UltimateOptimizationDashboard.test.tsx) verrouillent les tokens relevés.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 15 routes critiques avec ajout de `multiproject` et `optimization`, et publie `multiproject=0`, `optimization=0` puis `aggregate blocking=0 baseline=30`.
 
 # [2026-05-15] WCAG canonical route anti-drift realignment
 
 - Surfaces concernées: alias historiques `/dashboard`, `/monitoring`, `/governance-center` et leurs cibles canoniques `/titane`, `/dev?tab=diagnostics`, `/admin?tab=governance`.
 - Vérité runtime: le gate WCAG audite désormais les URL canoniques réellement actives au runtime au lieu de passer implicitement par des redirects legacy.
-- Points de contrôle canoniques: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) remplace `dashboard`, `monitoring` et `governance-center` par `titane-home`, `dev-diagnostics` et `admin-governance` sans changer la taille de l inventaire; [src/__tests__/ui/app-router-canonical-surfaces.test.tsx](src/__tests__/ui/app-router-canonical-surfaces.test.tsx) verrouille la normalisation des trois alias vers leurs cibles canoniques.
+- Points de contrôle canoniques: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) remplace `dashboard`, `monitoring` et `governance-center` par `titane-home`, `dev-diagnostics` et `admin-governance` sans changer la taille de l inventaire; [src/**tests**/ui/app-router-canonical-surfaces.test.tsx](src/__tests__/ui/app-router-canonical-surfaces.test.tsx) verrouille la normalisation des trois alias vers leurs cibles canoniques.
 - Preuve canonique: la suite Playwright officielle publie `titane-home=0`, `dev-diagnostics=0`, `admin-governance=0` et conserve `aggregate blocking=0 baseline=30` avec 17 tests passés.
 
 # [2026-05-15] Fusion + Evolution contrast hardening
@@ -423,7 +421,7 @@
 - Surfaces canoniques: `/fusion` et `/evolution`.
 - Vérité runtime: ces deux routes visibles hors gate WCAG partageaient une dette contraste purement locale sur leurs méta-textes et badges secondaires, sans dette clavier supplémentaire.
 - Points de contrôle canoniques: [src/pages/PerfectFusionDashboard.tsx](src/pages/PerfectFusionDashboard.tsx) relève les textes secondaires `text-gray-500` et les badges d activité dans la grille des moteurs; [src/pages/EvolutionMonitor.tsx](src/pages/EvolutionMonitor.tsx) relève les méta-labels `text-gray-500` dans les KPI, le résumé d état, la timeline et le résumé de version.
-- Gardes locales: [src/__tests__/pages/PerfectFusionDashboard.test.tsx](src/__tests__/pages/PerfectFusionDashboard.test.tsx) et [src/__tests__/pages/EvolutionMonitor.test.tsx](src/__tests__/pages/EvolutionMonitor.test.tsx) verrouillent les tokens relevés.
+- Gardes locales: [src/**tests**/pages/PerfectFusionDashboard.test.tsx](src/__tests__/pages/PerfectFusionDashboard.test.tsx) et [src/**tests**/pages/EvolutionMonitor.test.tsx](src/__tests__/pages/EvolutionMonitor.test.tsx) verrouillent les tokens relevés.
 - Preuve canonique renforcée: [e2e/a11y/wcag-aa-core.spec.ts](e2e/a11y/wcag-aa-core.spec.ts) couvre désormais 17 routes critiques avec ajout de `fusion` et `evolution`, et publie `fusion=0`, `evolution=0` puis `aggregate blocking=0 baseline=30`.
 
 - Surface canonique de métrique de contexte: [src/components/chat/ContextUsage.tsx](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/components/chat/ContextUsage.tsx) s appuie sur [src/services/chat/tokenCounter.ts](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src/services/chat/tokenCounter.ts), qui résout maintenant `gemma2:2b` vers une limite gouvernée de `8192` tokens au lieu du fallback cloud `gpt-4-turbo`.
@@ -1299,7 +1297,7 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 - **Surface modifiee** : [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) produit maintenant un resume shadow `twinChatShadowSummary` a partir du message utilisateur sur la voie canonique `sendMessage -> processMessage`, sans write TWIN ni mutation du snapshot `titane_twin_fusion_v1`.
 - **Service additif** : [src/services/twin_chat/extractTwinChatObservationCandidates.ts](src/services/twin_chat/extractTwinChatObservationCandidates.ts) et [src/services/twin_chat/types.ts](src/services/twin_chat/types.ts) introduisent un extracteur pur, borne aux familles `value`, `cognitive`, `style`, `emotional`, avec `data minimization` stricte (aucun raw message persiste).
 - **Observabilite runtime** : [src/services/conversationEngine.ts](src/services/conversationEngine.ts) projette uniquement des marqueurs techniques `twin-chat-shadow:*` et `twin_chat_*` dans les tags cognitifs et `links_to_contexts`, sans exposer de contenu utilisateur brut et sans ajouter `twins:present` tant qu il n y a pas de write valide.
-- **Tests cibles** : [src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts](src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts), [src/services/twin_chat/__tests__/types.test.ts](src/services/twin_chat/__tests__/types.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) verrouillent respectivement l extraction, le contrat shadow read-only et la non-pollution du contexte TWIN runtime.
+- **Tests cibles** : [src/services/twin_chat/**tests**/extractTwinChatObservationCandidates.test.ts](src/services/twin_chat/__tests__/extractTwinChatObservationCandidates.test.ts), [src/services/twin_chat/**tests**/types.test.ts](src/services/twin_chat/__tests__/types.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) verrouillent respectivement l extraction, le contrat shadow read-only et la non-pollution du contexte TWIN runtime.
 - **Rollback** : `git restore -- src/services/twin_chat src/hooks/useConversationEngine.ts src/services/conversationEngine.ts src/services/conversationEngine.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md scripts/autoheal/autoheal_rules.jsonl`
 
 ### Tests Vitest — Services IA
@@ -1649,38 +1647,38 @@ Chaque dashboard doit disposer de selectors stables (`data-testid`) pour E2E, lo
 
 ### Surfaces activées LIVE (étaient STUB/PARTIAL/SIMULATED)
 
-| Surface | Route | Avant | Après | IPC live |
-|---|---|---|---|---|
-| Sentinel | `/sentinel` | STUB (dead IPC) | LIVE | `engine_get_sentinel_state` |
-| Watchdog | `/watchdog` | STUB (dead IPC) | LIVE | `engine_get_singularity_state` |
-| SelfHeal | `/selfheal` | STUB (dead IPC) | LIVE | `engine_get_singularity_state` |
-| AdaptiveEngine | `/adaptive` | STUB (dead IPC) | LIVE | `engine_get_singularity_state` |
-| OrchestrationIntelligenceCenter | `/orchestration-intelligence` | SIMULATED banner | LIVE | `engine_get_singularity_state` |
-| RealityCenter | `/reality-center` | PARTIAL (hardcoded modules) | LIVE | `cp_get_modules_status` |
-| QuantumCenter | `/quantum-center` | SIMULATED (Math.random) | LIVE | `engine_get_singularity_state` |
-| UltimateOptimizationDashboard | `/optimization` | PARTIAL (static benchmarks) | LIVE | `engine_get_singularity_state` + `usePerformanceMonitor` |
-| Helios | `/helios` | no badge | LIVE | `useEngineSubscription('helios')` data != null |
-| Harmonia | `/harmonia` | no badge | LIVE | `useEngineSubscription('harmonia')` flows != null |
-| Nexus | `/nexus` | no badge | LIVE | `useEngineSubscription('nexus')` graph != null |
-| EvoPage | `/evo` | no badge | LIVE | `tauriClient.persistentMemoryGetStats()` != null |
-| TotalDevPage | `/total-dev` | no badge | LIVE | `lockState !== 'CHECKING'` |
-| ConfigurationHub | `/configuration` | no badge | LIVE | `config` (ConfigSnapshot) != null |
+| Surface                         | Route                         | Avant                       | Après | IPC live                                                 |
+| ------------------------------- | ----------------------------- | --------------------------- | ----- | -------------------------------------------------------- |
+| Sentinel                        | `/sentinel`                   | STUB (dead IPC)             | LIVE  | `engine_get_sentinel_state`                              |
+| Watchdog                        | `/watchdog`                   | STUB (dead IPC)             | LIVE  | `engine_get_singularity_state`                           |
+| SelfHeal                        | `/selfheal`                   | STUB (dead IPC)             | LIVE  | `engine_get_singularity_state`                           |
+| AdaptiveEngine                  | `/adaptive`                   | STUB (dead IPC)             | LIVE  | `engine_get_singularity_state`                           |
+| OrchestrationIntelligenceCenter | `/orchestration-intelligence` | SIMULATED banner            | LIVE  | `engine_get_singularity_state`                           |
+| RealityCenter                   | `/reality-center`             | PARTIAL (hardcoded modules) | LIVE  | `cp_get_modules_status`                                  |
+| QuantumCenter                   | `/quantum-center`             | SIMULATED (Math.random)     | LIVE  | `engine_get_singularity_state`                           |
+| UltimateOptimizationDashboard   | `/optimization`               | PARTIAL (static benchmarks) | LIVE  | `engine_get_singularity_state` + `usePerformanceMonitor` |
+| Helios                          | `/helios`                     | no badge                    | LIVE  | `useEngineSubscription('helios')` data != null           |
+| Harmonia                        | `/harmonia`                   | no badge                    | LIVE  | `useEngineSubscription('harmonia')` flows != null        |
+| Nexus                           | `/nexus`                      | no badge                    | LIVE  | `useEngineSubscription('nexus')` graph != null           |
+| EvoPage                         | `/evo`                        | no badge                    | LIVE  | `tauriClient.persistentMemoryGetStats()` != null         |
+| TotalDevPage                    | `/total-dev`                  | no badge                    | LIVE  | `lockState !== 'CHECKING'`                               |
+| ConfigurationHub                | `/configuration`              | no badge                    | LIVE  | `config` (ConfigSnapshot) != null                        |
 
 ### SurfaceTruthBadge — toutes les surfaces affichent maintenant `LIVE` quand l'IPC répond, `DEGRADED/PARTIAL` en fallback. 18 pages couvertes (AH-v97, 2026-05-28). data-testid ajoutés: `page-helios`, `page-harmonia`, `page-nexus`.
 
 ### Phase 6+ Badge Rollout (AH-v98, 2026-05-13)
 
-| Surface | Route/Location | Badge variant | Signal |
-|---|---|---|---|
-| CognitivePage | `/cognitive` | PARTIAL | static |
-| AgendaPage | `/agenda` | LIVE/PARTIAL | `!loading && initialized` |
-| Settings | `/settings` | PARTIAL | static |
-| HTFPage | `/htf` | LIVE/PARTIAL | `submissions.length > 0` |
-| CloudCenter | `/cloud` | LIVE/PARTIAL | `status != null` |
-| MultiProjectDashboard | `/multiproject` | LIVE/PARTIAL | `rollup != null` |
-| SecureSettings | `/secure-settings` | LIVE/PARTIAL | `tauriAvailable && status != null` |
-| TemporalFlowCenter | `modules/TemporalFlowCenter` | PARTIAL | static (mock data) |
-| IdentityMemoryEvolutionCenter | `modules/IdentityMemoryEvolutionCenter` | PARTIAL | static |
+| Surface                       | Route/Location                          | Badge variant | Signal                             |
+| ----------------------------- | --------------------------------------- | ------------- | ---------------------------------- |
+| CognitivePage                 | `/cognitive`                            | PARTIAL       | static                             |
+| AgendaPage                    | `/agenda`                               | LIVE/PARTIAL  | `!loading && initialized`          |
+| Settings                      | `/settings`                             | PARTIAL       | static                             |
+| HTFPage                       | `/htf`                                  | LIVE/PARTIAL  | `submissions.length > 0`           |
+| CloudCenter                   | `/cloud`                                | LIVE/PARTIAL  | `status != null`                   |
+| MultiProjectDashboard         | `/multiproject`                         | LIVE/PARTIAL  | `rollup != null`                   |
+| SecureSettings                | `/secure-settings`                      | LIVE/PARTIAL  | `tauriAvailable && status != null` |
+| TemporalFlowCenter            | `modules/TemporalFlowCenter`            | PARTIAL       | static (mock data)                 |
+| IdentityMemoryEvolutionCenter | `modules/IdentityMemoryEvolutionCenter` | PARTIAL       | static                             |
 
 data-testid ajoutés: `page-cognitive`, `page-agenda`, `page-settings` (existait), `htf-module-page`, `page-cloud-center`, `multiproject-dashboard`, `page-secure-settings`, `module-temporal-flow-center`, `module-identity-memory-evolution-center`.
 TotalDevPage regression fixed (import sans render dans Phase 5).
@@ -1692,15 +1690,15 @@ Objectif: éliminer le dernier badge `variant="LIVE"` hardcodé et dynamiser les
 
 ### Migrations STATIC → DYNAMIC
 
-| Surface | Avant | Après (probe runtime) |
-|---|---|---|
-| `src/pages/SingularityMonitor.tsx` | `variant="LIVE"` hardcodé (masquait backend down) | `isInitialized + metaEnergy` → LIVE/PARTIAL/DEGRADED |
-| `src/pages/CognitivePage.tsx` | PARTIAL fixe | probe `engine_get_cognition_state` (30s) |
-| `src/pages/Settings.tsx` | PARTIAL fixe | probe `quick_health_check` (60s) |
-| `src/features/admin/AdminPage.tsx` | PARTIAL fixe | probe `quick_health_check` (60s) |
-| `src/modules/TemporalFlowCenter.tsx` | PARTIAL fixe | probe `temporal_get_today_state` (30s) |
-| `src/modules/IdentityMemoryEvolutionCenter.tsx` | PARTIAL fixe | probe `memory_get_state` (30s) |
-| `src/pages/ProgressionPage.tsx` | aucun badge | badge ajouté (`useExperience`-dérivé) |
+| Surface                                         | Avant                                             | Après (probe runtime)                                |
+| ----------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------- |
+| `src/pages/SingularityMonitor.tsx`              | `variant="LIVE"` hardcodé (masquait backend down) | `isInitialized + metaEnergy` → LIVE/PARTIAL/DEGRADED |
+| `src/pages/CognitivePage.tsx`                   | PARTIAL fixe                                      | probe `engine_get_cognition_state` (30s)             |
+| `src/pages/Settings.tsx`                        | PARTIAL fixe                                      | probe `quick_health_check` (60s)                     |
+| `src/features/admin/AdminPage.tsx`              | PARTIAL fixe                                      | probe `quick_health_check` (60s)                     |
+| `src/modules/TemporalFlowCenter.tsx`            | PARTIAL fixe                                      | probe `temporal_get_today_state` (30s)               |
+| `src/modules/IdentityMemoryEvolutionCenter.tsx` | PARTIAL fixe                                      | probe `memory_get_state` (30s)                       |
+| `src/pages/ProgressionPage.tsx`                 | aucun badge                                       | badge ajouté (`useExperience`-dérivé)                |
 
 ### Tests Rule-16 ajoutés
 
@@ -1719,17 +1717,19 @@ Objectif: éliminer le dernier badge `variant="LIVE"` hardcodé et dynamiser les
 
 Nouveau composant global monté dans le shell d'application :
 
-| Composant | Fichier | data-testid | Position | Probe IPC |
-|---|---|---|---|---|
+| Composant          | Fichier                                        | data-testid            | Position                   | Probe IPC                 |
+| ------------------ | ---------------------------------------------- | ---------------------- | -------------------------- | ------------------------- |
 | GlobalRuntimePulse | `src/components/system/GlobalRuntimePulse.tsx` | `global-runtime-pulse` | `fixed top-2 right-3 z-50` | `quick_health_check` (5s) |
 
 **Comportement visuel** :
+
 - LIVE (vert calme) si `quick_health_check` répond OK et latence ≤ 1000ms
 - PARTIAL (ambre pulsé) si latence > 1000ms ou Tauri runtime absent
 - DEGRADED (rouge pulsé) si IPC échoue
 - PROBING (slate pulsé) état initial
 
 **SurfaceTruthBadge v34.0.3** :
+
 - Variants non-calmes (PARTIAL/DEGRADED/ERROR/FALLBACK/SIMULATED/NOT_WIRED/UNKNOWN) ont désormais `animate-pulse`
 - Variants calmes (LIVE/DISPLAY_ONLY/LEGACY) stables sans pulse
 - Taille bumpée : `text-sm px-3 py-1 shadow-sm` (était `text-xs px-2 py-0.5`)
@@ -1754,8 +1754,8 @@ Ajout d'un **couloir additif shadcn/ui** (sans toucher au design Titanium Dark d
 
 ### Command Palette globale
 
-| Composant | Fichier | data-testid | Trigger |
-|---|---|---|---|
+| Composant      | Fichier                                     | data-testid                                                                                                                                   | Trigger     |
+| -------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | CommandPalette | `src/components/palette/CommandPalette.tsx` | `command-palette-root`, `command-palette-input`, `command-group-routes`, `command-group-agents`, `command-group-actions`, `command-item-<id>` | ⌘K / Ctrl+K |
 
 - Trois groupes : **Routes** (12), **Agents avancés** (6, mapping AGENTS.md), **Actions IPC** (allowlist `ALLOWED_COMMANDS`).
@@ -1773,12 +1773,12 @@ AutoHeal : `SHADCN-CMDK-PALETTE-v34_3_0-2026-05-15`.
 
 ## 2026-05-15 — v34.4.0 — Additive TanStack Query chat hooks (providersHealth / conversation / send / deleteConversation)
 
-| Hook | IPC command | Type | Cache key | staleTime / invalidation |
-|---|---|---|---|---|
-| `useChatProvidersHealthQuery` | `chat_check_providers` | useQuery | `['chat','providers-health']` | 15s |
-| `useChatConversationQuery(conversationId)` | `chat_get_conversation` | useQuery (disabled when id empty) | `['chat','conversation',<id>]` | 5s |
-| `useChatSendMutation` | `chat_generate` | useMutation | invalidates `['chat','conversation',<id>]` | on success |
-| `useChatDeleteConversationMutation` | `chat_delete_conversation` | useMutation | invalidates `['chat','conversation',<id>]` + `['chat']` root | on success |
+| Hook                                       | IPC command                | Type                              | Cache key                                                    | staleTime / invalidation |
+| ------------------------------------------ | -------------------------- | --------------------------------- | ------------------------------------------------------------ | ------------------------ |
+| `useChatProvidersHealthQuery`              | `chat_check_providers`     | useQuery                          | `['chat','providers-health']`                                | 15s                      |
+| `useChatConversationQuery(conversationId)` | `chat_get_conversation`    | useQuery (disabled when id empty) | `['chat','conversation',<id>]`                               | 5s                       |
+| `useChatSendMutation`                      | `chat_generate`            | useMutation                       | invalidates `['chat','conversation',<id>]`                   | on success               |
+| `useChatDeleteConversationMutation`        | `chat_delete_conversation` | useMutation                       | invalidates `['chat','conversation',<id>]` + `['chat']` root | on success               |
 
 Tests: `src/__tests__/hooks/queries/chat.test.tsx` (5/5 PASS — IPC contract + invalidation spy on `QueryClient.prototype.invalidateQueries`).
 Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 minimal patch. Migration of consumers will land in later paliers under the same direct-to-main discipline (Rule 18).
@@ -1913,6 +1913,7 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Region scrollable DEV focusable** : `src/pages/DevPage.tsx` rend `main.dev-main` explicitement focusable au clavier via `tabIndex={0}` et un `aria-label`, ce qui ferme `scrollable-region-focusable` sur `/dev?tab=overview` sans changer la navigation existante.
 - **Sous-libelles TIME rehausses** : `src/pages/TimePage.tsx` releve le contraste des descriptions d onglets et des aides `time-current-segment` / `Fuseau & charge`, ce qui supprime les 9 noeuds `color-contrast` restants de `/time`.
 - **Preuves cibles** : `src/__tests__/pages/DevPage.test.tsx` et `src/__tests__/pages/TimePage.test.tsx` passent avec les nouvelles assertions locales; le diagnostic Axe cible passe a `admin-system=0`, `dev-overview=0`, `time=0`; la spec canonique `e2e/a11y/wcag-aa-core.spec.ts` ramene l aggregate blocking de `12` a `3`.
+
 # [2026-05-15] Governance Anthropic-only truth: la surface canonique `/admin?tab=governance` expose maintenant Anthropic comme seule carte API premium externe primaire, avec statuts `key_stored`, `runtime_loaded`, `chat_path_connected`, `cloud_use_mode`, `budget_status` et `last_real_test_status` rendus sans secret. Gemini, OpenAI et Copilot restent accessibles uniquement dans une section repliée de providers dormants, et la sauvegarde de clé Anthropic n'exécute ni test de connexion ni appel cloud automatique.
 
 ## 2026-05-15 — Twin chat D3 shadow policy on canonical conversation path (phase B1)
@@ -1920,7 +1921,7 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Surface modifiee** : [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) remplace le simple resume de candidats twin_chat par le resultat de [src/services/twin_chat/orchestrator.ts](src/services/twin_chat/orchestrator.ts), qui applique une policy D3 shadow-only avant projection runtime.
 - **Service additif** : [src/services/twin_chat/createTwinConsentShadowEntry.ts](src/services/twin_chat/createTwinConsentShadowEntry.ts) transforme les candidats derives en entrees compatibles avec [src/services/twin_consent/TwinConsentLedgerContract.ts](src/services/twin_consent/TwinConsentLedgerContract.ts), puis [src/services/twin_chat/policy.ts](src/services/twin_chat/policy.ts) publie des verdicts `allowed`, `review_required`, `blocked`, `downgraded` sans write TWIN.
 - **Observabilite runtime** : [src/services/conversationEngine.ts](src/services/conversationEngine.ts) ajoute uniquement des marqueurs techniques `twin-chat-verdict:*` et `twin_chat_verdict:*` dans les tags cognitifs et `links_to_contexts`, sans exposer de contenu brut et sans activer `submitObservation` ni `refreshChatContextSnapshot`.
-- **Tests cibles** : [src/services/twin_chat/__tests__/policy.test.ts](src/services/twin_chat/__tests__/policy.test.ts), [src/services/twin_chat/__tests__/orchestrator.test.ts](src/services/twin_chat/__tests__/orchestrator.test.ts), [src/__tests__/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) verrouillent le mapping D3, les verdicts et leur transport sur la voie canonique.
+- **Tests cibles** : [src/services/twin_chat/**tests**/policy.test.ts](src/services/twin_chat/__tests__/policy.test.ts), [src/services/twin_chat/**tests**/orchestrator.test.ts](src/services/twin_chat/__tests__/orchestrator.test.ts), [src/**tests**/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts) et [src/services/conversationEngine.test.ts](src/services/conversationEngine.test.ts) verrouillent le mapping D3, les verdicts et leur transport sur la voie canonique.
 - **Rollback** : `git restore -- src/services/twin_chat src/hooks/useConversationEngine.ts src/services/conversationEngine.ts src/services/conversationEngine.test.ts src/__tests__/hooks/useConversationEngine.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md scripts/autoheal/autoheal_rules.jsonl`
 
 ## 2026-05-15 — Twin chat review queue + limited Twin write on `/twins` (phase C1)
@@ -1928,7 +1929,7 @@ Scope: additive only; existing `useChat*` hooks remain untouched per Rule 1 mini
 - **Surface canonique** : [src/pages/TwinsPage.tsx](src/pages/TwinsPage.tsx) expose maintenant le panneau `twin-chat-review-queue` avec `twin-chat-review-count`, `twin-chat-review-item-*`, `twin-chat-review-approve-*`, `twin-chat-review-reject-*` pour la validation humaine explicite des observations shadow derivees du chat.
 - **Runtime source** : [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts) pousse les verdicts `review_required` et `downgraded` dans [src/services/twin_chat/reviewQueue.ts](src/services/twin_chat/reviewQueue.ts), qui conserve une file locale gouvernee sans contenu brut et sans write automatique.
 - **Write path limite** : la validation explicite depuis `/twins` appelle seulement les methodes haut niveau existantes de [src/services/api/numericTwin.ts](src/services/api/numericTwin.ts), puis `refreshChatContextSnapshot()`. Aucun write n est lance depuis la voie canonique du chat elle-meme.
-- **Preuves cibles** : [src/services/twin_chat/__tests__/reviewQueue.test.ts](src/services/twin_chat/__tests__/reviewQueue.test.ts), [src/__tests__/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts), [src/__tests__/pages/TwinsPage.test.tsx](src/__tests__/pages/TwinsPage.test.tsx), [e2e/critical/twin-chat-review.spec.ts](e2e/critical/twin-chat-review.spec.ts).
+- **Preuves cibles** : [src/services/twin_chat/**tests**/reviewQueue.test.ts](src/services/twin_chat/__tests__/reviewQueue.test.ts), [src/**tests**/hooks/useConversationEngine.test.ts](src/__tests__/hooks/useConversationEngine.test.ts), [src/**tests**/pages/TwinsPage.test.tsx](src/__tests__/pages/TwinsPage.test.tsx), [e2e/critical/twin-chat-review.spec.ts](e2e/critical/twin-chat-review.spec.ts).
 - **Rollback** : `git restore -- src/services/twin_chat src/hooks/useConversationEngine.ts src/pages/TwinsPage.tsx src/__tests__/hooks/useConversationEngine.test.ts src/__tests__/pages/TwinsPage.test.tsx e2e/critical/twin-chat-review.spec.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl`
 
 ## 2026-05-18 — Titane conversation fullscreen sidebar truth

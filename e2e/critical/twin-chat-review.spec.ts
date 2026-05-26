@@ -49,7 +49,9 @@ test('TwinsPage expose la review chat→Twin et permet la validation explicite',
   await expect(page.getByTestId('page-twins')).toBeVisible({ timeout: 30000 });
   await expect(page.getByTestId('twin-chat-review-queue')).toBeVisible();
   await expect(page.getByTestId('twin-chat-review-count')).toContainText('pending:1');
-  await expect(page.getByTestId('twin-chat-review-item-0')).toContainText('review_required');
+  await expect(page.getByTestId('twin-chat-review-item-0')).toContainText(
+    'review_required'
+  );
   await expect(page.getByTestId('twin-chat-review-item-content-0')).toContainText(
     'clarte'
   );

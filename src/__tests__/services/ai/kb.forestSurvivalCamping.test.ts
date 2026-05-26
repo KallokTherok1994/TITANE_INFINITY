@@ -19,8 +19,9 @@ describe('KB forest survival and camping', () => {
   });
 
   it('keeps water, fire, wildlife and hypothermia as primary risk domains', () => {
-    const pillars = survivalRaw.survie_camping_foret_autosuffisance_gouvernee
-      .piliers_de_survie_et_camping;
+    const pillars =
+      survivalRaw.survie_camping_foret_autosuffisance_gouvernee
+        .piliers_de_survie_et_camping;
 
     expect(pillars.eau.niveau_risque).toBe('high_survival_or_illegal_occupation_risk');
     expect(pillars.feu_de_camp.regles_pratiques).toContain(
@@ -35,8 +36,9 @@ describe('KB forest survival and camping', () => {
   });
 
   it('treats living in the forest as a high-risk legal and logistical issue, not a fantasy', () => {
-    const autonomy = survivalRaw.survie_camping_foret_autosuffisance_gouvernee
-      .autosuffisance_et_vivre_en_foret;
+    const autonomy =
+      survivalRaw.survie_camping_foret_autosuffisance_gouvernee
+        .autosuffisance_et_vivre_en_foret;
 
     expect(autonomy.niveau_risque).toBe('high_survival_or_illegal_occupation_risk');
     expect(autonomy.principes).toContain(

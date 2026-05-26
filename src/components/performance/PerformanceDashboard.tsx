@@ -409,7 +409,9 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Activity className="w-6 h-6 text-blue-400" />
-          <h2 className="text-xl font-semibold text-titanium-text-primary">Performance Monitor</h2>
+          <h2 className="text-xl font-semibold text-titanium-text-primary">
+            Performance Monitor
+          </h2>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -509,7 +511,9 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
         <div className="bg-titanium-bg-elevated/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-5 h-5 text-orange-400" />
-            <h3 className="font-medium text-titanium-text-primary">Problèmes ({data.issues.length})</h3>
+            <h3 className="font-medium text-titanium-text-primary">
+              Problèmes ({data.issues.length})
+            </h3>
           </div>
           <IssuesList issues={data.issues} onIssueClick={onIssueClick} />
         </div>

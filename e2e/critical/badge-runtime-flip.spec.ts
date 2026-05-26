@@ -44,7 +44,9 @@ test.describe('SurfaceTruthBadge — runtime flip (Phase 7.E)', () => {
   }
 
   for (const { route, testId, expectedUrl } of SURFACES) {
-    test(`badge on ${route} reflects runtime truth (not hardcoded LIVE)`, async ({ page }) => {
+    test(`badge on ${route} reflects runtime truth (not hardcoded LIVE)`, async ({
+      page,
+    }) => {
       await page.goto(route);
       await expect(page).toHaveURL(expectedUrl);
 
@@ -55,7 +57,11 @@ test.describe('SurfaceTruthBadge — runtime flip (Phase 7.E)', () => {
       // Au moins une variante non-hardcodée doit être visible
       let visibleVariant: string | null = null;
       for (const variant of NON_HARDCODED_VARIANTS) {
-        const found = await page.getByTestId(variant).first().isVisible().catch(() => false);
+        const found = await page
+          .getByTestId(variant)
+          .first()
+          .isVisible()
+          .catch(() => false);
         if (found) {
           visibleVariant = variant;
           break;

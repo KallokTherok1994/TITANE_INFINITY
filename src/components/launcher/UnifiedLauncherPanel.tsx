@@ -101,7 +101,10 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
         </span>
         <div>
           <h2 className="font-bold text-lg leading-tight">TITANE∞ Launcher</h2>
-          <p className="text-xs text-titanium-text-primary/50" data-testid="unified-launcher-platform">
+          <p
+            className="text-xs text-titanium-text-primary/50"
+            data-testid="unified-launcher-platform"
+          >
             {platform !== 'unknown' ? platformLabel[platform] : 'Détection…'}
           </p>
         </div>
@@ -143,7 +146,9 @@ export const UnifiedLauncherPanel: React.FC<UnifiedLauncherPanelProps> = ({
             <OAuthProfileCard />
           ) : (
             <div>
-              <p className="text-xs text-titanium-text-primary/50 mb-2">Connexion optionnelle</p>
+              <p className="text-xs text-titanium-text-primary/50 mb-2">
+                Connexion optionnelle
+              </p>
               <FacebookLoginButton label="Facebook (optionnel)" />
             </div>
           )}

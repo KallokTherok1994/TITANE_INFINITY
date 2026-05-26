@@ -44,7 +44,7 @@ test.describe('v34.0.8 theme switching dark/light (Phase O)', () => {
 
         // Invariant: documentElement carries the requested theme
         const activeTheme = await page.evaluate(() =>
-          document.documentElement.getAttribute('data-theme'),
+          document.documentElement.getAttribute('data-theme')
         );
         expect(activeTheme).toBe(theme);
 
@@ -74,18 +74,18 @@ test.describe('v34.0.8 theme switching dark/light (Phase O)', () => {
               timestamp: new Date().toISOString(),
             },
             null,
-            2,
+            2
           ),
-          'utf-8',
+          'utf-8'
         );
 
         console.log(
-          `[theme:${route.name}:${theme}] critical=${byImpact.critical} serious=${byImpact.serious}`,
+          `[theme:${route.name}:${theme}] critical=${byImpact.critical} serious=${byImpact.serious}`
         );
 
         // Soft: body is rendered (not blank), no fatal error
         const hasBody = await page.evaluate(
-          () => (document.body?.innerText?.length ?? 0) > 0,
+          () => (document.body?.innerText?.length ?? 0) > 0
         );
         expect(hasBody).toBe(true);
       });

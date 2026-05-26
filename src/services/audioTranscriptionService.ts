@@ -213,7 +213,11 @@ export const audioTranscriptionService = {
     try {
       // Créer un File depuis le Blob — utiliser le MIME type réel du blob (webm, mp4, ogg…)
       const blobType = audioBlob.type || 'audio/webm';
-      const ext = blobType.includes('mp4') ? 'mp4' : blobType.includes('ogg') ? 'ogg' : 'webm';
+      const ext = blobType.includes('mp4')
+        ? 'mp4'
+        : blobType.includes('ogg')
+          ? 'ogg'
+          : 'webm';
       const file = new File([audioBlob], `recorded-audio.${ext}`, {
         type: blobType,
       });

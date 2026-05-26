@@ -70,7 +70,9 @@ export function SentinelAlerts() {
       {/* Protection Score */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-titanium-text-tertiary">Niveau de Protection</span>
+          <span className="text-sm text-titanium-text-tertiary">
+            Niveau de Protection
+          </span>
           <span className="text-lg font-semibold">{protectionPct}%</span>
         </div>
         <div className="w-full bg-titanium-bg-interactive rounded-full h-3">

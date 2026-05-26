@@ -1,4 +1,4 @@
-## WINDOWS_PLATFORM_STATUS (updated 2026-05-22)
+## WINDOWS_PLATFORM_STATUS (updated 2026-05-25)
 
 | Surface | Version | Statut | Preuve |
 |---|---|---|---|
@@ -6,10 +6,26 @@
 | Linux v35.1.9 | 35.1.9 | PROVEN | AppImage/DEB/RPM proof in this inventory |
 | Windows MSI installer | 34.0.12 | HISTORICALLY_PROVEN | `RELEASE_ARTIFACTS_CHECKSUMS_34.0.12.txt` |
 | Windows MSI v35.x | 35.1.9 | BUILD_PROVEN_INSTALL_BLOCKED | `proof_packs/WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_2026-05-21/` — MSI + SHA256 PASS; install blocked admin |
+| Windows MSI v35.1.9 local rebuild | 35.1.9 | BUILD_PROVEN_INSTALL_BLOCKED | `proof_packs/WINDOWS_11_LOCAL_BUILD_LAUNCH_DEPLOY_2026-05-25/` — MSI SHA256 `260eb82d97e822fde7cd45b1254f34bd1e8378c0a6b2a2315c0cd97179a67572`; release exe launch PASS; install blocked admin |
 | Windows operational proof surface | 35.1.9 | PATCHED | `WINDOWS_11_OPERATIONAL_PROOF_SURFACE_PATCHED` |
 | CI Windows `windows-latest` | — | CONFIGURED | `.github/workflows/windows-msi-on-demand.yml` (on-demand; no local install claim) |
 
 > **Rule 14.4** : Preuve MSI v35.x requise avant de passer à `WINDOWS_11_MSI_RELEASE_PROVEN`. Statut actuel : `WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_BLOCKED`. Le MSI Windows v35.x est construit et checksummé, mais le smoke local est bloqué par droits admin Windows Installer.
+
+---
+
+## 2026-05-25 — WINDOWS_11_LOCAL_BUILD_LAUNCH_DEPLOY_v35.1.9_PARTIAL
+
+- **Scope** : Windows 11 local build/launch/deploy proof for v35.1.9.
+- **Environment repair** : user PATH exposes Corepack pnpm shim (`10.30.2`) and Git Bash for Bash validators.
+- **Static gates** : `check`, `lint`, `format:check`, full Vitest sharded 678/678, Rust tests, IPC contract, Tauri-only, online-first, network guard, AutoHeal all PASS.
+- **DEV runtime** : `TAURI_BOOT_TIMEOUT_SECONDS=900 pnpm run dev:tauri -- --smoke 45` PASS; `boot_seen=true`, `warn_count=0`, `error_count=0`, `timeout_count=0`.
+- **MSI build** : `pnpm run build:windows:msi` PASS; `titane-infinity_35.1.9_x64_en-US.msi` size `24002560`; SHA256 `260eb82d97e822fde7cd45b1254f34bd1e8378c0a6b2a2315c0cd97179a67572`.
+- **Release exe launch** : `src-tauri/target/release/titane-infinity.exe` ProductVersion `35.1.9`; process alive after 20s.
+- **Install smoke** : `BLOCKED_ADMIN_REQUIRED`; shell is not Administrator, no MSI install/uninstall executed.
+- **PostBuild readiness** : `PARTIAL` because MSI build/artifact passed but install smoke is admin-blocked.
+- **Proof pack** : `proof_packs/WINDOWS_11_LOCAL_BUILD_LAUNCH_DEPLOY_2026-05-25/`.
+- **Rollback** : no install completed; if installed later with admin rights, rollback via Windows Apps or `msiexec /x src-tauri/target/release/bundle/msi/titane-infinity_35.1.9_x64_en-US.msi`.
 
 ---
 

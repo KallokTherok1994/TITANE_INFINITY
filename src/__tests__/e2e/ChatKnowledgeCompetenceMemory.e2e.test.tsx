@@ -21,7 +21,6 @@ vi.mock('@/services/conversationEngine', async () => {
   };
 });
 
-
 const makeQC = () => new QueryClient({ defaultOptions: { queries: { retry: false } } });
 describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
   beforeEach(() => {
@@ -64,7 +63,9 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(sendButton);
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(contents.some(node => (node.textContent || '').trim().length > 0)).toBe(true);
+      expect(contents.some(node => (node.textContent || '').trim().length > 0)).toBe(
+        true
+      );
     });
   });
 
@@ -82,7 +83,9 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(sendButton);
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(contents.some(node => (node.textContent || '').trim().length > 0)).toBe(true);
+      expect(contents.some(node => (node.textContent || '').trim().length > 0)).toBe(
+        true
+      );
     });
   });
 
@@ -120,7 +123,9 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(screen.getByTestId('chat-send'));
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(contents.some(node => (node.textContent || '').trim().length > 0)).toBe(true);
+      expect(contents.some(node => (node.textContent || '').trim().length > 0)).toBe(
+        true
+      );
     });
   });
 
@@ -137,7 +142,9 @@ describe('E2E: Chat Compétences, Connaissances, Mémoire', () => {
     fireEvent.click(screen.getByTestId('chat-send'));
     await waitFor(() => {
       const contents = screen.getAllByTestId('chat-message-content');
-      expect(contents.some(node => /logique|raison/i.test(node.textContent || ''))).toBe(true);
+      expect(contents.some(node => /logique|raison/i.test(node.textContent || ''))).toBe(
+        true
+      );
     });
   });
 });

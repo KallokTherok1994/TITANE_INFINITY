@@ -227,7 +227,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <GitMerge className="w-7 h-7 text-violet-400" />
             <div>
-              <h1 className="text-2xl font-bold text-titanium-text-primary">Perfect Fusion Dashboard</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">
+                Perfect Fusion Dashboard
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Fusion des moteurs cognitifs — Synchronisation &amp; Cohérence
               </p>
@@ -303,7 +305,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
         <div className="grid grid-cols-3 gap-4">
           <Card variant="solid" padding={4}>
             <p className="text-xs text-titanium-text-tertiary mb-1">Sync moyen</p>
-            <p className="text-2xl font-bold text-titanium-text-primary">{(avgSync * 100).toFixed(1)}%</p>
+            <p className="text-2xl font-bold text-titanium-text-primary">
+              {(avgSync * 100).toFixed(1)}%
+            </p>
             <div className="w-full bg-titanium-bg-interactive rounded-full h-2 mt-2">
               <div
                 className="bg-violet-500 h-2 rounded-full transition-all"
@@ -313,7 +317,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
           </Card>
           <Card variant="solid" padding={4}>
             <p className="text-xs text-titanium-text-tertiary mb-1">Latence moyenne</p>
-            <p className="text-2xl font-bold text-titanium-text-primary">{avgLatency.toFixed(0)}ms</p>
+            <p className="text-2xl font-bold text-titanium-text-primary">
+              {avgLatency.toFixed(0)}ms
+            </p>
             <p className="text-xs text-titanium-text-secondary mt-1">
               {avgLatency < 15 ? '🟢 Excellent' : avgLatency < 30 ? '🟡 Bon' : '🔴 Lent'}
             </p>
@@ -350,7 +356,9 @@ export const PerfectFusionDashboard: React.FC = memo(() => {
                       <Atom className={`w-4 h-4 ${DOMAIN_COLORS[engine.domain]}`} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-titanium-text-primary">{engine.name}</p>
+                      <p className="text-sm font-medium text-titanium-text-primary">
+                        {engine.name}
+                      </p>
                       <p className="text-xs text-titanium-text-secondary">
                         {engine.domain}
                       </p>

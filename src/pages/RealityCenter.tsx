@@ -243,7 +243,9 @@ export const RealityCenter: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <Target className="w-7 h-7 text-cyan-400" />
             <div>
-              <h1 className="text-2xl font-bold text-titanium-text-primary">Reality Center</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">
+                Reality Center
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Monitoring état réel vs état attendu — Drift Detection
               </p>
@@ -403,7 +405,9 @@ export const RealityCenter: React.FC = memo(() => {
                       i % 2 === 0 ? 'bg-titanium-bg-base/30' : ''
                     }`}
                   >
-                    <td className="p-3 font-medium text-titanium-text-primary">{mod.name}</td>
+                    <td className="p-3 font-medium text-titanium-text-primary">
+                      {mod.name}
+                    </td>
                     <td className="p-3 text-titanium-text-secondary font-mono text-xs">
                       {mod.expected}
                     </td>

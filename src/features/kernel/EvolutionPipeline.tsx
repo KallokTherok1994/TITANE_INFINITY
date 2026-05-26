@@ -97,7 +97,9 @@ export function EvolutionPipeline() {
               <div className="text-3xl font-bold text-blue-500">
                 {state.total_evolutions}
               </div>
-              <div className="text-sm text-titanium-text-tertiary mt-1">Évolutions totales</div>
+              <div className="text-sm text-titanium-text-tertiary mt-1">
+                Évolutions totales
+              </div>
             </div>
 
             <div className="text-center">
@@ -107,7 +109,9 @@ export function EvolutionPipeline() {
                   : '-'}
                 %
               </div>
-              <div className="text-sm text-titanium-text-tertiary mt-1">Score de santé</div>
+              <div className="text-sm text-titanium-text-tertiary mt-1">
+                Score de santé
+              </div>
             </div>
 
             <div className="text-center">
@@ -149,8 +153,12 @@ export function EvolutionPipeline() {
                         {issue.severity}
                       </Badge>
                       <div className="flex-1">
-                        <div className="text-xs text-titanium-text-tertiary mb-1">{issue.category}</div>
-                        <p className="text-sm text-titanium-text-secondary">{issue.description}</p>
+                        <div className="text-xs text-titanium-text-tertiary mb-1">
+                          {issue.category}
+                        </div>
+                        <p className="text-sm text-titanium-text-secondary">
+                          {issue.description}
+                        </p>
                         {issue.affected_module && (
                           <div className="text-xs text-blue-400 mt-1">
                             Module: {issue.affected_module}
@@ -171,7 +179,9 @@ export function EvolutionPipeline() {
             </h3>
 
             {lastReport.recommendations.length === 0 ? (
-              <div className="text-center text-titanium-text-tertiary py-4">Aucune recommandation</div>
+              <div className="text-center text-titanium-text-tertiary py-4">
+                Aucune recommandation
+              </div>
             ) : (
               <div className="space-y-3">
                 {lastReport.recommendations
@@ -187,7 +197,9 @@ export function EvolutionPipeline() {
                         </Badge>
                         <div className="flex-1">
                           <div className="font-semibold text-sm mb-1">{rec.action}</div>
-                          <p className="text-xs text-titanium-text-tertiary mb-2">{rec.reason}</p>
+                          <p className="text-xs text-titanium-text-tertiary mb-2">
+                            {rec.reason}
+                          </p>
                           <div className="text-xs text-green-400">
                             Impact estimé: {rec.estimated_impact}
                           </div>

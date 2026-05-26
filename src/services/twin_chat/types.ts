@@ -45,11 +45,7 @@ export interface TwinChatOrchestrationResult {
   summary: TwinChatShadowSummary;
 }
 
-export type TwinChatReviewWriteStatus =
-  | 'pending'
-  | 'approved'
-  | 'rejected'
-  | 'failed';
+export type TwinChatReviewWriteStatus = 'pending' | 'approved' | 'rejected' | 'failed';
 
 export interface TwinChatReviewItem {
   id: string;

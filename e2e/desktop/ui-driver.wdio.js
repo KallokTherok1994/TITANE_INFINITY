@@ -472,10 +472,7 @@ function isSelectorActive(snapshot) {
   }
   // Fallback: Check for active class markers only (not Tailwind color classes)
   const className = snapshot.className || '';
-  return (
-    className.includes('active') ||
-    className.includes('--active')
-  );
+  return className.includes('active') || className.includes('--active');
   // NOTE: Removed 'bg-blue-600' hardcoded class check (brittle if Tailwind tokens change)
   // Target elements must use data-state='active' or aria-selected='true'
 }

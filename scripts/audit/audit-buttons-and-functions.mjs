@@ -15,7 +15,11 @@ const TARGETS = ['src/pages', 'src/components'];
 
 function walk(p, out = []) {
   let st;
-  try { st = statSync(p); } catch { return out; }
+  try {
+    st = statSync(p);
+  } catch {
+    return out;
+  }
   if (st.isDirectory()) {
     for (const entry of readdirSync(p)) walk(join(p, entry), out);
   } else if (/\.(tsx|jsx)$/.test(p) && !/\.test\.|\.spec\.|__tests__/.test(p)) {
@@ -63,7 +67,12 @@ for (const f of files) {
     totalButtons++;
     if (isStub) {
       stubButtons++;
-      stubList.push({ file: relative(ROOT, f), line, testid: attrs['data-testid'] ?? null, onClick });
+      stubList.push({
+        file: relative(ROOT, f),
+        line,
+        testid: attrs['data-testid'] ?? null,
+        onClick,
+      });
     }
   }
   if (buttons.length) {
@@ -92,5 +101,7 @@ const outDir = join(ROOT, 'reports');
 mkdirSync(outDir, { recursive: true });
 const out = join(outDir, 'buttons-audit-v35.1.4.json');
 writeFileSync(out, JSON.stringify(summary, null, 2));
-console.log(`OK files=${summary.files_scanned} buttons=${summary.total_buttons} stubs=${summary.stub_buttons} verdict=${summary.verdict}`);
+console.log(
+  `OK files=${summary.files_scanned} buttons=${summary.total_buttons} stubs=${summary.stub_buttons} verdict=${summary.verdict}`
+);
 console.log(`-> ${relative(ROOT, out)}`);

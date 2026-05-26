@@ -4,7 +4,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { resolveRuntimeIdentity, applyRuntimeIdentityToDOM } from '@/utils/runtimeIdentity';
+import {
+  resolveRuntimeIdentity,
+  applyRuntimeIdentityToDOM,
+} from '@/utils/runtimeIdentity';
 import type { RuntimeIdentity } from '@/utils/runtimeIdentity';
 
 interface RuntimeIdentityProbeProps {

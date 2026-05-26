@@ -91,7 +91,9 @@ export function NexusMesh() {
           <div className="text-3xl font-bold text-green-400">
             {nexus.active_connections}
           </div>
-          <div className="text-sm text-titanium-text-tertiary mt-1">Connexions actives</div>
+          <div className="text-sm text-titanium-text-tertiary mt-1">
+            Connexions actives
+          </div>
         </Card>
         <Card className="p-6 text-center">
           <div className="text-3xl font-bold text-purple-400">

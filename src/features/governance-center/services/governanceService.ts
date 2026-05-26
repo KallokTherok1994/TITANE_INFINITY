@@ -336,7 +336,9 @@ async function clearPermissionAudit(): Promise<SecureResponse<void>> {
 async function getSecurityLog(
   filters?: SecurityLogFilters
 ): Promise<SecureResponse<SecurityLogEntry[]>> {
-  const raw = await safeInvokeCanonical<SecurityLogEntry[]>('get_security_log', { filters });
+  const raw = await safeInvokeCanonical<SecurityLogEntry[]>('get_security_log', {
+    filters,
+  });
   return normalizeResponse<SecurityLogEntry[]>(
     raw,
     'Impossible de récupérer le journal de sécurité'

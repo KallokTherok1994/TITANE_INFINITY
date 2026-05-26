@@ -28,10 +28,7 @@ function readToolbarSource(): string {
     return readFileSync(TOOLBAR_SOURCE_PATH, 'utf-8');
   } catch {
     // Fallback: resolve relative to this file's actual location
-    return readFileSync(
-      resolve(__dirname, '../ChatToolbar.tsx'),
-      'utf-8'
-    );
+    return readFileSync(resolve(__dirname, '../ChatToolbar.tsx'), 'utf-8');
   }
 }
 

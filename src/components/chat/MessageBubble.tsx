@@ -207,7 +207,12 @@ export const MessageBubble = memo(function MessageBubble({
   // État pour gérer le retry loading
   const [isRetrying, setIsRetrying] = useState(false);
   const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => { if (retryTimerRef.current) clearTimeout(retryTimerRef.current); }, []);
+  useEffect(
+    () => () => {
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+    },
+    []
+  );
   const messageId = `${role}-${timestamp}`;
   const speechState = useMessageSpeechState(
     messageId,

@@ -162,11 +162,10 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
                     <div className="vision-optin-icon">📷</div>
                     <div className="vision-optin-title">Vision & Perception</div>
                     <div className="vision-optin-desc">
-                      Activez Vision pour analyser votre environnement en temps réel via la caméra — estimation d&apos;énergie, engagement et état cognitif.
+                      Activez Vision pour analyser votre environnement en temps réel via
+                      la caméra — estimation d&apos;énergie, engagement et état cognitif.
                     </div>
-                    {error && (
-                      <div className="vision-optin-error">{error}</div>
-                    )}
+                    {error && <div className="vision-optin-error">{error}</div>}
                     <Button
                       variant="primary"
                       size="sm"
@@ -214,7 +213,12 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
             style={{ marginTop: 'var(--space-4)' }}
           >
             <h4>⚠️ Information Importante</h4>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+            <p
+              style={{
+                fontSize: 'var(--text-sm)',
+                color: 'var(--titanium-text-tertiary, #8a8a8a)',
+              }}
+            >
               Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est
               envoyée vers le cloud.
             </p>

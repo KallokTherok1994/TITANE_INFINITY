@@ -130,7 +130,13 @@ export const TwinsPage: React.FC = () => {
       title: 'Twins — Jumeaux Numériques',
       status: isLoading ? 'partial' : liveConnected ? 'live' : 'partial',
       source: 'tauri_ipc',
-      capabilities: ['twin-identity', 'fusion-index', 'evolution-profile', 'sync-status', 'chat-context-status'],
+      capabilities: [
+        'twin-identity',
+        'fusion-index',
+        'evolution-profile',
+        'sync-status',
+        'chat-context-status',
+      ],
       visibleMetrics: {
         fusionIndex: fusionIndex ?? evolutionFusion ?? null,
         syncScore: syncScore ?? null,
@@ -142,12 +148,32 @@ export const TwinsPage: React.FC = () => {
       },
       actions: [
         { id: 'refresh', label: 'Rafraîchir', status: 'wired' },
-        { id: 'inspect_sources', label: 'Inspecter les sources', status: sourceCount != null ? 'wired' : 'blocked' },
-        { id: 'sync_now', label: 'Synchroniser maintenant', status: liveConnected ? 'wired' : 'blocked', reason: liveConnected ? undefined : 'Singularity engine not connected' },
+        {
+          id: 'inspect_sources',
+          label: 'Inspecter les sources',
+          status: sourceCount != null ? 'wired' : 'blocked',
+        },
+        {
+          id: 'sync_now',
+          label: 'Synchroniser maintenant',
+          status: liveConnected ? 'wired' : 'blocked',
+          reason: liveConnected ? undefined : 'Singularity engine not connected',
+        },
       ],
       warnings: isLoading ? ['Twin data loading'] : reviewError ? [reviewError] : [],
     });
-  }, [isLoading, liveConnected, fusionIndex, evolutionFusion, syncScore, sourceCount, currentPhase, chatContextStatus, pendingReviewItems.length, reviewError]);
+  }, [
+    isLoading,
+    liveConnected,
+    fusionIndex,
+    evolutionFusion,
+    syncScore,
+    sourceCount,
+    currentPhase,
+    chatContextStatus,
+    pendingReviewItems.length,
+    reviewError,
+  ]);
 
   const handleApproveReview = async (reviewId: string) => {
     setReviewBusyId(reviewId);
@@ -189,7 +215,9 @@ export const TwinsPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <Users className="w-7 h-7 text-violet-400" />
             <div>
-              <h1 className="text-2xl font-bold text-titanium-text-primary">Twins — Digital Twins</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">
+                Twins — Digital Twins
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Gestion et visualisation des jumeaux numériques — Symbiose Kevin ↔ TITANE∞
               </p>
@@ -398,7 +426,9 @@ export const TwinsPage: React.FC = () => {
                   {identity.name && (
                     <div>
                       <p className="text-xs text-titanium-text-disabled">Nom</p>
-                      <p className="text-titanium-text-primary font-medium">{identity.name}</p>
+                      <p className="text-titanium-text-primary font-medium">
+                        {identity.name}
+                      </p>
                     </div>
                   )}
                   {identity.signature && (

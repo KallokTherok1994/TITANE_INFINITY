@@ -10,19 +10,19 @@ TITANE∞ est un **OS cognitif** sous forme d'application desktop native (Tauri 
 
 ## Audit Status (v35.1.6 — 2026-05-16)
 
-| Gate | Résultat |
-|---|---|
-| `pnpm run check` (TypeScript) | **PASS** — 0 erreurs |
-| `pnpm run lint` (ESLint) | **PASS** — 0 erreurs |
+| Gate                           | Résultat                           |
+| ------------------------------ | ---------------------------------- |
+| `pnpm run check` (TypeScript)  | **PASS** — 0 erreurs               |
+| `pnpm run lint` (ESLint)       | **PASS** — 0 erreurs               |
 | `pnpm run test --run` (Vitest) | **PASS** — 9471/9471, 653 fichiers |
-| `pnpm run build` (Vite) | **PASS** — built in 17.27s |
-| Targeted former-failure lanes | **PASS** — 5 lanes, 370 tests |
+| `pnpm run build` (Vite)        | **PASS** — built in 17.27s         |
+| Targeted former-failure lanes  | **PASS** — 5 lanes, 370 tests      |
 
 ---
 
 ## Redesign UI/UX Seal (2026-05-15)
 
-Commit de scellement : `558119238` — *seal(frontend): certify ui ux redesign and repair test gates*
+Commit de scellement : `558119238` — _seal(frontend): certify ui ux redesign and repair test gates_
 
 - Light/dark mode complet via `UIThemeProvider` + classe `html.light` + toggle Sun/Moon dans `TopNav`
 - Toutes les classes `titanium-*` branchées sur CSS custom properties (`var(--color-*)`)
@@ -62,12 +62,12 @@ Voir [DEVELOPER_SETUP.md](DEVELOPER_SETUP.md) pour le guide complet (Linux deps,
 
 TITANE∞ suit un modèle **4-Ring** :
 
-| Ring | Responsabilité |
-|---|---|
-| Ring 1 — UI | React 19, TypeScript 5.9, Tailwind CSS 4.2, Framer Motion, Radix UI |
-| Ring 2 — Services | TanStack Query, Zustand, services IA/mémoire/voix |
-| Ring 3 — IPC Bridge | Tauri v2 Commands, protocole sécurisé frontend ↔ Rust |
-| Ring 4 — Moteurs Rust | Pipeline OMEGA, MemoryOS, SecretsEngine, CognitionLayer |
+| Ring                  | Responsabilité                                                      |
+| --------------------- | ------------------------------------------------------------------- |
+| Ring 1 — UI           | React 19, TypeScript 5.9, Tailwind CSS 4.2, Framer Motion, Radix UI |
+| Ring 2 — Services     | TanStack Query, Zustand, services IA/mémoire/voix                   |
+| Ring 3 — IPC Bridge   | Tauri v2 Commands, protocole sécurisé frontend ↔ Rust               |
+| Ring 4 — Moteurs Rust | Pipeline OMEGA, MemoryOS, SecretsEngine, CognitionLayer             |
 
 **Backend Rust** (`src-tauri/src/`) : pipeline OMEGA 10 étapes, Memory OS STM/MTM/LTM, SecretsEngine AES-256-GCM, conversation engine, 20+ modules de commandes Tauri.
 
@@ -97,16 +97,16 @@ cargo tauri build --config src-tauri/tauri.conf.json
 
 ## Documentation
 
-| Document | Description |
-|---|---|
-| [DEVELOPER_SETUP.md](DEVELOPER_SETUP.md) | Installation complète, prérequis, IDE |
-| [CHANGELOG.md](CHANGELOG.md) | Historique des versions |
-| [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) | Guide de contribution |
-| [docs/ui/DESIGN_SYSTEM.md](docs/ui/DESIGN_SYSTEM.md) | Référence design system |
-| [docs/ui/ui-ux-research-notes.md](docs/ui/ui-ux-research-notes.md) | Notes de recherche UX |
-| [.claude/frontend-ui-ux-guidelines.md](.claude/frontend-ui-ux-guidelines.md) | Guidelines design system (contributors) |
-| [docs/INDEX_REPO_STRUCTURE.md](docs/INDEX_REPO_STRUCTURE.md) | Index structure repo |
-| [docs/06_api/TAURI_COMMANDS_REFERENCE.md](docs/06_api/TAURI_COMMANDS_REFERENCE.md) | Référence API Tauri |
+| Document                                                                           | Description                             |
+| ---------------------------------------------------------------------------------- | --------------------------------------- |
+| [DEVELOPER_SETUP.md](DEVELOPER_SETUP.md)                                           | Installation complète, prérequis, IDE   |
+| [CHANGELOG.md](CHANGELOG.md)                                                       | Historique des versions                 |
+| [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md)                                    | Guide de contribution                   |
+| [docs/ui/DESIGN_SYSTEM.md](docs/ui/DESIGN_SYSTEM.md)                               | Référence design system                 |
+| [docs/ui/ui-ux-research-notes.md](docs/ui/ui-ux-research-notes.md)                 | Notes de recherche UX                   |
+| [.claude/frontend-ui-ux-guidelines.md](.claude/frontend-ui-ux-guidelines.md)       | Guidelines design system (contributors) |
+| [docs/INDEX_REPO_STRUCTURE.md](docs/INDEX_REPO_STRUCTURE.md)                       | Index structure repo                    |
+| [docs/06_api/TAURI_COMMANDS_REFERENCE.md](docs/06_api/TAURI_COMMANDS_REFERENCE.md) | Référence API Tauri                     |
 
 ---
 

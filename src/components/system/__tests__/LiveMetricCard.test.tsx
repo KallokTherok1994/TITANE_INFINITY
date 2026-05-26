@@ -8,11 +8,21 @@ describe('LiveMetricCard', () => {
     render(<LiveMetricCard label="Niveau" value={5} source="live" />);
     expect(screen.getByText('5')).toBeInTheDocument();
     expect(screen.getByText('Niveau')).toBeInTheDocument();
-    expect(screen.getByTestId('metric-niveau')).toHaveAttribute('data-metric-source', 'live');
+    expect(screen.getByTestId('metric-niveau')).toHaveAttribute(
+      'data-metric-source',
+      'live'
+    );
   });
 
   it('shows empty reason when value is null', () => {
-    render(<LiveMetricCard label="Score" value={null} source="degraded" emptyReason="Service unavailable" />);
+    render(
+      <LiveMetricCard
+        label="Score"
+        value={null}
+        source="degraded"
+        emptyReason="Service unavailable"
+      />
+    );
     expect(screen.getByText('Service unavailable')).toBeInTheDocument();
   });
 
@@ -31,11 +41,13 @@ describe('LiveMetricCard', () => {
 describe('ModuleHealthStrip', () => {
   it('renders all module statuses', () => {
     render(
-      <ModuleHealthStrip modules={[
-        { id: 'chat', label: 'Chat', status: 'live' },
-        { id: 'memory', label: 'Memory', status: 'partial' },
-        { id: 'time', label: 'Time', status: 'degraded' },
-      ]} />
+      <ModuleHealthStrip
+        modules={[
+          { id: 'chat', label: 'Chat', status: 'live' },
+          { id: 'memory', label: 'Memory', status: 'partial' },
+          { id: 'time', label: 'Time', status: 'degraded' },
+        ]}
+      />
     );
     expect(screen.getByTestId('module-health-strip')).toBeInTheDocument();
     expect(screen.getByTestId('health-chat')).toBeInTheDocument();

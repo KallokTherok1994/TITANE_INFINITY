@@ -130,12 +130,33 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
           mode,
         },
         actions: [
-          { id: 'read_evolution_state', label: 'Lire l\'état d\'évolution', status: 'wired' },
-          { id: 'read_transformation_phase', label: 'Phase de transformation', status: 'wired' },
+          {
+            id: 'read_evolution_state',
+            label: "Lire l'état d'évolution",
+            status: 'wired',
+          },
+          {
+            id: 'read_transformation_phase',
+            label: 'Phase de transformation',
+            status: 'wired',
+          },
         ],
-        warnings: mode !== 'tauri' ? ['Running in browser mode — some evolution data may be limited'] : [],
+        warnings:
+          mode !== 'tauri'
+            ? ['Running in browser mode — some evolution data may be limited']
+            : [],
       });
-    }, [stats.evolutionScore, stats.level, stats.totalXP, totalMemories, mode, transformationPhase, stats.memoryShortTerm, stats.memoryMidTerm, stats.memoryLongTerm]);
+    }, [
+      stats.evolutionScore,
+      stats.level,
+      stats.totalXP,
+      totalMemories,
+      mode,
+      transformationPhase,
+      stats.memoryShortTerm,
+      stats.memoryMidTerm,
+      stats.memoryLongTerm,
+    ]);
 
     return (
       <div
@@ -183,7 +204,12 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
             </React.Suspense>
           ) : (
             <div>
-              <p style={{ color: 'var(--titanium-text-tertiary, #8a8a8a)', fontSize: 'var(--text-sm)' }}>
+              <p
+                style={{
+                  color: 'var(--titanium-text-tertiary, #8a8a8a)',
+                  fontSize: 'var(--text-sm)',
+                }}
+              >
                 Disponible en mode Tauri uniquement
               </p>
               <div style={{ marginTop: 'var(--space-4)' }}>

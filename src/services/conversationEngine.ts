@@ -560,7 +560,8 @@ function resolveUserCoreModelShadowState(
   const coreStatus: 'enabled' | 'disabled' = resolved.values.ucmCore
     ? 'enabled'
     : 'disabled';
-  const promptProjectionStatus: 'enabled' | 'disabled' = resolved.values.ucmPromptProjection
+  const promptProjectionStatus: 'enabled' | 'disabled' = resolved.values
+    .ucmPromptProjection
     ? 'enabled'
     : 'disabled';
   const observabilityStatus: 'enabled' | 'disabled' = resolved.values
@@ -2222,13 +2223,12 @@ export async function processMessage(
       `web_action:${discernmentDecision.webAction}`,
       `memory_action:${discernmentDecision.memoryAction}`,
       `ask_act_hold:${discernmentDecision.askActHold}`,
-      ...(options?.twinChatShadowSummary && options.twinChatShadowSummary.candidateCount > 0
+      ...(options?.twinChatShadowSummary &&
+      options.twinChatShadowSummary.candidateCount > 0
         ? [
             'twin_chat_shadow:present',
             `twin_chat_candidates:${options.twinChatShadowSummary.candidateCount}`,
-            ...options.twinChatShadowSummary.kinds.map(
-              kind => `twin_chat_kind:${kind}`
-            ),
+            ...options.twinChatShadowSummary.kinds.map(kind => `twin_chat_kind:${kind}`),
             ...Object.entries(options.twinChatShadowSummary.verdictCounts ?? {}).map(
               ([verdict, count]) => `twin_chat_verdict:${verdict}:${count}`
             ),

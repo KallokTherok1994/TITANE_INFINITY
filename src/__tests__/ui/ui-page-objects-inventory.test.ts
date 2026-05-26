@@ -104,9 +104,12 @@ describe('WDIO UI page inventory', () => {
     }
 
     for (const page of moreMenuRoutePages) {
-      expect(['nav-twins', 'nav-optimization', 'nav-total-dev', 'nav-projects']).toContain(
-        page.navTestId
-      );
+      expect([
+        'nav-twins',
+        'nav-optimization',
+        'nav-total-dev',
+        'nav-projects',
+      ]).toContain(page.navTestId);
     }
   });
 });

@@ -5,19 +5,31 @@ import { PageFrame, PageSection } from '../PageFrame';
 
 describe('PageFrame', () => {
   it('renders with correct testid and surface frame attribute', () => {
-    render(<PageFrame id="test-page"><div>content</div></PageFrame>);
+    render(
+      <PageFrame id="test-page">
+        <div>content</div>
+      </PageFrame>
+    );
     const frame = screen.getByTestId('page-frame-test-page');
     expect(frame).toBeInTheDocument();
     expect(frame).toHaveAttribute('data-surface-frame', 'test-page');
   });
 
   it('renders children', () => {
-    render(<PageFrame id="x"><span data-testid="child">hello</span></PageFrame>);
+    render(
+      <PageFrame id="x">
+        <span data-testid="child">hello</span>
+      </PageFrame>
+    );
     expect(screen.getByTestId('child')).toBeInTheDocument();
   });
 
   it('applies padding classes', () => {
-    render(<PageFrame id="p" padding="lg"><div /></PageFrame>);
+    render(
+      <PageFrame id="p" padding="lg">
+        <div />
+      </PageFrame>
+    );
     expect(screen.getByTestId('page-frame-p').className).toContain('p-8');
   });
 });
@@ -34,7 +46,11 @@ describe('PageSection', () => {
   });
 
   it('renders with testId', () => {
-    render(<PageSection testId="my-section"><span>x</span></PageSection>);
+    render(
+      <PageSection testId="my-section">
+        <span>x</span>
+      </PageSection>
+    );
     expect(screen.getByTestId('my-section')).toBeInTheDocument();
   });
 });

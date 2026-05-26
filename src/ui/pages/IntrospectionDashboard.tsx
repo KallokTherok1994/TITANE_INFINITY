@@ -123,7 +123,9 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
       <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm text-titanium-text-tertiary mb-2">Chemin du projet</label>
+            <label className="block text-sm text-titanium-text-tertiary mb-2">
+              Chemin du projet
+            </label>
             <input
               type="text"
               value={projectPath}
@@ -158,26 +160,36 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-              <div className="text-titanium-text-tertiary text-sm mb-2">Fichiers analysés</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">
+                Fichiers analysés
+              </div>
               <div className="text-3xl font-bold text-titanium-text-primary">
                 {report.total_files_scanned}
               </div>
             </div>
 
             <div className="bg-linear-to-br from-red-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
-              <div className="text-titanium-text-tertiary text-sm mb-2">Problèmes totaux</div>
-              <div className="text-3xl font-bold text-titanium-text-primary">{report.total_issues}</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">
+                Problèmes totaux
+              </div>
+              <div className="text-3xl font-bold text-titanium-text-primary">
+                {report.total_issues}
+              </div>
             </div>
 
             <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <div className="text-titanium-text-tertiary text-sm mb-2">Auto-corrigés</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">
+                Auto-corrigés
+              </div>
               <div className="text-3xl font-bold text-titanium-text-primary">
                 {report.auto_fixes_applied}
               </div>
             </div>
 
             <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-              <div className="text-titanium-text-tertiary text-sm mb-2">Score de santé</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">
+                Score de santé
+              </div>
               <div className="text-3xl font-bold text-titanium-text-primary">
                 {(
                   (1 - report.total_issues / (report.total_files_scanned * 10)) *
@@ -238,8 +250,12 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">{getCategoryIcon(issue.category)}</span>
                       <div>
-                        <div className="text-titanium-text-primary font-semibold">{issue.category}</div>
-                        <div className="text-sm text-titanium-text-tertiary">{issue.severity}</div>
+                        <div className="text-titanium-text-primary font-semibold">
+                          {issue.category}
+                        </div>
+                        <div className="text-sm text-titanium-text-tertiary">
+                          {issue.severity}
+                        </div>
                       </div>
                     </div>
 
@@ -255,12 +271,16 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
                       {issue.file_path}:
                       <span className="text-yellow-400">{issue.line}</span>
                     </div>
-                    <div className="text-titanium-text-secondary text-sm">{issue.description}</div>
+                    <div className="text-titanium-text-secondary text-sm">
+                      {issue.description}
+                    </div>
                   </div>
 
                   {issue.suggestion && (
                     <div className="bg-titanium-bg-base/50 rounded-lg p-3 text-sm">
-                      <div className="text-titanium-text-tertiary mb-1">💡 Suggestion:</div>
+                      <div className="text-titanium-text-tertiary mb-1">
+                        💡 Suggestion:
+                      </div>
                       <div className="text-green-300">{issue.suggestion}</div>
                     </div>
                   )}

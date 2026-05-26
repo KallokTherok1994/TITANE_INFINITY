@@ -419,365 +419,390 @@ export const AppRouter: React.FC = () => {
       <SurfaceRoot id="app-root" ring="core">
         <Suspense fallback={<PageLoadingFallback />}>
           <Routes>
-          {/* Main Routes — TITANE Homepage */}
-          <Route path="/" element={<Navigate to="/titane" replace />} />
-          <Route path="/titane.sh" element={<Navigate to="/titane" replace />} />
-          <Route path="/titane.sh/*" element={<Navigate to="/titane" replace />} />
-          {/* ⚡ TITANE - LE CŒUR DU SYSTÈME (Chat IA + Vision + EVO unifiés) */}
-          <Route
-            path="/titane"
-            element={
-              <ErrorBoundary context="TitanePage">
-                <TitanePage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers TITANE */}
-          <Route
-            path="/chat"
-            element={<Navigate to="/titane?tab=conversation" replace />}
-          />
-          <Route path="/camera" element={<Navigate to="/titane" replace />} />
-          <Route path="/evo" element={<Navigate to="/titane" replace />} />
-          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
-          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
-          <Route
-            path="/cognitive-evolution"
-            element={<Navigate to="/titane" replace />}
-          />
-          <Route
-            path="/identity-memory-evolution"
-            element={<Navigate to="/titane" replace />}
-          />
-          <Route
-            path="/progression"
-            element={<Navigate to="/titane?tab=progression" replace />}
-          />
-          <Route path="/xp" element={<Navigate to="/experience" replace />} />
-          {/* /cognitive redirigé vers DEV Cockpit > Diagnostics */}
-          <Route
-            path="/cognitive"
-            element={<Navigate to="/dev?tab=diagnostics" replace />}
-          />
-          {/* /stats fusionné dans DEV Cockpit > Diagnostics */}
-          <Route path="/stats" element={<Navigate to="/dev?tab=diagnostics" replace />} />
-          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-          {/* ✨ v35.1.8 TIME CENTER - Temporal Flow + Agenda + Time Navigator */}
-          <Route
-            path="/time"
-            element={
-              <ErrorBoundary context="TimePage">
-                <TimePage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers TIME */}
-          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
-          <Route path="/agenda" element={<Navigate to="/time" replace />} />
-          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
-          {/* ✨ v35.1.8 ADMIN CENTER - Module ADMIN unifié */}
-          <Route
-            path="/admin"
-            element={
-              <ErrorBoundary context="AdminCenter">
-                <AdminPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections vers ADMIN Center */}
-          <Route
-            path="/system-center"
-            element={<Navigate to="/admin?tab=system" replace />}
-          />
-          <Route
-            path="/diagnostics"
-            element={<Navigate to="/admin?tab=production-health" replace />}
-          />
-          <Route
-            path="/devtools"
-            element={<Navigate to="/admin?tab=system&systemTab=devtools" replace />}
-          />
-          <Route
-            path="/cluster"
-            element={<Navigate to="/admin?tab=production-health" replace />}
-          />
-          <Route
-            path="/introspection"
-            element={<Navigate to="/admin?tab=system" replace />}
-          />
-          <Route
-            path="/hypervision"
-            element={<Navigate to="/admin?tab=system" replace />}
-          />
-          <Route
-            path="/configuration"
-            element={<Navigate to="/admin?tab=config" replace />}
-          />
-          <Route
-            path="/design-center"
-            element={<Navigate to="/admin?tab=design" replace />}
-          />
-          <Route
-            path="/design-system"
-            element={<Navigate to="/admin?tab=design" replace />}
-          />
-          <Route path="/settings" element={<Navigate to="/admin?tab=config" replace />} />
-          <Route
-            path="/governance-center"
-            element={<Navigate to="/admin?tab=governance" replace />}
-          />
-          <Route
-            path="/governance"
-            element={<Navigate to="/admin?tab=governance" replace />}
-          />
-          <Route
-            path="/secure"
-            element={<Navigate to="/admin?tab=governance" replace />}
-          />
-          <Route
-            path="/audio-center"
-            element={<Navigate to="/admin?tab=audio" replace />}
-          />
-          <Route path="/audio" element={<Navigate to="/admin?tab=audio" replace />} />
-          <Route path="/voice" element={<Navigate to="/admin?tab=audio" replace />} />
-          <Route path="/tts" element={<Navigate to="/admin?tab=audio" replace />} />
-          {/* ✨ v35.1.8 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
-          <Route
-            path="/fusion"
-            element={
-              <ErrorBoundary context="PerfectFusionDashboard">
-                <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
-                  <PerfectFusionDashboard />
-                </Suspense>
-              </ErrorBoundary>
-            }
-          />
-          {/* ✨ v35.1.8 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
-          <Route
-            path="/optimization"
-            element={
-              <ErrorBoundary context="UltimateOptimizationDashboard">
-                <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
-                  <UltimateOptimizationDashboard />
-                </Suspense>
-              </ErrorBoundary>
-            }
-          />
-          {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}
-          <Route
-            path="/orchestration-intelligence"
-            element={
-              <ErrorBoundary context="OrchestrationIntelligenceCenter">
-                <OrchestrationIntelligenceCenter />
-              </ErrorBoundary>
-            }
-          />
-          {/* ✨ v24 ORCHESTRATION META CENTER - Centre Unifié (#9) */}
-          <Route
-            path="/orchestration-center"
-            element={
-              <ErrorBoundary context="OrchestrationMetaCenter">
-                <OrchestrationMetaCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/meta-center"
-            element={<Navigate to="/orchestration-center" replace />}
-          />
-          {/* Redirections vers Orchestration Meta Center pour anciennes routes */}
-          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
-          <Route
-            path="/multi-ai-dashboard"
-            element={<Navigate to="/orchestration-center" replace />}
-          />
-          <Route
-            path="/nexus-engine"
-            element={<Navigate to="/orchestration-center" replace />}
-          />
-          <Route
-            path="/harmonia-engine"
-            element={<Navigate to="/orchestration-center" replace />}
-          />
-          <Route
-            path="/cognitive-state"
-            element={<Navigate to="/orchestration-center" replace />}
-          />
-          {/* ✨ v35.1.8 DEV CENTER - Fusion Complete (4 modules → 1) */}
-          <Route
-            path="/dev"
-            element={
-              <ErrorBoundary context="DevCenter">
-                <DevPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* ✨ TOTAL_DEV v35.1.8 — GOD DEV sovereign space */}
-          <Route
-            path="/total-dev"
-            element={
-              <ErrorBoundary context="TotalDev">
-                <TotalDevPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* Redirections des anciens modules vers DEV */}
-          <Route path="/one-core" element={<Navigate to="/dev?tab=overview" replace />} />
-          <Route
-            path="/command-center"
-            element={<Navigate to="/dev?tab=operations" replace />}
-          />
-          <Route path="/unified" element={<Navigate to="/dev?tab=overview" replace />} />
-          <Route
-            path="/qa-monitoring"
-            element={<Navigate to="/dev?tab=validation" replace />}
-          />
-          <Route path="/qa" element={<Navigate to="/dev?tab=validation" replace />} />
-          <Route
-            path="/monitoring"
-            element={<Navigate to="/dev?tab=diagnostics" replace />}
-          />
-          <Route path="/tests" element={<Navigate to="/dev?tab=validation" replace />} />
-          <Route
-            path="/developer-mode"
-            element={<Navigate to="/dev?tab=operations" replace />}
-          />
-          <Route
-            path="/dev-mode"
-            element={<Navigate to="/dev?tab=operations" replace />}
-          />
-          <Route
-            path="/devmode"
-            element={<Navigate to="/dev?tab=operations" replace />}
-          />
-          <Route path="/ia-dev" element={<Navigate to="/dev?tab=operations" replace />} />
-          {/* Note: /orchestration-intelligence et /orchestration-center ont leurs propres composants ci-dessus */}
-          <Route
-            path="/orchestration"
-            element={<Navigate to="/orchestration-intelligence" replace />}
-          />
-          {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
-          <Route
-            path="/reality-center"
-            element={
-              <ErrorBoundary context="RealityCenter">
-                <RealityCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
-          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
-          {/* ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20) */}
-          <Route
-            path="/hyper-center"
-            element={
-              <ErrorBoundary context="HyperCenter">
-                <HyperCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
-          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
-          {/* ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17) */}
-          <Route
-            path="/quantum-center"
-            element={
-              <ErrorBoundary context="QuantumCenter">
-                <QuantumCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
-          {/* ✨ TWINS — Page dédiée, accessible via menu Plus */}
-          <Route path="/identity-center" element={<Navigate to="/twins" replace />} />
-          <Route path="/identity" element={<Navigate to="/twins" replace />} />
-          <Route path="/persona" element={<Navigate to="/twins" replace />} />
-          <Route
-            path="/twins"
-            element={
-              <ErrorBoundary context="TwinsPage">
-                <TwinsPage />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/twin" element={<Navigate to="/twins" replace />} />
-          {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
-          <Route
-            path="/memory-evolution"
-            element={<Navigate to="/titane?tab=transformation" replace />}
-          />
-          <Route
-            path="/memory-evo"
-            element={<Navigate to="/titane?tab=transformation" replace />}
-          />
-          {/* ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞ */}
-          <Route
-            path="/cloud"
-            element={
-              <ErrorBoundary context="CloudCenter">
-                <CloudCenter />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
-          <Route path="/vault" element={<Navigate to="/cloud" replace />} />
-          {/* ❌ SUPPRIMÉ v24.3.7: Route /multi-ai (deprecated stub) */}
-          {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
-          <Route path="/knowledge" element={<KnowledgeFusionPage />} />
-          <Route path="/creation" element={<CreationStudio />} />
-          <Route path="/evolution" element={<EvolutionMonitor />} />
-          {/* v15: SingularityState Monitor */}
-          <Route
-            path="/singularity"
-            element={
-              <ErrorBoundary context="SingularityMonitor">
-                <SingularityMonitor />
-              </ErrorBoundary>
-            }
-          />
-          {/* Engine Routes */}
-          {/* Routes historiques fusionnées vers les surfaces DEV/TITANE actives */}
-          <Route path="/sentinel" element={<Sentinel />} />
-          <Route path="/watchdog" element={<Watchdog />} />
-          <Route path="/selfheal" element={<SelfHeal />} />
-          <Route path="/adaptive" element={<AdaptiveEngine />} />
-          <Route path="/memory" element={<Memory />} />
-          <Route path="/research" element={<ResearchPage />} />
-          {/* ✨ Skill OS — Import/manage external skills */}
-          <Route path="/skills" element={<SkillManager />} />
-          <Route
-            path="/multiproject"
-            element={
-              <ErrorBoundary context="MultiProjectDashboard">
-                <MultiProjectDashboard />
-              </ErrorBoundary>
-            }
-          />
-          {/* ✨ v31.1.0 — DOC CENTER — Export DOCX natif */}
-          <Route
-            path="/doc-center"
-            element={
-              <ErrorBoundary context="DocCenterPage">
-                <DocCenterPage />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/doc" element={<Navigate to="/doc-center" replace />} />
-          {/* HTF Module — L'Humain à tout faire */}
-          <Route
-            path="/htf"
-            element={
-              <ErrorBoundary context="HTFPage">
-                <HTFPage />
-              </ErrorBoundary>
-            }
-          />
-          {/* System Routes (Phase 9: lazy loaded) */}
-          <Route path="/performance" element={<PerformanceTest />} />
-          {/* Catch-all - Redirection vers Dashboard */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
+            {/* Main Routes — TITANE Homepage */}
+            <Route path="/" element={<Navigate to="/titane" replace />} />
+            <Route path="/titane.sh" element={<Navigate to="/titane" replace />} />
+            <Route path="/titane.sh/*" element={<Navigate to="/titane" replace />} />
+            {/* ⚡ TITANE - LE CŒUR DU SYSTÈME (Chat IA + Vision + EVO unifiés) */}
+            <Route
+              path="/titane"
+              element={
+                <ErrorBoundary context="TitanePage">
+                  <TitanePage />
+                </ErrorBoundary>
+              }
+            />
+            {/* Redirections vers TITANE */}
+            <Route
+              path="/chat"
+              element={<Navigate to="/titane?tab=conversation" replace />}
+            />
+            <Route path="/camera" element={<Navigate to="/titane" replace />} />
+            <Route path="/evo" element={<Navigate to="/titane" replace />} />
+            <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
+            <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+            <Route
+              path="/cognitive-evolution"
+              element={<Navigate to="/titane" replace />}
+            />
+            <Route
+              path="/identity-memory-evolution"
+              element={<Navigate to="/titane" replace />}
+            />
+            <Route
+              path="/progression"
+              element={<Navigate to="/titane?tab=progression" replace />}
+            />
+            <Route path="/xp" element={<Navigate to="/experience" replace />} />
+            {/* /cognitive redirigé vers DEV Cockpit > Diagnostics */}
+            <Route
+              path="/cognitive"
+              element={<Navigate to="/dev?tab=diagnostics" replace />}
+            />
+            {/* /stats fusionné dans DEV Cockpit > Diagnostics */}
+            <Route
+              path="/stats"
+              element={<Navigate to="/dev?tab=diagnostics" replace />}
+            />
+            <Route path="/experience" element={<Experience />} />{' '}
+            {/* ✨ v∞.D5 - Page XP */}
+            {/* ✨ v35.1.8 TIME CENTER - Temporal Flow + Agenda + Time Navigator */}
+            <Route
+              path="/time"
+              element={
+                <ErrorBoundary context="TimePage">
+                  <TimePage />
+                </ErrorBoundary>
+              }
+            />
+            {/* Redirections vers TIME */}
+            <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+            <Route path="/agenda" element={<Navigate to="/time" replace />} />
+            <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
+            {/* ✨ v35.1.8 ADMIN CENTER - Module ADMIN unifié */}
+            <Route
+              path="/admin"
+              element={
+                <ErrorBoundary context="AdminCenter">
+                  <AdminPage />
+                </ErrorBoundary>
+              }
+            />
+            {/* Redirections vers ADMIN Center */}
+            <Route
+              path="/system-center"
+              element={<Navigate to="/admin?tab=system" replace />}
+            />
+            <Route
+              path="/diagnostics"
+              element={<Navigate to="/admin?tab=production-health" replace />}
+            />
+            <Route
+              path="/devtools"
+              element={<Navigate to="/admin?tab=system&systemTab=devtools" replace />}
+            />
+            <Route
+              path="/cluster"
+              element={<Navigate to="/admin?tab=production-health" replace />}
+            />
+            <Route
+              path="/introspection"
+              element={<Navigate to="/admin?tab=system" replace />}
+            />
+            <Route
+              path="/hypervision"
+              element={<Navigate to="/admin?tab=system" replace />}
+            />
+            <Route
+              path="/configuration"
+              element={<Navigate to="/admin?tab=config" replace />}
+            />
+            <Route
+              path="/design-center"
+              element={<Navigate to="/admin?tab=design" replace />}
+            />
+            <Route
+              path="/design-system"
+              element={<Navigate to="/admin?tab=design" replace />}
+            />
+            <Route
+              path="/settings"
+              element={<Navigate to="/admin?tab=config" replace />}
+            />
+            <Route
+              path="/governance-center"
+              element={<Navigate to="/admin?tab=governance" replace />}
+            />
+            <Route
+              path="/governance"
+              element={<Navigate to="/admin?tab=governance" replace />}
+            />
+            <Route
+              path="/secure"
+              element={<Navigate to="/admin?tab=governance" replace />}
+            />
+            <Route
+              path="/audio-center"
+              element={<Navigate to="/admin?tab=audio" replace />}
+            />
+            <Route path="/audio" element={<Navigate to="/admin?tab=audio" replace />} />
+            <Route path="/voice" element={<Navigate to="/admin?tab=audio" replace />} />
+            <Route path="/tts" element={<Navigate to="/admin?tab=audio" replace />} />
+            {/* ✨ v35.1.8 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
+            <Route
+              path="/fusion"
+              element={
+                <ErrorBoundary context="PerfectFusionDashboard">
+                  <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                    <PerfectFusionDashboard />
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+            {/* ✨ v35.1.8 - ULTIMATE OPTIMIZATION - Phase 12: GPU/WASM/Cache/IndexedDB */}
+            <Route
+              path="/optimization"
+              element={
+                <ErrorBoundary context="UltimateOptimizationDashboard">
+                  <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                    <UltimateOptimizationDashboard />
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+            {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}
+            <Route
+              path="/orchestration-intelligence"
+              element={
+                <ErrorBoundary context="OrchestrationIntelligenceCenter">
+                  <OrchestrationIntelligenceCenter />
+                </ErrorBoundary>
+              }
+            />
+            {/* ✨ v24 ORCHESTRATION META CENTER - Centre Unifié (#9) */}
+            <Route
+              path="/orchestration-center"
+              element={
+                <ErrorBoundary context="OrchestrationMetaCenter">
+                  <OrchestrationMetaCenter />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/meta-center"
+              element={<Navigate to="/orchestration-center" replace />}
+            />
+            {/* Redirections vers Orchestration Meta Center pour anciennes routes */}
+            <Route
+              path="/meta"
+              element={<Navigate to="/orchestration-center" replace />}
+            />
+            <Route
+              path="/multi-ai-dashboard"
+              element={<Navigate to="/orchestration-center" replace />}
+            />
+            <Route
+              path="/nexus-engine"
+              element={<Navigate to="/orchestration-center" replace />}
+            />
+            <Route
+              path="/harmonia-engine"
+              element={<Navigate to="/orchestration-center" replace />}
+            />
+            <Route
+              path="/cognitive-state"
+              element={<Navigate to="/orchestration-center" replace />}
+            />
+            {/* ✨ v35.1.8 DEV CENTER - Fusion Complete (4 modules → 1) */}
+            <Route
+              path="/dev"
+              element={
+                <ErrorBoundary context="DevCenter">
+                  <DevPage />
+                </ErrorBoundary>
+              }
+            />
+            {/* ✨ TOTAL_DEV v35.1.8 — GOD DEV sovereign space */}
+            <Route
+              path="/total-dev"
+              element={
+                <ErrorBoundary context="TotalDev">
+                  <TotalDevPage />
+                </ErrorBoundary>
+              }
+            />
+            {/* Redirections des anciens modules vers DEV */}
+            <Route
+              path="/one-core"
+              element={<Navigate to="/dev?tab=overview" replace />}
+            />
+            <Route
+              path="/command-center"
+              element={<Navigate to="/dev?tab=operations" replace />}
+            />
+            <Route
+              path="/unified"
+              element={<Navigate to="/dev?tab=overview" replace />}
+            />
+            <Route
+              path="/qa-monitoring"
+              element={<Navigate to="/dev?tab=validation" replace />}
+            />
+            <Route path="/qa" element={<Navigate to="/dev?tab=validation" replace />} />
+            <Route
+              path="/monitoring"
+              element={<Navigate to="/dev?tab=diagnostics" replace />}
+            />
+            <Route
+              path="/tests"
+              element={<Navigate to="/dev?tab=validation" replace />}
+            />
+            <Route
+              path="/developer-mode"
+              element={<Navigate to="/dev?tab=operations" replace />}
+            />
+            <Route
+              path="/dev-mode"
+              element={<Navigate to="/dev?tab=operations" replace />}
+            />
+            <Route
+              path="/devmode"
+              element={<Navigate to="/dev?tab=operations" replace />}
+            />
+            <Route
+              path="/ia-dev"
+              element={<Navigate to="/dev?tab=operations" replace />}
+            />
+            {/* Note: /orchestration-intelligence et /orchestration-center ont leurs propres composants ci-dessus */}
+            <Route
+              path="/orchestration"
+              element={<Navigate to="/orchestration-intelligence" replace />}
+            />
+            {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
+            <Route
+              path="/reality-center"
+              element={
+                <ErrorBoundary context="RealityCenter">
+                  <RealityCenter />
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
+            <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+            {/* ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20) */}
+            <Route
+              path="/hyper-center"
+              element={
+                <ErrorBoundary context="HyperCenter">
+                  <HyperCenter />
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+            <Route
+              path="/intelligence"
+              element={<Navigate to="/hyper-center" replace />}
+            />
+            {/* ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17) */}
+            <Route
+              path="/quantum-center"
+              element={
+                <ErrorBoundary context="QuantumCenter">
+                  <QuantumCenter />
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+            {/* ✨ TWINS — Page dédiée, accessible via menu Plus */}
+            <Route path="/identity-center" element={<Navigate to="/twins" replace />} />
+            <Route path="/identity" element={<Navigate to="/twins" replace />} />
+            <Route path="/persona" element={<Navigate to="/twins" replace />} />
+            <Route
+              path="/twins"
+              element={
+                <ErrorBoundary context="TwinsPage">
+                  <TwinsPage />
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/twin" element={<Navigate to="/twins" replace />} />
+            {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
+            <Route
+              path="/memory-evolution"
+              element={<Navigate to="/titane?tab=transformation" replace />}
+            />
+            <Route
+              path="/memory-evo"
+              element={<Navigate to="/titane?tab=transformation" replace />}
+            />
+            {/* ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞ */}
+            <Route
+              path="/cloud"
+              element={
+                <ErrorBoundary context="CloudCenter">
+                  <CloudCenter />
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+            <Route path="/vault" element={<Navigate to="/cloud" replace />} />
+            {/* ❌ SUPPRIMÉ v24.3.7: Route /multi-ai (deprecated stub) */}
+            {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
+            <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+            <Route path="/creation" element={<CreationStudio />} />
+            <Route path="/evolution" element={<EvolutionMonitor />} />
+            {/* v15: SingularityState Monitor */}
+            <Route
+              path="/singularity"
+              element={
+                <ErrorBoundary context="SingularityMonitor">
+                  <SingularityMonitor />
+                </ErrorBoundary>
+              }
+            />
+            {/* Engine Routes */}
+            {/* Routes historiques fusionnées vers les surfaces DEV/TITANE actives */}
+            <Route path="/sentinel" element={<Sentinel />} />
+            <Route path="/watchdog" element={<Watchdog />} />
+            <Route path="/selfheal" element={<SelfHeal />} />
+            <Route path="/adaptive" element={<AdaptiveEngine />} />
+            <Route path="/memory" element={<Memory />} />
+            <Route path="/research" element={<ResearchPage />} />
+            {/* ✨ Skill OS — Import/manage external skills */}
+            <Route path="/skills" element={<SkillManager />} />
+            <Route
+              path="/multiproject"
+              element={
+                <ErrorBoundary context="MultiProjectDashboard">
+                  <MultiProjectDashboard />
+                </ErrorBoundary>
+              }
+            />
+            {/* ✨ v31.1.0 — DOC CENTER — Export DOCX natif */}
+            <Route
+              path="/doc-center"
+              element={
+                <ErrorBoundary context="DocCenterPage">
+                  <DocCenterPage />
+                </ErrorBoundary>
+              }
+            />
+            <Route path="/doc" element={<Navigate to="/doc-center" replace />} />
+            {/* HTF Module — L'Humain à tout faire */}
+            <Route
+              path="/htf"
+              element={
+                <ErrorBoundary context="HTFPage">
+                  <HTFPage />
+                </ErrorBoundary>
+              }
+            />
+            {/* System Routes (Phase 9: lazy loaded) */}
+            <Route path="/performance" element={<PerformanceTest />} />
+            {/* Catch-all - Redirection vers Dashboard */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </SurfaceRoot>
 
       {/* ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION ⚡🧠) */}

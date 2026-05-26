@@ -8,7 +8,11 @@
  * mutation is preferable to long cache reuse. Pair with
  * `useChatSendMutation` which invalidates this exact key on success.
  */
-import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
+import {
+  useQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import { secureInvoke } from '../../lib/security';
 import { TAURI_COMMANDS } from '../../lib/tauriCommands';
 import { queryKeys } from '../../lib/queryKeys';
@@ -16,7 +20,12 @@ import { queryKeys } from '../../lib/queryKeys';
 export type ChatConversation = unknown;
 
 type QueryOpts = Omit<
-  UseQueryOptions<ChatConversation, Error, ChatConversation, ReturnType<typeof queryKeys.chat.conversation>>,
+  UseQueryOptions<
+    ChatConversation,
+    Error,
+    ChatConversation,
+    ReturnType<typeof queryKeys.chat.conversation>
+  >,
   'queryKey' | 'queryFn' | 'enabled'
 > & { enabled?: boolean };
 
@@ -29,7 +38,9 @@ export function useChatConversationQuery(
   return useQuery({
     queryKey: queryKeys.chat.conversation(id),
     queryFn: () =>
-      secureInvoke<ChatConversation>(TAURI_COMMANDS.CHAT_GET_CONVERSATION, { conversationId: id }),
+      secureInvoke<ChatConversation>(TAURI_COMMANDS.CHAT_GET_CONVERSATION, {
+        conversationId: id,
+      }),
     staleTime: 5_000,
     ...options,
     enabled: enabledByCaller && id.length > 0,

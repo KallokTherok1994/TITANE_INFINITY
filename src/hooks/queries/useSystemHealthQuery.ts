@@ -8,7 +8,11 @@
  * dashboards stay battery-aware. Callers that need polling can use `refetchInterval`
  * locally via `useSystemHealthQuery({ refetchInterval: 5_000 })`.
  */
-import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
+import {
+  useQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import { secureInvoke } from '../../lib/security';
 import { TAURI_COMMANDS } from '../../lib/tauriCommands';
 import { queryKeys } from '../../lib/queryKeys';
@@ -16,7 +20,12 @@ import { queryKeys } from '../../lib/queryKeys';
 export type SystemHealthSnapshot = unknown;
 
 type QueryOpts = Omit<
-  UseQueryOptions<SystemHealthSnapshot, Error, SystemHealthSnapshot, ReturnType<typeof queryKeys.system.health>>,
+  UseQueryOptions<
+    SystemHealthSnapshot,
+    Error,
+    SystemHealthSnapshot,
+    ReturnType<typeof queryKeys.system.health>
+  >,
   'queryKey' | 'queryFn'
 >;
 
@@ -25,7 +34,8 @@ export function useSystemHealthQuery(
 ): UseQueryResult<SystemHealthSnapshot, Error> {
   return useQuery({
     queryKey: queryKeys.system.health(),
-    queryFn: () => secureInvoke<SystemHealthSnapshot>(TAURI_COMMANDS.GET_SYSTEM_HEALTH, {}),
+    queryFn: () =>
+      secureInvoke<SystemHealthSnapshot>(TAURI_COMMANDS.GET_SYSTEM_HEALTH, {}),
     staleTime: 10_000,
     ...options,
   });

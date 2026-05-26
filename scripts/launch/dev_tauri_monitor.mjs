@@ -2,7 +2,13 @@
 
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { existsSync, mkdirSync, createWriteStream, readFileSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  createWriteStream,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
 import path from 'node:path';
 
 import { classifyMonitorLine, normalizeMonitorArgs } from './dev_tauri_monitor_rules.mjs';
@@ -24,18 +30,22 @@ function bootstrapWindowsDevEnv(env) {
   }
 
   const hostAppData = nextEnv.APPDATA || path.join(nextEnv.HOME, 'AppData', 'Roaming');
-  const devAppData = nextEnv.TITANE_DEV_APPDATA_ROOT || path.join(hostAppData, 'TITANE_INFINITY', 'dev', 'appdata');
+  const devAppData =
+    nextEnv.TITANE_DEV_APPDATA_ROOT ||
+    path.join(hostAppData, 'TITANE_INFINITY', 'dev', 'appdata');
   mkdirSync(devAppData, { recursive: true });
 
   nextEnv.APPDATA = devAppData;
   nextEnv.TITANE_DEV_APPDATA_ROOT = devAppData;
   nextEnv.TITANE_SECRETS_PATH =
-    nextEnv.TITANE_SECRETS_PATH || path.join(devAppData, 'titane_infinity', 'secrets.enc');
+    nextEnv.TITANE_SECRETS_PATH ||
+    path.join(devAppData, 'titane_infinity', 'secrets.enc');
   nextEnv.TITANE_DEV_AUTO_TOKEN = nextEnv.TITANE_DEV_AUTO_TOKEN || '1';
 
   // Fix Windows conversation DB path: use LOCALAPPDATA (stable) instead of HOME/.local/share (Linux-style)
-  const localAppData = process.env.LOCALAPPDATA
-    || path.join(nextEnv.HOME || nextEnv.USERPROFILE, 'AppData', 'Local');
+  const localAppData =
+    process.env.LOCALAPPDATA ||
+    path.join(nextEnv.HOME || nextEnv.USERPROFILE, 'AppData', 'Local');
   if (!nextEnv.TITANE_CONVOS_DB_PATH) {
     const convosDbDir = path.join(localAppData, 'TITANE_INFINITY', 'runtime', 'memory');
     mkdirSync(convosDbDir, { recursive: true });
@@ -47,7 +57,10 @@ function bootstrapWindowsDevEnv(env) {
     const passphraseFile = path.join(devDir, 'secrets-passphrase.txt');
     mkdirSync(devDir, { recursive: true });
     if (!existsSync(passphraseFile)) {
-      writeFileSync(passphraseFile, randomBytes(32).toString('hex'), { encoding: 'ascii', mode: 0o600 });
+      writeFileSync(passphraseFile, randomBytes(32).toString('hex'), {
+        encoding: 'ascii',
+        mode: 0o600,
+      });
     }
     nextEnv.TITANE_SECRETS_PASSPHRASE = readFileSync(passphraseFile, 'utf8').trim();
   }

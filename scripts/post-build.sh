@@ -8,6 +8,14 @@ set -e
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
+case "$(uname -s 2>/dev/null || echo unknown)" in
+  MINGW*|MSYS*|CYGWIN*)
+    echo ""
+    echo "✅ Post-Build: Windows host detected, Linux desktop icon hook skipped"
+    exit 0
+    ;;
+esac
+
 echo ""
 echo "🔄 Post-Build: Mise à jour automatique de l'icône desktop..."
 echo ""

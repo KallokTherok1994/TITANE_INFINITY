@@ -1,7 +1,7 @@
 /**
  * TITANE∞ — Advanced Q&A Scenario Tests
  * Rule 16 compliance: Advanced scenario validation for new capabilities
- * 
+ *
  * Tests complex multi-turn conversations with memory, context switching,
  * and advanced reasoning patterns with both PROD (gemma2:2b) and DEV (qwen) models.
  */
@@ -20,7 +20,10 @@ describe('Advanced Q&A Scenarios', () => {
       const conversationState = {
         stm: [
           { content: 'User: What is quantum computing?', timestamp: Date.now() },
-          { content: 'Assistant: Quantum computing uses qubits...', timestamp: Date.now() },
+          {
+            content: 'Assistant: Quantum computing uses qubits...',
+            timestamp: Date.now(),
+          },
         ],
         mtm: [{ topic: 'quantum_computing', summary: 'Introduction to QC concepts' }],
         ltm: [],
@@ -54,8 +57,9 @@ describe('Advanced Q&A Scenarios', () => {
    */
   describe('Scenario 2: Agent orchestration for complex reasoning', () => {
     it('should route analytical query to reasoning engine', async () => {
-      const query = 'Compare the performance implications of async/await vs promises in a CPU-bound scenario';
-      
+      const query =
+        'Compare the performance implications of async/await vs promises in a CPU-bound scenario';
+
       // Simulate query classification
       const classification = {
         category: 'technical_comparison',
@@ -76,7 +80,9 @@ describe('Advanced Q&A Scenarios', () => {
       ];
 
       const synthesis = {
-        primary_source: sources.find(s => s.relevance === Math.max(...sources.map(x => x.relevance))),
+        primary_source: sources.find(
+          s => s.relevance === Math.max(...sources.map(x => x.relevance))
+        ),
         supporting_sources: sources.filter(s => s.relevance > 0.75),
       };
 

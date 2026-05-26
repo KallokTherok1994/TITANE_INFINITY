@@ -67,11 +67,15 @@ function isActionable(decision: TwinChatPolicyDecision): boolean {
   return decision.verdict === 'review_required' || decision.verdict === 'downgraded';
 }
 
-function buildDecisionMap(decisions: TwinChatPolicyDecision[]): Map<string, TwinChatPolicyDecision> {
+function buildDecisionMap(
+  decisions: TwinChatPolicyDecision[]
+): Map<string, TwinChatPolicyDecision> {
   return new Map(decisions.map(decision => [decision.candidateId, decision]));
 }
 
-async function submitApprovedCandidate(candidate: TwinChatObservationCandidate): Promise<string> {
+async function submitApprovedCandidate(
+  candidate: TwinChatObservationCandidate
+): Promise<string> {
   switch (candidate.kind) {
     case 'value':
       return numericTwinService.observeValue(

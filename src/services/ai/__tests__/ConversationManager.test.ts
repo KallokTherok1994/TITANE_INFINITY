@@ -7,6 +7,24 @@ import { ConversationManager } from '../ConversationManager';
 import type { ConversationMessage } from '@/types/conversation';
 import { vi, beforeEach, afterEach } from 'vitest';
 
+const unifiedMemoryMock = vi.hoisted(() => ({
+  buildContext: vi.fn(),
+  createMemory: vi.fn(),
+}));
+
+const chatEngineCommandsMock = vi.hoisted(() => ({
+  generate: vi.fn(),
+}));
+
+vi.mock('@/services/unified', () => ({
+  createUnifiedMemory: vi.fn(() => Promise.resolve(unifiedMemoryMock)),
+}));
+
+vi.mock('@/services/tauri/chatEngine.commands', () => ({
+  default: chatEngineCommandsMock,
+  chatEngineCommands: chatEngineCommandsMock,
+}));
+
 // Mock secureInvoke (replaces deprecated Tauri invoke)
 vi.mock('@/lib/security', () => ({
   secureInvoke: vi.fn((cmd: string, args?: any) => {
@@ -72,6 +90,23 @@ describe('ConversationManager P0 Tests', () => {
   beforeEach(() => {
     manager = ConversationManager.getInstance();
     vi.clearAllMocks();
+    unifiedMemoryMock.buildContext.mockResolvedValue({
+      memories: [],
+      summary: '',
+    });
+    unifiedMemoryMock.createMemory.mockResolvedValue(undefined);
+    chatEngineCommandsMock.generate.mockImplementation(args =>
+      Promise.resolve({
+        content: `Mock omega response to: ${args?.message ?? 'unknown'}`,
+        conversationId: args?.conversationId ?? 'default',
+        messageId: `mock-msg-${Date.now()}`,
+        frenchMasteryApplied: true,
+        latencyMs: 5,
+        metadata: {
+          provider: args?.provider ?? 'mock',
+        },
+      })
+    );
   });
 
   afterEach(() => {

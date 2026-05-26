@@ -36,7 +36,9 @@ const tauriCoreInvokeMock = vi.hoisted(() =>
   vi.fn(async (cmd: string, args?: unknown) =>
     (
       globalThis as typeof globalThis & {
-        __TAURI__?: { core: { invoke: (cmd: string, args?: unknown) => Promise<unknown> } };
+        __TAURI__?: {
+          core: { invoke: (cmd: string, args?: unknown) => Promise<unknown> };
+        };
       }
     ).__TAURI__?.core.invoke(cmd, args)
   )
@@ -399,9 +401,7 @@ vi.mock('@tauri-apps/api/event', () => ({
     typeof SVGElement !== 'undefined' ? SVGElement.prototype : undefined
   );
   installTransformPolyfill(
-    typeof SVGGraphicsElement !== 'undefined'
-      ? SVGGraphicsElement.prototype
-      : undefined
+    typeof SVGGraphicsElement !== 'undefined' ? SVGGraphicsElement.prototype : undefined
   );
   installTransformPolyfill(
     typeof SVGGElement !== 'undefined' ? SVGGElement.prototype : undefined

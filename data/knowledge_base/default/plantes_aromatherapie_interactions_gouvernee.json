@@ -125,11 +125,7 @@
       },
       "lavande": {
         "nom_scientifique": "Lavandula angustifolia",
-        "formes": [
-          "aromatherapie",
-          "usage topique",
-          "produit oral standardise"
-        ],
+        "formes": ["aromatherapie", "usage topique", "produit oral standardise"],
         "niveau_preuve": "limited_or_preliminary",
         "usages_avec_signal": [
           "un produit oral de lavande pourrait aider l anxiete",
@@ -177,15 +173,9 @@
       },
       "echinacee": {
         "nom_scientifique": "Echinacea spp.",
-        "formes": [
-          "tisane",
-          "capsule",
-          "extrait"
-        ],
+        "formes": ["tisane", "capsule", "extrait"],
         "niveau_preuve": "insufficient_or_conflicting",
-        "usages_avec_signal": [
-          "usage populaire pour rhume et soutien immunitaire"
-        ],
+        "usages_avec_signal": ["usage populaire pour rhume et soutien immunitaire"],
         "garde_fous": [
           "donnees contradictoires selon preparation et indication",
           "interactions possibles avec medicaments metabolises par le foie",

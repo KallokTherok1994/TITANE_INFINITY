@@ -204,10 +204,23 @@ export async function withRetry<T>(
  */
 export async function withRetryAndTimeout<T>(
   fn: () => Promise<T>,
-  timeoutMs: number,
-  config: Partial<RetryConfig> = {},
+  timeoutMsOrConfig: number | Partial<RetryConfig>,
+  configOrTimeoutMs: Partial<RetryConfig> | number = {},
   context: Record<string, unknown> = {}
 ): Promise<T> {
+  const timeoutMs =
+    typeof timeoutMsOrConfig === 'number' ? timeoutMsOrConfig : configOrTimeoutMs;
+  const config =
+    typeof timeoutMsOrConfig === 'number'
+      ? typeof configOrTimeoutMs === 'number'
+        ? {}
+        : configOrTimeoutMs
+      : timeoutMsOrConfig;
+
+  if (typeof timeoutMs !== 'number' || !Number.isFinite(timeoutMs) || timeoutMs < 0) {
+    throw new Error(`Invalid timeout value (${String(timeoutMs)})`);
+  }
+
   const timeoutPromise = new Promise<never>((_, reject) => {
     setTimeout(() => {
       reject(new Error(`Global timeout exceeded (${timeoutMs}ms)`));

@@ -166,7 +166,10 @@ export const TitanePage: React.FC = () => {
 
   const handleStartTitleEdit = useCallback(() => {
     const currentTitle = activeConversation?.title ?? '';
-    const isGeneric = !currentTitle || currentTitle === 'Untitled' || currentTitle === 'Nouvelle conversation';
+    const isGeneric =
+      !currentTitle ||
+      currentTitle === 'Untitled' ||
+      currentTitle === 'Nouvelle conversation';
     setTitleDraft(isGeneric ? '' : currentTitle);
     setEditingTitle(true);
   }, [activeConversation]);
@@ -174,7 +177,11 @@ export const TitanePage: React.FC = () => {
   const handleCommitTitleEdit = useCallback(async () => {
     const id = activeConversation?.id;
     if (id && titleDraft.trim()) {
-      try { await renameConversation(id, titleDraft.trim()); } catch { /* non-fatal */ }
+      try {
+        await renameConversation(id, titleDraft.trim());
+      } catch {
+        /* non-fatal */
+      }
     }
     setEditingTitle(false);
     setTitleDraft('');
@@ -195,18 +202,30 @@ export const TitanePage: React.FC = () => {
   const handleSidebarToggle = useCallback(() => {
     setSidebarOpen(prev => {
       const next = !prev;
-      try { localStorage.setItem('titane_chat_sidebar_open', String(next)); } catch { /* ignore */ }
+      try {
+        localStorage.setItem('titane_chat_sidebar_open', String(next));
+      } catch {
+        /* ignore */
+      }
       return next;
     });
   }, []);
 
   const handleNewConversation = useCallback(() => {
-    try { localStorage.removeItem('titane_active_conversation_id'); } catch { /* ignore */ }
+    try {
+      localStorage.removeItem('titane_active_conversation_id');
+    } catch {
+      /* ignore */
+    }
     setChatKey(k => k + 1);
   }, []);
 
   const handleSelectConversation = useCallback((convId: string) => {
-    try { localStorage.setItem('titane_active_conversation_id', convId); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('titane_active_conversation_id', convId);
+    } catch {
+      /* ignore */
+    }
     setChatKey(k => k + 1);
   }, []);
 
@@ -275,11 +294,14 @@ export const TitanePage: React.FC = () => {
       },
       actions: [
         { id: 'send_message', label: 'Envoyer un message', status: 'wired' },
-        { id: 'switch_tab', label: 'Changer d\'onglet', status: 'wired' },
+        { id: 'switch_tab', label: "Changer d'onglet", status: 'wired' },
         { id: 'refresh_memory', label: 'Rafraîchir mémoire', status: 'wired' },
       ],
       memoryRefs: ['titane_active_conversation_id', 'titane_chat_mode_*'],
-      warnings: memoryStats == null ? ['Memory stats unavailable — tauri IPC may be degraded'] : [],
+      warnings:
+        memoryStats == null
+          ? ['Memory stats unavailable — tauri IPC may be degraded']
+          : [],
     });
   }, [stats, memoryStats, activeTab]);
 
@@ -454,8 +476,10 @@ export const TitanePage: React.FC = () => {
                     onChange={e => setTitleDraft(e.target.value)}
                     onBlur={() => void handleCommitTitleEdit()}
                     onKeyDown={e => {
-                      if (e.key === 'Enter') { e.preventDefault(); void handleCommitTitleEdit(); }
-                      else if (e.key === 'Escape') handleCancelTitleEdit();
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        void handleCommitTitleEdit();
+                      } else if (e.key === 'Escape') handleCancelTitleEdit();
                     }}
                     placeholder="Nom de la conversation…"
                     maxLength={80}
@@ -470,7 +494,9 @@ export const TitanePage: React.FC = () => {
                     aria-label="Titre de la conversation — cliquer pour renommer"
                     data-testid="chat-title-btn"
                   >
-                    {activeConversation?.title && activeConversation.title !== 'Untitled' && activeConversation.title !== 'Nouvelle conversation'
+                    {activeConversation?.title &&
+                    activeConversation.title !== 'Untitled' &&
+                    activeConversation.title !== 'Nouvelle conversation'
                       ? activeConversation.title
                       : 'Nouvelle conversation'}
                   </button>
@@ -484,7 +510,20 @@ export const TitanePage: React.FC = () => {
                   aria-label="Nouvelle conversation"
                   data-testid="chat-title-new-btn"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -513,11 +552,7 @@ export const TitanePage: React.FC = () => {
         data-testid="page-titane"
         data-layout="standard"
       >
-        <Stack
-          direction="vertical"
-          gap={4}
-          className="titane-page-shell"
-        >
+        <Stack direction="vertical" gap={4} className="titane-page-shell">
           {/* Runtime Truth Badge */}
           <SurfaceTruthBadge
             variant={memoryStats != null ? 'LIVE' : 'PARTIAL'}
@@ -531,9 +566,7 @@ export const TitanePage: React.FC = () => {
                 <h1 className="text-xl font-semibold text-titanium-text-primary">
                   ⚡ TITANE
                 </h1>
-                <p className="text-xs text-titanium-text-secondary">
-                  Le Cœur du Système
-                </p>
+                <p className="text-xs text-titanium-text-secondary">Le Cœur du Système</p>
               </div>
             </div>
 
@@ -546,12 +579,32 @@ export const TitanePage: React.FC = () => {
             >
               {(
                 [
-                  { id: 'conversation', label: '💬 Chat', handler: tabHandlers.conversation },
-                  { id: 'overview', label: '📊 Dashboard', handler: tabHandlers.overview },
+                  {
+                    id: 'conversation',
+                    label: '💬 Chat',
+                    handler: tabHandlers.conversation,
+                  },
+                  {
+                    id: 'overview',
+                    label: '📊 Dashboard',
+                    handler: tabHandlers.overview,
+                  },
                   { id: 'vision', label: '📷 Vision', handler: tabHandlers.vision },
-                  { id: 'memory-map', label: '💾 Mémoire', handler: tabHandlers.memoryMap },
-                  { id: 'progression', label: '⚡ Progression', handler: tabHandlers.progression },
-                  { id: 'transformation', label: '🌱 Évolution', handler: tabHandlers.transformation },
+                  {
+                    id: 'memory-map',
+                    label: '💾 Mémoire',
+                    handler: tabHandlers.memoryMap,
+                  },
+                  {
+                    id: 'progression',
+                    label: '⚡ Progression',
+                    handler: tabHandlers.progression,
+                  },
+                  {
+                    id: 'transformation',
+                    label: '🌱 Évolution',
+                    handler: tabHandlers.transformation,
+                  },
                 ] as Array<{ id: TabId; label: string; handler: () => void }>
               ).map(tab => {
                 const isActive = activeTab === tab.id;

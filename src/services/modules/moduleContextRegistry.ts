@@ -17,10 +17,15 @@ const MAX_SNAPSHOT_AGE_MS = 30_000; // 30s before stale
 
 class ModuleContextRegistryImpl {
   private snapshots = new Map<string, ModuleContextSnapshot>();
-  private listeners = new Set<(moduleId: string, snapshot: ModuleContextSnapshot) => void>();
+  private listeners = new Set<
+    (moduleId: string, snapshot: ModuleContextSnapshot) => void
+  >();
 
   /** Publish a snapshot for a module. Called by page components. */
-  publish(moduleId: string, snapshot: Omit<ModuleContextSnapshot, 'lastUpdated' | 'freshnessMs'>): void {
+  publish(
+    moduleId: string,
+    snapshot: Omit<ModuleContextSnapshot, 'lastUpdated' | 'freshnessMs'>
+  ): void {
     const full: ModuleContextSnapshot = {
       ...snapshot,
       lastUpdated: new Date().toISOString(),
@@ -28,7 +33,11 @@ class ModuleContextRegistryImpl {
     };
     this.snapshots.set(moduleId, full);
     for (const listener of this.listeners) {
-      try { listener(moduleId, full); } catch { /* ignore */ }
+      try {
+        listener(moduleId, full);
+      } catch {
+        /* ignore */
+      }
     }
   }
 
@@ -50,23 +59,27 @@ class ModuleContextRegistryImpl {
 
   /** Get current module snapshot or return a degraded placeholder. */
   getOrDegraded(moduleId: string): ModuleContextSnapshot {
-    return this.get(moduleId) ?? {
-      moduleId,
-      route: '',
-      title: moduleId,
-      status: 'unknown',
-      lastUpdated: new Date(0).toISOString(),
-      freshnessMs: Infinity,
-      source: 'unknown',
-      capabilities: [],
-      visibleMetrics: {},
-      actions: [],
-      warnings: ['Module snapshot not yet published'],
-    };
+    return (
+      this.get(moduleId) ?? {
+        moduleId,
+        route: '',
+        title: moduleId,
+        status: 'unknown',
+        lastUpdated: new Date(0).toISOString(),
+        freshnessMs: Infinity,
+        source: 'unknown',
+        capabilities: [],
+        visibleMetrics: {},
+        actions: [],
+        warnings: ['Module snapshot not yet published'],
+      }
+    );
   }
 
   /** Subscribe to snapshot updates. Returns unsubscribe fn. */
-  subscribe(listener: (moduleId: string, snapshot: ModuleContextSnapshot) => void): () => void {
+  subscribe(
+    listener: (moduleId: string, snapshot: ModuleContextSnapshot) => void
+  ): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
@@ -95,7 +108,9 @@ class ModuleContextRegistryImpl {
       lines.push(
         `${snap.moduleId} status=${snap.status} source=${snap.source} age=${ageS}s` +
           (metrics ? ` metrics=[${metrics}]` : '') +
-          (snap.warnings.length ? ` warnings=[${snap.warnings.slice(0, 2).join('; ')}]` : '')
+          (snap.warnings.length
+            ? ` warnings=[${snap.warnings.slice(0, 2).join('; ')}]`
+            : '')
       );
     }
     lines.push('[/MODULE_CONTEXT]');

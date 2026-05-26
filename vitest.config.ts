@@ -105,13 +105,11 @@ export const sharedTestConfig = defineConfig({
         },
       },
     },
-    // Memory stability: avoid forking many workers; run files sequentially.
-    pool: 'forks',
+    // Memory stability on Windows/Node 24: avoid fork worker exits; run files sequentially.
+    pool: 'threads',
     maxWorkers: 1,
     fileParallelism: false,
-    setupFiles: [
-      './src/__tests__/setup.ts',
-    ],
+    setupFiles: ['./src/__tests__/setup.ts'],
     // Variables d'environnement pour les tests
     env: {
       VITE_DISABLE_SECURITY_IN_TESTS: 'true',

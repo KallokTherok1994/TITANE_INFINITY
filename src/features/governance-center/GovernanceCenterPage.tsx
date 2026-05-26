@@ -40,7 +40,9 @@ function GovernanceCenterPageContent(): JSX.Element {
         data-testid="page-governance-center"
       >
         <Spinner />
-        <span className="ml-3 text-titanium-text-tertiary">Chargement du Centre Gouvernance...</span>
+        <span className="ml-3 text-titanium-text-tertiary">
+          Chargement du Centre Gouvernance...
+        </span>
       </div>
     );
   }

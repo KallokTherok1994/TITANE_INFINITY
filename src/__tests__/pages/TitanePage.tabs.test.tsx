@@ -45,7 +45,14 @@ vi.mock('@/cognitive/progression/xpEngine', () => ({
 }));
 vi.mock('@/hooks/useExperience', () => ({
   useExperience: () => ({
-    state: { totalXp: 0, level: 0, domains: {}, history: [], lastUpdated: 1, version: '1.0.0' },
+    state: {
+      totalXp: 0,
+      level: 0,
+      domains: {},
+      history: [],
+      lastUpdated: 1,
+      version: '1.0.0',
+    },
   }),
 }));
 vi.mock('@/lib/tauriClient', () => ({
@@ -95,9 +102,20 @@ vi.mock('@/components/chat/ConversationHistorySidebar', () => ({
   ConversationHistorySidebar: ({
     onTabChange,
   }: {
-    onTabChange: (tab: 'conversation' | 'vision' | 'overview' | 'memory-map' | 'progression' | 'transformation') => void;
+    onTabChange: (
+      tab:
+        | 'conversation'
+        | 'vision'
+        | 'overview'
+        | 'memory-map'
+        | 'progression'
+        | 'transformation'
+    ) => void;
   }) => (
-    <aside data-testid="conversation-history-sidebar" aria-label="Historique des conversations">
+    <aside
+      data-testid="conversation-history-sidebar"
+      aria-label="Historique des conversations"
+    >
       <button data-testid="sidebar-tab-overview" onClick={() => onTabChange('overview')}>
         Dashboard
       </button>
@@ -230,10 +248,7 @@ describe('TitanePage — Tab data-testids & a11y', () => {
     );
     expect(screen.getByTestId('conversation-history-sidebar')).toBeInTheDocument();
     expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
-    expect(screen.getByTestId('page-titane-content')).toHaveAttribute(
-      'role',
-      'main'
-    );
+    expect(screen.getByTestId('page-titane-content')).toHaveAttribute('role', 'main');
   });
 });
 

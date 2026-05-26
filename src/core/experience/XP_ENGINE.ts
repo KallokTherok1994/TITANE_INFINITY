@@ -268,7 +268,7 @@ function startAutoSave() {
   if (autoSaveIntervalId !== null) return; // Already running
 
   autoSaveIntervalId = setInterval(() => {
-      XP.load();
+    XP.load();
   }, 60000); // Every 60s
 
   console.warn('[XP] Miroir experienceService activé (60s)');

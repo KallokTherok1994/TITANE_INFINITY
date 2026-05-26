@@ -55,9 +55,15 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
           value={selectedProvider}
           onChange={e => onChange(e.target.value)}
           className="rounded-lg border border-titanium-border-strong bg-titanium-bg-interactive px-3 py-1.5 text-sm text-titanium-text-primary outline-none transition-colors"
-          style={{ '--tw-ring-color': 'var(--titane-accent, #06b6d4)' } as React.CSSProperties}
-          onFocus={e => { e.currentTarget.style.borderColor = 'var(--titane-accent, #06b6d4)'; }}
-          onBlur={e => { e.currentTarget.style.borderColor = ''; }}
+          style={
+            { '--tw-ring-color': 'var(--titane-accent, #06b6d4)' } as React.CSSProperties
+          }
+          onFocus={e => {
+            e.currentTarget.style.borderColor = 'var(--titane-accent, #06b6d4)';
+          }}
+          onBlur={e => {
+            e.currentTarget.style.borderColor = '';
+          }}
         >
           {options}
         </select>

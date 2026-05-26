@@ -16,9 +16,7 @@ describe('installGoogleFontStylesheetGuard', () => {
 
     const cleanup = installGoogleFontStylesheetGuard();
 
-    expect(
-      document.head.querySelector('link[href*="fonts.googleapis.com"]')
-    ).toBeNull();
+    expect(document.head.querySelector('link[href*="fonts.googleapis.com"]')).toBeNull();
     expect(document.head.querySelector('link[href="/assets/app.css"]')).not.toBeNull();
 
     cleanup();
@@ -38,9 +36,7 @@ describe('installGoogleFontStylesheetGuard', () => {
 
     await Promise.resolve();
 
-    expect(
-      document.head.querySelector('link[href*="fonts.googleapis.com"]')
-    ).toBeNull();
+    expect(document.head.querySelector('link[href*="fonts.googleapis.com"]')).toBeNull();
 
     cleanup();
   });

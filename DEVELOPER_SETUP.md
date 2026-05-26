@@ -1,19 +1,19 @@
 # TITANE∞ — Guide d'installation développeur
+
 > Status after Windows migration: Windows native is now the default primary development rail. Use `docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md` as the canonical Windows setup and proof guide. This document remains a cross-platform reference; for Windows-first quickstart follow the Windows guide.
 
 **Version:** v35.1.9 | **Dernière mise à jour:** 2026-05-21
 
-
 ## Prérequis
 
-| Outil | Version minimum | Installation recommandée |
-|---|---|---|
-| Node.js | 20 LTS | `fnm install 20` ou `nvm install 20` |
-| pnpm | 10.30.2 | `corepack enable && corepack prepare pnpm@10.30.2 --activate` |
-| Rust | 1.77 stable | `rustup update stable` |
-| Tauri CLI v2 | ^2.0 | `cargo install tauri-cli --version '^2'` |
-| Git | 2.40+ | gestionnaire de paquets OS |
-| Ollama | 0.4+ | [ollama.ai](https://ollama.ai) |
+| Outil        | Version minimum | Installation recommandée                                      |
+| ------------ | --------------- | ------------------------------------------------------------- |
+| Node.js      | 20 LTS          | `fnm install 20` ou `nvm install 20`                          |
+| pnpm         | 10.30.2         | `corepack enable && corepack prepare pnpm@10.30.2 --activate` |
+| Rust         | 1.77 stable     | `rustup update stable`                                        |
+| Tauri CLI v2 | ^2.0            | `cargo install tauri-cli --version '^2'`                      |
+| Git          | 2.40+           | gestionnaire de paquets OS                                    |
+| Ollama       | 0.4+            | [ollama.ai](https://ollama.ai)                                |
 
 ---
 
@@ -21,14 +21,14 @@
 
 > Windows 11 est le DEV_HOST primaire. Voir le guide canonique : [`docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`](docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md).
 
-| Composant | Requis | Notes |
-|---|---|---|
-| Microsoft C++ Build Tools 2022 | Obligatoire | Charge de travail C++ + Windows SDK + chaîne MSVC |
-| Microsoft Edge WebView2 Runtime | Obligatoire | Inclus Windows 11 ; installer manuellement sur Windows 10 |
-| Rust toolchain MSVC | Obligatoire | `x86_64-pc-windows-msvc` via `rustup` |
-| WiX Toolset v3 | Pour MSI | Requis pour `tauri build --bundles msi` |
-| Windows VBSCRIPT (fonctionnalité optionnelle) | Pour MSI | Peut être requis par le compilateur WiX |
-| `icon.ico` multi-résolution | Obligatoire | Autorité icône Windows |
+| Composant                                     | Requis      | Notes                                                     |
+| --------------------------------------------- | ----------- | --------------------------------------------------------- |
+| Microsoft C++ Build Tools 2022                | Obligatoire | Charge de travail C++ + Windows SDK + chaîne MSVC         |
+| Microsoft Edge WebView2 Runtime               | Obligatoire | Inclus Windows 11 ; installer manuellement sur Windows 10 |
+| Rust toolchain MSVC                           | Obligatoire | `x86_64-pc-windows-msvc` via `rustup`                     |
+| WiX Toolset v3                                | Pour MSI    | Requis pour `tauri build --bundles msi`                   |
+| Windows VBSCRIPT (fonctionnalité optionnelle) | Pour MSI    | Peut être requis par le compilateur WiX                   |
+| `icon.ico` multi-résolution                   | Obligatoire | Autorité icône Windows                                    |
 
 > **Commandes PowerShell-first.** Utiliser `corepack pnpm` — jamais `npm install`.
 
@@ -111,15 +111,16 @@ cargo tauri build --config src-tauri/tauri.conf.json
 
 Extensions à installer :
 
-| Extension | Identifiant |
-|---|---|
-| Tauri | `tauri-apps.tauri-vscode` |
-| Rust Analyzer | `rust-lang.rust-analyzer` |
-| ESLint | `dbaeumer.vscode-eslint` |
-| Prettier | `esbenp.prettier-vscode` |
+| Extension                 | Identifiant                 |
+| ------------------------- | --------------------------- |
+| Tauri                     | `tauri-apps.tauri-vscode`   |
+| Rust Analyzer             | `rust-lang.rust-analyzer`   |
+| ESLint                    | `dbaeumer.vscode-eslint`    |
+| Prettier                  | `esbenp.prettier-vscode`    |
 | Tailwind CSS IntelliSense | `bradlc.vscode-tailwindcss` |
 
 Le fichier `.vscode/settings.json` du projet configure automatiquement :
+
 - `editor.formatOnSave` avec Prettier
 - `chat.mcp.enabled: true` pour les agents MCP
 
@@ -136,6 +137,7 @@ pnpm run verify:ollama:boundary
 ```
 
 Modèles Ollama utilisés :
+
 - **Chat TITANE (runtime produit)** : `gemma2:2b`
 - **Dev/Copilot (VS Code conversation)** : `qwen3.5:9b`
 

@@ -21,7 +21,7 @@ describe('OrchestrationIntelligenceCenter A11y — tab desc contrast hardening',
   it('keeps the simulated disclosure banner wired on the canonical route', () => {
     const tsxPath = resolve(
       process.cwd(),
-      'src/modules/OrchestrationIntelligenceCenter.tsx',
+      'src/modules/OrchestrationIntelligenceCenter.tsx'
     );
     const src = readFileSync(tsxPath, 'utf-8');
 
@@ -33,7 +33,7 @@ describe('OrchestrationIntelligenceCenter A11y — tab desc contrast hardening',
   it('tab description span does not use opacity-70 (would drop below AA 4.5:1)', () => {
     const tsxPath = resolve(
       process.cwd(),
-      'src/modules/OrchestrationIntelligenceCenter.tsx',
+      'src/modules/OrchestrationIntelligenceCenter.tsx'
     );
     const src = readFileSync(tsxPath, 'utf-8');
 

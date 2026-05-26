@@ -10,7 +10,10 @@ import { waitFor } from '@testing-library/react';
 import { renderHook } from '../../../test-utils/renderHook';
 
 vi.mock('../../../lib/security', () => ({
-  secureInvoke: vi.fn(async (_cmd: string, _payload?: unknown) => ({ ok: true, value: _cmd })),
+  secureInvoke: vi.fn(async (_cmd: string, _payload?: unknown) => ({
+    ok: true,
+    value: _cmd,
+  })),
 }));
 
 import { secureInvoke } from '../../../lib/security';

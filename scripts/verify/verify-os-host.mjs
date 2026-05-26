@@ -5,7 +5,8 @@ const release = os.release();
 const isCi = String(process.env.CI || '').toLowerCase() === 'true';
 const isGitHubActions = String(process.env.GITHUB_ACTIONS || '').toLowerCase() === 'true';
 const runnerOs = process.env.RUNNER_OS || '';
-const shellHint = process.env.SHELL || process.env.ComSpec || process.env.PSModulePath || 'UNKNOWN';
+const shellHint =
+  process.env.SHELL || process.env.ComSpec || process.env.PSModulePath || 'UNKNOWN';
 
 let osHost = 'UNKNOWN';
 let classification = 'UNKNOWN';
@@ -23,7 +24,10 @@ if (platform === 'win32') {
     classification = 'UNKNOWN';
   }
 } else if (platform === 'linux') {
-  osHost = isGitHubActions || runnerOs.toLowerCase() === 'linux' ? 'GITHUB_ACTIONS_LINUX' : 'LINUX_LOCAL';
+  osHost =
+    isGitHubActions || runnerOs.toLowerCase() === 'linux'
+      ? 'GITHUB_ACTIONS_LINUX'
+      : 'LINUX_LOCAL';
   classification = 'PASS';
 } else if (platform === 'darwin') {
   osHost = 'MACOS_LOCAL';

@@ -10,10 +10,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { QueryClient } from '@tanstack/react-query';
-import {
-  installQueryPersister,
-  shouldDehydrateQueryKey,
-} from '../../lib/queryPersister';
+import { installQueryPersister, shouldDehydrateQueryKey } from '../../lib/queryPersister';
 
 class MemoryStorage implements Storage {
   private store = new Map<string, string>();
@@ -95,7 +92,7 @@ describe('installQueryPersister', () => {
     });
 
     // Laisse persister flusher (throttle=0 mais via microtask interne TanStack).
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 100));
 
     const raw = storage.getItem('titane.tanstack.query.cache.v1');
     expect(raw).toBeTruthy();
@@ -114,7 +111,7 @@ describe('installQueryPersister', () => {
       queryKey: ['secrets', 'token'],
       queryFn: async () => 'super-secret',
     });
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 100));
 
     const raw = storage.getItem('titane.tanstack.query.cache.v1');
     if (raw) {

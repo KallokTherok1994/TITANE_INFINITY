@@ -18,7 +18,9 @@ test.describe('GlobalRuntimePulse — Living Pulse v34.0.3', () => {
     await expect(pulse).toBeVisible({ timeout: 10_000 });
   });
 
-  test('pulse exposes data-status attribute (LIVE/PARTIAL/DEGRADED/PROBING)', async ({ page }) => {
+  test('pulse exposes data-status attribute (LIVE/PARTIAL/DEGRADED/PROBING)', async ({
+    page,
+  }) => {
     await page.goto('/');
     const pulse = page.getByTestId('global-runtime-pulse');
     await expect(pulse).toBeVisible({ timeout: 10_000 });
@@ -36,8 +38,12 @@ test.describe('GlobalRuntimePulse — Living Pulse v34.0.3', () => {
 
   test('pulse remains mounted across navigation', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByTestId('global-runtime-pulse')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('global-runtime-pulse')).toBeVisible({
+      timeout: 10_000,
+    });
     await page.goto('/settings');
-    await expect(page.getByTestId('global-runtime-pulse')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('global-runtime-pulse')).toBeVisible({
+      timeout: 10_000,
+    });
   });
 });

@@ -34,7 +34,8 @@ export const queryKeys = {
   chat: {
     all: ['chat'] as const,
     providersHealth: () => ['chat', 'providers-health'] as const,
-    conversation: (conversationId: string) => ['chat', 'conversation', conversationId] as const,
+    conversation: (conversationId: string) =>
+      ['chat', 'conversation', conversationId] as const,
     suggestions: (prompt: string) => ['chat', 'suggestions', prompt] as const,
   },
   devtools: {

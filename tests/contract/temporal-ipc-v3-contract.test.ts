@@ -32,15 +32,13 @@ describe('TIME-IPC v3 — 18 commandes (17 + temporal_metrics_health)', () => {
 
   it.each(TEMPORAL_V3_COMMANDS)(
     '%s — déclarée en Rust + handler + allowlist Rust + allowlist TS',
-    (cmd) => {
+    cmd => {
       const rustDecl = new RegExp(
         `#\\[tauri::command\\][\\s\\S]*?pub\\s+async\\s+fn\\s+${cmd}\\b`
       );
       expect(rustDecl.test(RUST_CMD)).toBe(true);
 
-      const handlerRef = new RegExp(
-        `commands::temporal_commands::${cmd}\\b`
-      );
+      const handlerRef = new RegExp(`commands::temporal_commands::${cmd}\\b`);
       expect(handlerRef.test(RUST_MAIN)).toBe(true);
 
       expect(RUST_SEC.includes(`commands.insert("${cmd}")`)).toBe(true);

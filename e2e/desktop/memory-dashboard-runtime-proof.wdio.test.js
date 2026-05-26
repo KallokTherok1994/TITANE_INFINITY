@@ -67,18 +67,20 @@ async function navigateToMemoryPage() {
 async function checkMemoryDashboardError() {
   // ✅ FIXED: Use stable data-testid instead of hardcoded class selector
   // Try data-testid first, then fallback to text content search
-  let errorBanner = await browser.$('[data-testid="memory-error-banner"]').catch(() => null);
-  
+  let errorBanner = await browser
+    .$('[data-testid="memory-error-banner"]')
+    .catch(() => null);
+
   // Fallback: Search for error text in error containers
   if (!errorBanner) {
     errorBanner = await browser.$('[data-testid*="error"]:has(p)').catch(() => null);
   }
-  
+
   // Last resort: Search in any paragraph with error-like styling (but not color-specific)
   if (!errorBanner) {
     errorBanner = await browser.$('p[role="alert"]').catch(() => null);
   }
-  
+
   const bannerExists = errorBanner && (await errorBanner.isExisting().catch(() => false));
   if (!bannerExists) return { hasError: false, errorText: null };
 

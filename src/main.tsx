@@ -957,7 +957,9 @@ if (typeof window !== 'undefined') {
 // 🚀 BOOT SEQUENCE START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 logger.info('\n╔════════════════════════════════════════════════════════════════╗');
-logger.info(`║  🌌 TITANE∞ v${__APP_VERSION__} - BOOT SEQUENCE                          ║`);
+logger.info(
+  `║  🌌 TITANE∞ v${__APP_VERSION__} - BOOT SEQUENCE                          ║`
+);
 logger.info('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 logger.info('╚════════════════════════════════════════════════════════════════╝\n');
 
@@ -1070,7 +1072,9 @@ const getSingularityPollingIntervalMs = (): number => {
 SingularityBridge.initialize()
   .then(() => {
     if (!SingularityBridge.hasBackendSyncAvailable()) {
-      logger.info('✅ SingularityBridge initialized (browser fallback, no backend transport)');
+      logger.info(
+        '✅ SingularityBridge initialized (browser fallback, no backend transport)'
+      );
       return;
     }
 
@@ -1272,9 +1276,8 @@ if (_titaneCurrentWindowLabel !== 'main') {
   // useChat reads getActiveConversationId() synchronously in useState initializer;
   // without this, it fires before the async initialize() in useConversations completes.
   try {
-    const { conversationStorage } = await import(
-      '@/services/conversation/conversationStorage'
-    );
+    const { conversationStorage } =
+      await import('@/services/conversation/conversationStorage');
     await conversationStorage.initialize();
     logger.info('✅ conversationStorage pre-initialized');
   } catch (err) {

@@ -75,7 +75,8 @@ const BADGE_META: Record<
   LEGACY: {
     label: 'LEGACY',
     verbose: 'Legacy — deprecated surface, alias redirect only',
-    colorClass: 'bg-titanium-bg-overlay/60 text-titanium-text-tertiary border border-titanium-border-subtle/50',
+    colorClass:
+      'bg-titanium-bg-overlay/60 text-titanium-text-tertiary border border-titanium-border-subtle/50',
     icon: '↩',
   },
   NOT_WIRED: {

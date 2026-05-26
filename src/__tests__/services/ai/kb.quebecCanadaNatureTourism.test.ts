@@ -24,7 +24,9 @@ describe('KB Quebec and Canada nature tourism', () => {
 
   it('adds a Canada-wide scenic landscapes domain without collapsing everything into Banff', () => {
     expect(caRaw.category).toBe('canada_paysages_parcs_routes_panoramiques');
-    expect(caRaw.canada_paysages_parcs_routes_panoramiques.doctrine_canonique.regles).toContain(
+    expect(
+      caRaw.canada_paysages_parcs_routes_panoramiques.doctrine_canonique.regles
+    ).toContain(
       'Ne pas reduire le Canada naturel a Banff seulement; garder une lecture multiregionale.'
     );
     expect(

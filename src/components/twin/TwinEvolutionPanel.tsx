@@ -174,11 +174,20 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
           ...contextStatusMeta.style,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.5rem',
+          }}
+        >
           <strong>{contextStatusMeta.label}</strong>
           <button
             className="twin-sync-force-btn"
-            onClick={() => { void handleForceSync(); }}
+            onClick={() => {
+              void handleForceSync();
+            }}
             disabled={isSyncing}
             title="Forcer la synchronisation TWIN maintenant"
             aria-label="Forcer la synchronisation TWIN"

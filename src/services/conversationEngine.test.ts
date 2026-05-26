@@ -944,7 +944,10 @@ describe('conversationEngine.processMessage', () => {
   it('injects UCM shadow status in the canonical prompt and metadata without activating behavior changes', async () => {
     userPreferencesEngine.setCustomPreference('ucm.runtime.ucmCore', true);
     userPreferencesEngine.setCustomPreference('ucm.runtime.ucmPromptProjection', true);
-    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmRuntimeObservability', true);
+    userPreferencesEngine.setCustomPreference(
+      'ucm.runtime.ucmRuntimeObservability',
+      true
+    );
     userPreferencesEngine.setCustomPreference('ucm_consent_granted', true);
     userPreferencesEngine.setCustomPreference('ucm_can_use_personal_data', true);
     userPreferencesEngine.setCustomPreference('ucm_internal_user', true);
@@ -1007,7 +1010,10 @@ describe('conversationEngine.processMessage', () => {
 
   it('keeps memory flow unchanged when UCM core is disabled in shadow mode', async () => {
     userPreferencesEngine.setCustomPreference('ucm.runtime.ucmCore', false);
-    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmRuntimeObservability', true);
+    userPreferencesEngine.setCustomPreference(
+      'ucm.runtime.ucmRuntimeObservability',
+      true
+    );
 
     vi.mocked(secureInvoke).mockImplementation(async command => {
       if (command === 'persistent_memory_get_context') {
@@ -1029,10 +1035,13 @@ describe('conversationEngine.processMessage', () => {
       return null;
     });
 
-    const response = await processMessage('Valide le flux standard sans rappel explicite', {
-      conversationId: 'c12',
-      providerPreference: 'ollama',
-    });
+    const response = await processMessage(
+      'Valide le flux standard sans rappel explicite',
+      {
+        conversationId: 'c12',
+        providerPreference: 'ollama',
+      }
+    );
 
     expect(
       vi
@@ -1045,16 +1054,19 @@ describe('conversationEngine.processMessage', () => {
     expect(response.cognitive_tags).toEqual(
       expect.arrayContaining(['persistent-memory:loaded'])
     );
-    expect(response.metadata.links_to_contexts.some(link => link.startsWith('ucm_'))).toBe(
-      false
-    );
+    expect(
+      response.metadata.links_to_contexts.some(link => link.startsWith('ucm_'))
+    ).toBe(false);
     expect(response.cognitive_tags.some(tag => tag.startsWith('ucm-'))).toBe(false);
   });
 
   it('does not expose UCM shadow prompt and tags when runtime observability is disabled', async () => {
     userPreferencesEngine.setCustomPreference('ucm.runtime.ucmCore', true);
     userPreferencesEngine.setCustomPreference('ucm.runtime.ucmPromptProjection', true);
-    userPreferencesEngine.setCustomPreference('ucm.runtime.ucmRuntimeObservability', false);
+    userPreferencesEngine.setCustomPreference(
+      'ucm.runtime.ucmRuntimeObservability',
+      false
+    );
 
     vi.mocked(secureInvoke)
       .mockResolvedValueOnce(null)
@@ -1073,14 +1085,17 @@ describe('conversationEngine.processMessage', () => {
     const generateCall = vi
       .mocked(secureInvoke)
       .mock.calls.find(([command]) => command === 'conversation_generate');
-    const prompt = String((generateCall?.[1] as { args?: { systemPrompt?: string } })?.args?.systemPrompt ?? '');
+    const prompt = String(
+      (generateCall?.[1] as { args?: { systemPrompt?: string } })?.args?.systemPrompt ??
+        ''
+    );
 
     expect(prompt).not.toContain('## USER_CORE_MODEL_SHADOW_CONTEXT');
     expect(prompt).not.toContain('## USER_CORE_MODEL_SHADOW_STATUS');
     expect(response.cognitive_tags.some(tag => tag.startsWith('ucm-'))).toBe(false);
-    expect(response.metadata.links_to_contexts.some(link => link.startsWith('ucm_'))).toBe(
-      false
-    );
+    expect(
+      response.metadata.links_to_contexts.some(link => link.startsWith('ucm_'))
+    ).toBe(false);
   });
 
   it('marks twins, cognitive, and time context when the active route passes a context envelope', async () => {

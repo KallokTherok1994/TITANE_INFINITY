@@ -30,8 +30,14 @@ describe('extractTwinChatObservationCandidates', () => {
 
     expect(candidates).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ kind: 'cognitive', contentCompact: 'reasoning_stepwise' }),
-        expect.objectContaining({ kind: 'cognitive', contentCompact: 'reasoning_structured' }),
+        expect.objectContaining({
+          kind: 'cognitive',
+          contentCompact: 'reasoning_stepwise',
+        }),
+        expect.objectContaining({
+          kind: 'cognitive',
+          contentCompact: 'reasoning_structured',
+        }),
       ])
     );
   });

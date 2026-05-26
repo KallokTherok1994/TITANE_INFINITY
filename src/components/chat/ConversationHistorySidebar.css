@@ -81,7 +81,10 @@
   background: rgba(255, 255, 255, 0.03);
   color: var(--titanium-text-tertiary, #8a8a8a);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 
 .titane-chat-sidebar-toggle:hover {
@@ -112,7 +115,9 @@
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -146,7 +151,9 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .titane-chat-sidebar-search-wrap:focus-within {
@@ -240,8 +247,15 @@
 }
 
 @keyframes sidebarLoadingPulse {
-  0%, 100% { opacity: 0.3; transform: scale(0.85); }
-  50%       { opacity: 1;   transform: scale(1.1); }
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 /* ─── Groups ─── */
@@ -389,7 +403,9 @@
   color: var(--titanium-text-tertiary, #8a8a8a);
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.12s, background 0.12s;
+  transition:
+    opacity 0.12s,
+    background 0.12s;
   font-size: 0.9rem;
 }
 
@@ -419,8 +435,14 @@
 }
 
 @keyframes contextMenuFadeIn {
-  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .titane-chat-context-menu-item {
@@ -436,7 +458,9 @@
   font-size: 0.8125rem;
   cursor: pointer;
   text-align: left;
-  transition: background 0.1s, color 0.1s;
+  transition:
+    background 0.1s,
+    color 0.1s;
 }
 
 .titane-chat-context-menu-item:hover {
@@ -486,7 +510,9 @@
   font-size: 0.8rem;
   cursor: pointer;
   text-align: left;
-  transition: background 0.12s, color 0.12s;
+  transition:
+    background 0.12s,
+    color 0.12s;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -495,7 +521,10 @@
   background: rgba(255, 255, 255, 0.05);
   color: var(--titanium-text-secondary, #b8b8b8);
   transform: translateX(2px);
-  transition: background 0.12s, color 0.12s, transform 0.15s;
+  transition:
+    background 0.12s,
+    color 0.12s,
+    transform 0.15s;
 }
 
 .titane-chat-sidebar-nav-item--active {

@@ -2,7 +2,9 @@ import holisticRaw from '../../../../data/knowledge_base/default/medecines_natur
 
 describe('KB natural health and holistic guidance', () => {
   it('adds a governed natural therapies domain with medical safety gating', () => {
-    expect(holisticRaw.category).toBe('medecines_naturelles_nutrition_holistique_gouvernee');
+    expect(holisticRaw.category).toBe(
+      'medecines_naturelles_nutrition_holistique_gouvernee'
+    );
     expect(holisticRaw.retrieval_triggers.length).toBeGreaterThanOrEqual(30);
     expect(holisticRaw.source_curation.medical_safety_gate).toBe(true);
     expect(holisticRaw.source_curation.sources.length).toBeGreaterThanOrEqual(15);
@@ -17,16 +19,19 @@ describe('KB natural health and holistic guidance', () => {
     expect(kb.piliers_holistiques_prioritaires.alimentation_saine.niveau_preuve).toBe(
       'lifestyle_foundation'
     );
-    expect(kb.piliers_holistiques_prioritaires.activite_physique.recommandations_cles).toContain(
-      '150 minutes ou plus par semaine chez l adulte'
-    );
+    expect(
+      kb.piliers_holistiques_prioritaires.activite_physique.recommandations_cles
+    ).toContain('150 minutes ou plus par semaine chez l adulte');
   });
 
   it('captures nuanced evidence for complementary practices', () => {
-    const practices = holisticRaw.medecines_naturelles_nutrition_holistique_gouvernee
-      .pratiques_complementaires;
+    const practices =
+      holisticRaw.medecines_naturelles_nutrition_holistique_gouvernee
+        .pratiques_complementaires;
 
-    expect(practices.meditation_pleine_conscience.niveau_preuve).toBe('supported_adjunct');
+    expect(practices.meditation_pleine_conscience.niveau_preuve).toBe(
+      'supported_adjunct'
+    );
     expect(practices.yoga.niveau_preuve).toBe('supported_adjunct');
     expect(practices.acupuncture.niveau_preuve).toBe('supported_adjunct');
     expect(practices.homeopathie.niveau_preuve).toBe(
@@ -35,8 +40,9 @@ describe('KB natural health and holistic guidance', () => {
   });
 
   it('guards supplement advice with context, interactions, and deficiency-first logic', () => {
-    const supplements = holisticRaw.medecines_naturelles_nutrition_holistique_gouvernee
-      .supplements_et_therapies_naturelles;
+    const supplements =
+      holisticRaw.medecines_naturelles_nutrition_holistique_gouvernee
+        .supplements_et_therapies_naturelles;
 
     expect(supplements.probiotiques.niveau_preuve).toBe('context_specific_or_deficiency');
     expect(supplements.melatonine.garde_fous).toContain(

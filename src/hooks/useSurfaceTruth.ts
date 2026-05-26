@@ -59,10 +59,8 @@ function readTransport(): ActiveTransport {
   try {
     if (
       typeof window !== 'undefined' &&
-      (
-        (window as unknown as Record<string, unknown>).__TAURI_INTERNALS__ ||
-        (window as unknown as Record<string, unknown>).__TAURI__
-      )
+      ((window as unknown as Record<string, unknown>).__TAURI_INTERNALS__ ||
+        (window as unknown as Record<string, unknown>).__TAURI__)
     ) {
       return 'tauri';
     }
@@ -95,7 +93,9 @@ export function useSurfaceTruth(): SurfaceTruth {
   const [truth, setTruth] = useState<SurfaceTruth>(() => ({
     appVersion: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'dev',
     buildTimestamp:
-      typeof __BUILD_TIMESTAMP__ !== 'undefined' ? __BUILD_TIMESTAMP__ : new Date(0).toISOString(),
+      typeof __BUILD_TIMESTAMP__ !== 'undefined'
+        ? __BUILD_TIMESTAMP__
+        : new Date(0).toISOString(),
     storeVersion: readStoreVersion(),
     swScope: null,
     swController: false,
@@ -126,7 +126,13 @@ export function useSurfaceTruth(): SurfaceTruth {
     };
   }, []);
 
-  return { ...truth, transport: liveTransport === 'degraded' && truth.transport === 'tauri' ? 'tauri' : liveTransport ?? truth.transport };
+  return {
+    ...truth,
+    transport:
+      liveTransport === 'degraded' && truth.transport === 'tauri'
+        ? 'tauri'
+        : (liveTransport ?? truth.transport),
+  };
 }
 
 export default useSurfaceTruth;

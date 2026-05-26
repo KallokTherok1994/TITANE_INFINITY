@@ -119,7 +119,9 @@ test.describe('TITANE v84 — Production Prod Freshness', () => {
     const deployVersion = fs.readFileSync(versionPath, 'utf8').trim();
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
       version?: string;
-      artifacts?: Record<string, string> | Array<string | { file?: string; name?: string }>;
+      artifacts?:
+        | Record<string, string>
+        | Array<string | { file?: string; name?: string }>;
     };
 
     expect(deployVersion).toMatch(/^\d+\.\d+\.\d+$/);

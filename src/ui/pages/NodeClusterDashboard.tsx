@@ -103,7 +103,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-600">
           Node-Cluster Dashboard
         </h1>
-        <p className="text-titanium-text-tertiary mt-2">Phase 5 : Réseau maillé distribué</p>
+        <p className="text-titanium-text-tertiary mt-2">
+          Phase 5 : Réseau maillé distribué
+        </p>
       </div>
 
       {/* Initialization Panel */}
@@ -114,7 +116,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
           </h2>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm text-titanium-text-tertiary mb-2">ID du nœud</label>
+              <label className="block text-sm text-titanium-text-tertiary mb-2">
+                ID du nœud
+              </label>
               <input
                 type="text"
                 value={nodeId}
@@ -124,7 +128,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
               />
             </div>
             <div>
-              <label className="block text-sm text-titanium-text-tertiary mb-2">Port</label>
+              <label className="block text-sm text-titanium-text-tertiary mb-2">
+                Port
+              </label>
               <input
                 type="number"
                 value={port}
@@ -153,7 +159,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">ID du nœud</div>
-            <div className="text-titanium-text-primary text-xl font-bold truncate">{stats.node_id}</div>
+            <div className="text-titanium-text-primary text-xl font-bold truncate">
+              {stats.node_id}
+            </div>
           </div>
           <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">Rôle</div>
@@ -163,7 +171,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
           </div>
           <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">Pairs</div>
-            <div className="text-titanium-text-primary text-xl font-bold">{stats.peer_count}</div>
+            <div className="text-titanium-text-primary text-xl font-bold">
+              {stats.peer_count}
+            </div>
           </div>
           <div className="bg-linear-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
             <div className="text-titanium-text-tertiary text-sm mb-2">Charge moy.</div>
@@ -177,7 +187,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
       {/* Peer List */}
       {isInitialized && (
         <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">Pairs actifs</h2>
+          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
+            Pairs actifs
+          </h2>
           <div className="space-y-3">
             {peers.map(peer => (
               <div
@@ -186,7 +198,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <div className="text-titanium-text-primary font-semibold">{peer.id}</div>
+                    <div className="text-titanium-text-primary font-semibold">
+                      {peer.id}
+                    </div>
                     <div className="text-titanium-text-tertiary text-sm">{peer.addr}</div>
                   </div>
                   <div
@@ -220,7 +234,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
                           style={{ width: `${peer.load}%` }}
                         />
                       </div>
-                      <span className="text-titanium-text-primary text-sm font-medium">{peer.load}%</span>
+                      <span className="text-titanium-text-primary text-sm font-medium">
+                        {peer.load}%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -244,7 +260,9 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
       {/* Network Visualization Placeholder */}
       {isInitialized && (
         <div className="mt-6 bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">Network Topology</h2>
+          <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
+            Network Topology
+          </h2>
           <div className="bg-titanium-bg-base/50 rounded-xl h-64 flex items-center justify-center text-titanium-text-disabled">
             Topology visualization (coming soon with D3.js)
           </div>

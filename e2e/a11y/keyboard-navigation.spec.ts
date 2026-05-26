@@ -68,7 +68,9 @@ test.describe('v34.0.8 keyboard navigation (Phase N)', () => {
       expect(bodyOk).toBe(true);
 
       // At least one focusable element was reached during the 6 Tabs
-      const focusableCount = focusInfo.filter(f => f.tag !== 'NONE' && f.tag !== 'BODY').length;
+      const focusableCount = focusInfo.filter(
+        f => f.tag !== 'NONE' && f.tag !== 'BODY'
+      ).length;
       writeFileSync(
         resolve(OUTPUT_DIR, `${surface.name}.json`),
         JSON.stringify(
@@ -80,13 +82,11 @@ test.describe('v34.0.8 keyboard navigation (Phase N)', () => {
             focusTrace: focusInfo,
           },
           null,
-          2,
+          2
         ),
-        'utf-8',
+        'utf-8'
       );
-      console.log(
-        `[keyboard:${surface.name}] focusable_reached=${focusableCount}/6`,
-      );
+      console.log(`[keyboard:${surface.name}] focusable_reached=${focusableCount}/6`);
       // Soft: at least 1 focusable element on these heavy surfaces
       expect(focusableCount).toBeGreaterThanOrEqual(1);
     });

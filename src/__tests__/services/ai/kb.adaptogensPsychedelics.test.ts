@@ -2,14 +2,17 @@ import adaptogensRaw from '../../../../data/knowledge_base/default/adaptogenes_c
 
 describe('KB adaptogens and psychedelic mushrooms', () => {
   it('adds a governed adaptogen and psychedelic domain', () => {
-    expect(adaptogensRaw.category).toBe('adaptogenes_champignons_psychedeliques_gouvernee');
+    expect(adaptogensRaw.category).toBe(
+      'adaptogenes_champignons_psychedeliques_gouvernee'
+    );
     expect(adaptogensRaw.retrieval_triggers.length).toBeGreaterThanOrEqual(20);
     expect(adaptogensRaw.source_curation.medical_safety_gate).toBe(true);
     expect(adaptogensRaw.source_curation.sources.length).toBeGreaterThanOrEqual(8);
   });
 
   it('keeps adaptogens bounded and interaction-aware', () => {
-    const dossiers = adaptogensRaw.adaptogenes_champignons_psychedeliques_gouvernee.dossiers;
+    const dossiers =
+      adaptogensRaw.adaptogenes_champignons_psychedeliques_gouvernee.dossiers;
 
     expect(dossiers.ashwagandha.niveau_preuve).toBe('limited_targeted_signal');
     expect(dossiers.ashwagandha.garde_fous).toContain(
@@ -20,7 +23,8 @@ describe('KB adaptogens and psychedelic mushrooms', () => {
   });
 
   it('does not overclaim medicinal mushrooms without strong official evidence', () => {
-    const dossiers = adaptogensRaw.adaptogenes_champignons_psychedeliques_gouvernee.dossiers;
+    const dossiers =
+      adaptogensRaw.adaptogenes_champignons_psychedeliques_gouvernee.dossiers;
 
     expect(dossiers.champignons_medicinaux_commerciaux.niveau_preuve).toBe(
       'insufficient_or_mixed'
@@ -31,7 +35,8 @@ describe('KB adaptogens and psychedelic mushrooms', () => {
   });
 
   it('treats psilocybin as controlled and not an approved self-treatment', () => {
-    const dossiers = adaptogensRaw.adaptogenes_champignons_psychedeliques_gouvernee.dossiers;
+    const dossiers =
+      adaptogensRaw.adaptogenes_champignons_psychedeliques_gouvernee.dossiers;
 
     expect(dossiers.psilocybine_et_champignons_magiques.niveau_preuve).toBe(
       'high_risk_or_controlled'

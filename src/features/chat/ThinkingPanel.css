@@ -888,7 +888,10 @@
 
 /* Topology node hover state */
 .thinking-topology-node {
-  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.12s;
 }
 
 .thinking-topology-node:hover {
@@ -903,8 +906,14 @@
 }
 
 @keyframes thinkingStreamPulse {
-  0%, 100% { opacity: 0.75; }
-  50%       { opacity: 1; box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+  }
 }
 
 /* Panel body scrollable area — ensure overflow */

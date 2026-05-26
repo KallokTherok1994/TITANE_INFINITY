@@ -318,10 +318,11 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                   }
                 );
               } catch (vaultError) {
-                isDev && console.warn(
-                  '[FileUpload] Knowledge vault ingestion warning (non-blocking):',
-                  vaultError
-                );
+                isDev &&
+                  console.warn(
+                    '[FileUpload] Knowledge vault ingestion warning (non-blocking):',
+                    vaultError
+                  );
               }
 
               // Ingestion dans la mémoire IA permanente
@@ -364,10 +365,11 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                 );
             } catch (memoryError) {
               // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
-              isDev && console.warn(
-                '[FileUpload] Memory ingestion warning (non-blocking):',
-                memoryError
-              );
+              isDev &&
+                console.warn(
+                  '[FileUpload] Memory ingestion warning (non-blocking):',
+                  memoryError
+                );
 
               // On donne quand même +10 XP pour l'analyse locale
               try {

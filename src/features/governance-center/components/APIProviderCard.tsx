@@ -197,7 +197,9 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
 
             <div className="grid gap-2 rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/30 p-3 text-xs text-titanium-text-secondary sm:grid-cols-2">
               <div data-testid="ollama-provider-url">
-                <span className="font-semibold text-titanium-text-primary">Endpoint:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">
+                  Endpoint:
+                </span>{' '}
                 {ollamaStatus?.url || 'non vérifié'}
               </div>
               <div data-testid="ollama-provider-model">
@@ -227,7 +229,9 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                 data-testid="ollama-provider-model-list"
                 className="rounded-lg border border-titanium-border-default/50 bg-titanium-bg-elevated/20 p-3 text-xs text-titanium-text-secondary"
               >
-                <span className="font-semibold text-titanium-text-primary">Modèles détectés:</span>{' '}
+                <span className="font-semibold text-titanium-text-primary">
+                  Modèles détectés:
+                </span>{' '}
                 {ollamaStatus?.models.join(', ')}
               </div>
             )}
@@ -263,7 +267,9 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Key className="h-4 w-4 text-titanium-text-tertiary" />
-                    <code className="text-sm text-titanium-text-secondary">{status.masked_key}</code>
+                    <code className="text-sm text-titanium-text-secondary">
+                      {status.masked_key}
+                    </code>
                   </div>
                   {status.env_purged && (
                     <span className="rounded bg-green-500/20 px-2 py-0.5 text-xs text-green-400">

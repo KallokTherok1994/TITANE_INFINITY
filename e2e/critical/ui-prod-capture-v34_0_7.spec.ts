@@ -85,12 +85,15 @@ test.describe('v34.0.7 UI PROD capture (50 surfaces)', () => {
   for (const surface of SURFACES) {
     test(`capture ${surface.name}`, async ({ page }) => {
       const errors: string[] = [];
-      page.on('pageerror', (err) => errors.push(`PAGEERROR: ${err.message}`));
-      page.on('console', (msg) => {
+      page.on('pageerror', err => errors.push(`PAGEERROR: ${err.message}`));
+      page.on('console', msg => {
         if (msg.type() === 'error') errors.push(`CONSOLE_ERROR: ${msg.text()}`);
       });
 
-      const response = await page.goto(surface.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+      const response = await page.goto(surface.url, {
+        waitUntil: 'domcontentloaded',
+        timeout: 30_000,
+      });
       expect(response?.status(), `HTTP status for ${surface.url}`).toBeLessThan(500);
 
       // Wait for React to render
@@ -101,12 +104,17 @@ test.describe('v34.0.7 UI PROD capture (50 surfaces)', () => {
       await page.screenshot({ path: screenshotPath, fullPage: false });
 
       // Verify body has content (no white screen)
-      const bodyText = await page.evaluate(() => document.body?.innerText?.trim()?.length ?? 0);
+      const bodyText = await page.evaluate(
+        () => document.body?.innerText?.trim()?.length ?? 0
+      );
       expect(bodyText, `body text length for ${surface.url}`).toBeGreaterThan(0);
 
       // Log non-blocking errors (visible in proof but don't fail unless catastrophic)
       if (errors.length > 0) {
-        console.log(`[${surface.name}] ${errors.length} console/page errors:`, errors.slice(0, 3));
+        console.log(
+          `[${surface.name}] ${errors.length} console/page errors:`,
+          errors.slice(0, 3)
+        );
       }
     });
   }

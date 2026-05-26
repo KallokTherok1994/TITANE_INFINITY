@@ -53,7 +53,11 @@ describe('Ollama generate() — health check before retries', () => {
     ollamaCheckHealthMock.mockResolvedValue({
       ok: false,
       provider: 'ollama',
-      error: { code: 'OLLAMA_IPC_FAILED', message: 'Ollama unreachable', retryable: false },
+      error: {
+        code: 'OLLAMA_IPC_FAILED',
+        message: 'Ollama unreachable',
+        retryable: false,
+      },
     });
 
     const { ollamaProvider } = await import('@/services/ai/providers/ollama');
@@ -102,9 +106,21 @@ describe('Ollama generate() — retry behavior on transient errors', () => {
     ollamaGenerateMock.mockImplementation(() => {
       callCount++;
       if (callCount === 1) {
-        return Promise.resolve({ ok: false, provider: 'ollama', error: { code: 'OLLAMA_IPC_ERROR', message: 'Transient error', retryable: true } });
+        return Promise.resolve({
+          ok: false,
+          provider: 'ollama',
+          error: {
+            code: 'OLLAMA_IPC_ERROR',
+            message: 'Transient error',
+            retryable: true,
+          },
+        });
       }
-      return Promise.resolve({ ok: true, provider: 'ollama', content: { content: 'Succès retry', model: 'gemma2:2b', latency_ms: 80 } });
+      return Promise.resolve({
+        ok: true,
+        provider: 'ollama',
+        content: { content: 'Succès retry', model: 'gemma2:2b', latency_ms: 80 },
+      });
     });
 
     const { ollamaProvider } = await import('@/services/ai/providers/ollama');

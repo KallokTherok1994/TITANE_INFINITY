@@ -32,9 +32,9 @@ function resolveCommand(command) {
   return (
     result.stdout
       .split(/\r?\n/)
-      .map((line) => line.trim())
+      .map(line => line.trim())
       .filter(Boolean)
-      .find((candidate) => fs.existsSync(candidate)) || ''
+      .find(candidate => fs.existsSync(candidate)) || ''
   );
 }
 
@@ -57,21 +57,21 @@ const child = spawn(command, args, {
   stdio: ['ignore', 'pipe', 'pipe'],
 });
 
-child.stdout.on('data', (chunk) => {
+child.stdout.on('data', chunk => {
   fs.appendFileSync(LOG_FILE, chunk);
   process.stdout.write(chunk);
 });
 
-child.stderr.on('data', (chunk) => {
+child.stderr.on('data', chunk => {
   fs.appendFileSync(LOG_FILE, chunk);
   process.stderr.write(chunk);
 });
 
-child.on('error', (error) => {
+child.on('error', error => {
   log(`[tauri.dev] ERROR: vite build failed to start: ${error.message}`);
   process.exit(1);
 });
 
-child.on('exit', (code) => {
+child.on('exit', code => {
   process.exit(code ?? 1);
 });

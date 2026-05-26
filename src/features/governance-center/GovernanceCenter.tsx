@@ -124,7 +124,9 @@ export const GovernanceCenter: React.FC = () => {
               <Brain className="h-8 w-8 text-titanium-text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-titanium-text-primary">Centre de Gouvernance IA</h1>
+              <h1 className="text-3xl font-bold text-titanium-text-primary">
+                Centre de Gouvernance IA
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Configuration des providers d&apos;intelligence artificielle
               </p>
@@ -181,7 +183,9 @@ export const GovernanceCenter: React.FC = () => {
             <div className="flex items-center gap-3">
               <Zap className="h-5 w-5 text-yellow-400" />
               <div>
-                <p className="text-2xl font-bold text-titanium-text-primary">{activeProviders}/4</p>
+                <p className="text-2xl font-bold text-titanium-text-primary">
+                  {activeProviders}/4
+                </p>
                 <p className="text-xs text-titanium-text-tertiary">Providers actifs</p>
               </div>
             </div>
@@ -276,19 +280,25 @@ export const GovernanceCenter: React.FC = () => {
           </h3>
           <div className="grid gap-4 text-sm text-titanium-text-secondary md:grid-cols-3">
             <div>
-              <p className="mb-1 font-semibold text-titanium-text-primary">🔒 Chiffrement AES-256-GCM</p>
+              <p className="mb-1 font-semibold text-titanium-text-primary">
+                🔒 Chiffrement AES-256-GCM
+              </p>
               <p className="text-xs text-titanium-text-tertiary">
                 Toutes les clés API sont chiffrées avant stockage
               </p>
             </div>
             <div>
-              <p className="mb-1 font-semibold text-titanium-text-primary">🧹 Purge environnement</p>
+              <p className="mb-1 font-semibold text-titanium-text-primary">
+                🧹 Purge environnement
+              </p>
               <p className="text-xs text-titanium-text-tertiary">
                 Variables d&apos;environnement nettoyées automatiquement
               </p>
             </div>
             <div>
-              <p className="mb-1 font-semibold text-titanium-text-primary">👁️ Affichage masqué</p>
+              <p className="mb-1 font-semibold text-titanium-text-primary">
+                👁️ Affichage masqué
+              </p>
               <p className="text-xs text-titanium-text-tertiary">
                 Seuls les 4 derniers caractères affichés
               </p>

@@ -64,7 +64,10 @@ test.describe('Runtime Identity Truth — Web UI', () => {
 
     if (isSpaFallback) {
       // Dev server SPA fallback — verify via dist/build-truth.json instead (gate-build-truth.sh covers this)
-      test.skip(true, 'Dev server SPA fallback: build-truth.json verified via gate-build-truth.sh (PASS=8)');
+      test.skip(
+        true,
+        'Dev server SPA fallback: build-truth.json verified via gate-build-truth.sh (PASS=8)'
+      );
       return;
     }
 

@@ -51,7 +51,10 @@ function detectBinarySource(protocol: string, userAgent: string): BinarySource {
   }
   if (protocol !== 'tauri') return 'browser';
   if (userAgent.toLowerCase().includes('appimage')) return 'appimage';
-  if (userAgent.toLowerCase().includes('deb') || userAgent.toLowerCase().includes('installed')) {
+  if (
+    userAgent.toLowerCase().includes('deb') ||
+    userAgent.toLowerCase().includes('installed')
+  ) {
     return 'deb-installed';
   }
   return 'appimage';
@@ -60,7 +63,10 @@ function detectBinarySource(protocol: string, userAgent: string): BinarySource {
 let _buildTruth: { appVersion?: string; buildTimestamp?: string } | null | undefined =
   undefined;
 
-async function loadBuildTruth(): Promise<{ appVersion?: string; buildTimestamp?: string } | null> {
+async function loadBuildTruth(): Promise<{
+  appVersion?: string;
+  buildTimestamp?: string;
+} | null> {
   if (_buildTruth !== undefined) return _buildTruth;
   try {
     const res = await fetch('/build-truth.json');
@@ -141,7 +147,8 @@ export async function resolveRuntimeIdentity(): Promise<RuntimeIdentity> {
     buildTruthVersion: bt?.appVersion ?? null,
     buildTimestamp: bt?.buildTimestamp ?? null,
     runtimeKind,
-    isTauriRuntimeAvailable: hasTauriAPI || hasTauriInternals || hasTauriUA || protocol === 'tauri',
+    isTauriRuntimeAvailable:
+      hasTauriAPI || hasTauriInternals || hasTauriUA || protocol === 'tauri',
     hasTauriInternals,
     currentUrl: window.location.href,
     userAgent,

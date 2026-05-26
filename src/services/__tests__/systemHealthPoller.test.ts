@@ -123,10 +123,8 @@ describe('startSystemHealthPolling', () => {
     });
 
     vi.resetModules();
-    const {
-      startSystemHealthPolling,
-      __resetSystemHealthPollerForTests,
-    } = await import('../systemHealthPoller');
+    const { startSystemHealthPolling, __resetSystemHealthPollerForTests } =
+      await import('../systemHealthPoller');
     __resetSystemHealthPollerForTests();
 
     expect(() => startSystemHealthPolling(1000).stop()).not.toThrow();

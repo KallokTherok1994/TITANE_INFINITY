@@ -45,7 +45,9 @@ const DASHBOARD_TESTIDS = [
   'log-analysis-dashboard',
 ];
 
-test('v34.0.7 advanced agent dashboards are reachable and expose canonical testids', async ({ page }) => {
+test('v34.0.7 advanced agent dashboards are reachable and expose canonical testids', async ({
+  page,
+}) => {
   await page.goto(CANONICAL_APP_SHELL_ROUTE, {
     waitUntil: 'domcontentloaded',
     timeout: 30_000,
@@ -75,7 +77,9 @@ test('v34.0.7 advanced agent dashboards are reachable and expose canonical testi
   });
 });
 
-test('v34.0.7 log-analysis dashboard exposes canonical testid contract', async ({ page }) => {
+test('v34.0.7 log-analysis dashboard exposes canonical testid contract', async ({
+  page,
+}) => {
   await page.goto(CANONICAL_APP_SHELL_ROUTE, {
     waitUntil: 'domcontentloaded',
     timeout: 30_000,

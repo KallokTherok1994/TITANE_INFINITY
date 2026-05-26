@@ -25,7 +25,7 @@ describe('tag-orphan-pages — extractImports', () => {
 
   it('détecte les lazy / lazyWithTimeout avec wrapper multiligne', () => {
     const source = [
-      "const TitanePage = lazyWithTimeout(",
+      'const TitanePage = lazyWithTimeout(',
       "  () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),",
       '  { ms: 8000 }',
       ');',
@@ -65,16 +65,22 @@ describe('tag-orphan-pages — buildAuditReport sur fixture isolée', () => {
     try {
       const pagesDir = join(dir, 'pages');
       await mkdir(pagesDir, { recursive: true });
-      await writeFile(join(pagesDir, 'AlphaPage.tsx'), 'export const AlphaPage = () => null;');
-      await writeFile(join(pagesDir, 'OrphanPage.tsx'), 'export const OrphanPage = () => null;');
+      await writeFile(
+        join(pagesDir, 'AlphaPage.tsx'),
+        'export const AlphaPage = () => null;'
+      );
+      await writeFile(
+        join(pagesDir, 'OrphanPage.tsx'),
+        'export const OrphanPage = () => null;'
+      );
       const appPath = join(dir, 'App.tsx');
       await writeFile(
         appPath,
         `const AlphaPage = lazy(() => import('./pages/AlphaPage'));\n<AlphaPage />`
       );
       const report = await buildAuditReport({ pagesDir, appTsxPath: appPath });
-      const alpha = report.pages.find((p) => p.file.endsWith('AlphaPage.tsx'));
-      const orphan = report.pages.find((p) => p.file.endsWith('OrphanPage.tsx'));
+      const alpha = report.pages.find(p => p.file.endsWith('AlphaPage.tsx'));
+      const orphan = report.pages.find(p => p.file.endsWith('OrphanPage.tsx'));
       expect(alpha?.category).toBe('LIVE');
       expect(orphan?.category).toBe('ORPHAN_DEAD');
       expect(report.totals.total).toBe(2);

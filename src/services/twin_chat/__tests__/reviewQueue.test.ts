@@ -7,10 +7,7 @@ import {
   rejectTwinChatReviewItem,
 } from '../reviewQueue';
 import { numericTwinService } from '@/services/api/numericTwin';
-import type {
-  TwinChatObservationCandidate,
-  TwinChatPolicyDecision,
-} from '../types';
+import type { TwinChatObservationCandidate, TwinChatPolicyDecision } from '../types';
 
 vi.mock('@/services/api/numericTwin', () => ({
   numericTwinService: {

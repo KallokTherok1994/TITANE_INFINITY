@@ -16,16 +16,23 @@ function tomlWindowsPath(value) {
 
 function findMsvcLinker() {
   const roots = [
-    resolve(process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)', 'Microsoft Visual Studio'),
+    resolve(
+      process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)',
+      'Microsoft Visual Studio'
+    ),
     resolve(process.env.ProgramFiles || 'C:\\Program Files', 'Microsoft Visual Studio'),
   ];
 
   for (const root of roots) {
     if (!existsSync(root)) continue;
-    const years = readdirSync(root, { withFileTypes: true }).filter(entry => entry.isDirectory());
+    const years = readdirSync(root, { withFileTypes: true }).filter(entry =>
+      entry.isDirectory()
+    );
     for (const year of years) {
       const yearDir = resolve(root, year.name);
-      const editions = readdirSync(yearDir, { withFileTypes: true }).filter(entry => entry.isDirectory());
+      const editions = readdirSync(yearDir, { withFileTypes: true }).filter(entry =>
+        entry.isDirectory()
+      );
       for (const edition of editions) {
         const msvcDir = resolve(yearDir, edition.name, 'VC', 'Tools', 'MSVC');
         if (!existsSync(msvcDir)) continue;
@@ -54,14 +61,16 @@ function ensureTestCargoHome() {
   const cargoHome = resolve(tauriDir, 'target', 'cargo-home-tests');
   mkdirSync(cargoHome, { recursive: true });
 
-  const userCargoHome = process.env.CARGO_HOME || resolve(process.env.USERPROFILE || '', '.cargo');
+  const userCargoHome =
+    process.env.CARGO_HOME || resolve(process.env.USERPROFILE || '', '.cargo');
   const userRegistry = resolve(userCargoHome, 'registry');
   const localRegistry = resolve(cargoHome, 'registry');
   if (!existsSync(localRegistry) && existsSync(userRegistry)) {
     symlinkSync(userRegistry, localRegistry, 'junction');
   }
 
-  const rustupHome = process.env.RUSTUP_HOME || resolve(process.env.USERPROFILE || '', '.rustup');
+  const rustupHome =
+    process.env.RUSTUP_HOME || resolve(process.env.USERPROFILE || '', '.rustup');
   const msvc = findMsvcLinker();
   const linker =
     msvc?.linker ||
@@ -82,7 +91,9 @@ function ensureTestCargoHome() {
     resolve(userProfile, 'WinSDK_NuGet', 'c', 'ucrt', 'x64'),
     resolve(userProfile, 'WinLibs'),
   ].filter(Boolean);
-  const rustflags = libPaths.map(libPath => `  "-C", "link-arg=/LIBPATH:${tomlWindowsPath(libPath)}"`).join(',\n');
+  const rustflags = libPaths
+    .map(libPath => `  "-C", "link-arg=/LIBPATH:${tomlWindowsPath(libPath)}"`)
+    .join(',\n');
   const config = `[target.x86_64-pc-windows-msvc]
 linker = "${tomlWindowsPath(linker)}"
 rustflags = [

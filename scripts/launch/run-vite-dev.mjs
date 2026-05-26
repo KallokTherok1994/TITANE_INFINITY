@@ -45,17 +45,19 @@ function resolveCommand(command) {
     return '';
   }
 
-  return result.stdout
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .flatMap((line) => {
-      if (!line) {
-        return [];
-      }
-      const ext = path.extname(line).toLowerCase();
-      return ext ? [line] : [`${line}.cmd`, `${line}.exe`, line];
-    })
-    .find((candidate) => fs.existsSync(candidate)) || '';
+  return (
+    result.stdout
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .flatMap(line => {
+        if (!line) {
+          return [];
+        }
+        const ext = path.extname(line).toLowerCase();
+        return ext ? [line] : [`${line}.cmd`, `${line}.exe`, line];
+      })
+      .find(candidate => fs.existsSync(candidate)) || ''
+  );
 }
 
 const viteBin = path.join(ROOT, 'node_modules', 'vite', 'bin', 'vite.js');
@@ -89,12 +91,12 @@ const child = spawn(command, args, {
   stdio: ['ignore', 'pipe', 'pipe'],
 });
 
-child.stdout.on('data', (chunk) => {
+child.stdout.on('data', chunk => {
   fs.appendFileSync(LOG_FILE, chunk);
   process.stdout.write(chunk);
 });
 
-child.stderr.on('data', (chunk) => {
+child.stderr.on('data', chunk => {
   fs.appendFileSync(LOG_FILE, chunk);
   process.stderr.write(chunk);
 });

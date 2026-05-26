@@ -23,15 +23,26 @@ vi.mock('@/engines/conversation/conversationLifecycleEngine', () => {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     })),
-    createSummary: vi.fn((conv: { id: string; title?: string; messages?: unknown[]; updatedAt?: number }) => ({
-      id: conv.id,
-      title: conv.title ?? 'Untitled',
-      messageCount: (conv.messages ?? []).length,
-      updatedAt: conv.updatedAt ?? Date.now(),
-    })),
+    createSummary: vi.fn(
+      (conv: {
+        id: string;
+        title?: string;
+        messages?: unknown[];
+        updatedAt?: number;
+      }) => ({
+        id: conv.id,
+        title: conv.title ?? 'Untitled',
+        messageCount: (conv.messages ?? []).length,
+        updatedAt: conv.updatedAt ?? Date.now(),
+      })
+    ),
     setActiveConversation: vi.fn((id: string) => {
       // Mirror the real engine: persist active ID to localStorage
-      try { localStorage.setItem(STORAGE_KEY_ACTIVE, id); } catch { /* ignore */ }
+      try {
+        localStorage.setItem(STORAGE_KEY_ACTIVE, id);
+      } catch {
+        /* ignore */
+      }
     }),
     getActiveConversationId: vi.fn(),
   };
@@ -58,11 +69,19 @@ function makeLocalStorageMock(): Storage {
   let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] ?? null),
-    setItem: vi.fn((key: string, value: string) => { store[key] = value; }),
-    removeItem: vi.fn((key: string) => { delete store[key]; }),
-    clear: vi.fn(() => { store = {}; }),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
     key: vi.fn((index: number) => Object.keys(store)[index] ?? null),
-    get length() { return Object.keys(store).length; },
+    get length() {
+      return Object.keys(store).length;
+    },
   } as unknown as Storage;
 }
 
@@ -107,12 +126,16 @@ describe('conversationStorage.initialize() — active conversation guarantee', (
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    (localStorageMock.getItem as ReturnType<typeof vi.fn>).mockImplementation((key: string) => {
-      if (key === STORAGE_KEY_ACTIVE) return EXISTING_ID;
-      if (key === STORAGE_KEY_INDEX) return JSON.stringify([{ id: EXISTING_ID, title: 'Existing conversation' }]);
-      if (key === `${STORAGE_KEY_PREFIX}${EXISTING_ID}`) return JSON.stringify(existingConversation);
-      return null;
-    });
+    (localStorageMock.getItem as ReturnType<typeof vi.fn>).mockImplementation(
+      (key: string) => {
+        if (key === STORAGE_KEY_ACTIVE) return EXISTING_ID;
+        if (key === STORAGE_KEY_INDEX)
+          return JSON.stringify([{ id: EXISTING_ID, title: 'Existing conversation' }]);
+        if (key === `${STORAGE_KEY_PREFIX}${EXISTING_ID}`)
+          return JSON.stringify(existingConversation);
+        return null;
+      }
+    );
 
     const storage = new ConversationStorageService();
     await storage.initialize();
@@ -122,8 +145,11 @@ describe('conversationStorage.initialize() — active conversation guarantee', (
   });
 
   it('initialize() is idempotent: calling it twice only runs initialization logic once', async () => {
-    const { conversationLifecycle } = await import('@/engines/conversation/conversationLifecycleEngine');
-    const createConversationSpy = conversationLifecycle.createConversation as ReturnType<typeof vi.fn>;
+    const { conversationLifecycle } =
+      await import('@/engines/conversation/conversationLifecycleEngine');
+    const createConversationSpy = conversationLifecycle.createConversation as ReturnType<
+      typeof vi.fn
+    >;
     createConversationSpy.mockClear();
 
     const storage = new ConversationStorageService();

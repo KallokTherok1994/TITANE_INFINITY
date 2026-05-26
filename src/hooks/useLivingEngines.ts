@@ -144,11 +144,15 @@ export const useLivingEngines = (updateInterval = 100) => {
         // Try Tauri bridge first
         if (personaTauriBridge.isTauriEnvironment()) {
           await initWithTimeout(personaTauriBridge.initialize(), 4000);
-          logger.info(`🌟 TITANE∞ v${__APP_VERSION__} - Persona Engine (Rust/Tauri) Initialized`);
+          logger.info(
+            `🌟 TITANE∞ v${__APP_VERSION__} - Persona Engine (Rust/Tauri) Initialized`
+          );
         } else {
           // Fallback to TypeScript engine
           await personaEngine.initialize();
-          logger.info(`🌟 TITANE∞ v${__APP_VERSION__} - Persona Engine (TypeScript) Initialized`);
+          logger.info(
+            `🌟 TITANE∞ v${__APP_VERSION__} - Persona Engine (TypeScript) Initialized`
+          );
         }
 
         if (mountedRef.current) {

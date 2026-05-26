@@ -224,9 +224,7 @@ function countKnowledgeEvents(history: ExperienceGain[]): number {
 
 function countConsecutiveActiveDays(history: ExperienceGain[]): number {
   const days = Array.from(
-    new Set(
-      history.map(event => new Date(event.timestamp).toISOString().slice(0, 10))
-    )
+    new Set(history.map(event => new Date(event.timestamp).toISOString().slice(0, 10)))
   ).sort((a, b) => b.localeCompare(a));
 
   if (days.length === 0) {
@@ -287,7 +285,8 @@ function deriveMilestones(input: {
 
   const unlockedMilestones: string[] = [];
   const milestones = DEFAULT_MILESTONES.map(milestone => {
-    let unlocked = input.level >= milestone.requiredLevel && input.totalXP >= milestone.requiredXP;
+    let unlocked =
+      input.level >= milestone.requiredLevel && input.totalXP >= milestone.requiredXP;
 
     if (milestone.id === 'first_message') {
       unlocked = input.chatMessageCount >= 1;
@@ -498,9 +497,9 @@ class XPEngine {
 export const xpEngine = new XPEngine();
 
 if (typeof window !== 'undefined') {
-  void xpEngine.initialize().catch(error =>
-    logger.error('Erreur initialisation XP adapter:', error)
-  );
+  void xpEngine
+    .initialize()
+    .catch(error => logger.error('Erreur initialisation XP adapter:', error));
 }
 
 export default xpEngine;

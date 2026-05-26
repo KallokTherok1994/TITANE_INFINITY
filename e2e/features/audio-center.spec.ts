@@ -133,7 +133,9 @@ test.describe('Feature: Audio Center', () => {
       .locator('section')
       .filter({ has: page.getByRole('heading', { name: /Paramètres de la Voix/i }) })
       .first();
-    const volumeSlider = voiceSettingsSection.locator('input[type="range"]:visible').first();
+    const volumeSlider = voiceSettingsSection
+      .locator('input[type="range"]:visible')
+      .first();
 
     if (await volumeSlider.isVisible({ timeout: 5000 }).catch(() => false)) {
       const initialValue = await volumeSlider.inputValue();
@@ -159,7 +161,9 @@ test.describe('Feature: Audio Center', () => {
 
       const newValue = await volumeSlider.inputValue();
       if (newValue === initialValue) {
-        console.log('⚠️ Volume slider value did not update (runtime-gated or controlled fallback)');
+        console.log(
+          '⚠️ Volume slider value did not update (runtime-gated or controlled fallback)'
+        );
         return;
       }
 

@@ -175,7 +175,9 @@ export const CreationStudio: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <Layers className="w-7 h-7 text-violet-400" />
             <div>
-              <h1 className="text-2xl font-bold text-titanium-text-primary">Creation Studio</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">
+                Creation Studio
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Créez du contenu, des projets et des assets avec l'IA TITANE∞
               </p>
@@ -216,7 +218,9 @@ export const CreationStudio: React.FC = memo(() => {
               <span className="text-violet-400 mt-0.5">{tool.icon}</span>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-titanium-text-primary">{tool.label}</span>
+                  <span className="text-sm font-medium text-titanium-text-primary">
+                    {tool.label}
+                  </span>
                   {tool.status !== 'available' && (
                     <Badge variant={STATUS_COLORS[tool.status]} size="sm">
                       {tool.status}
@@ -298,7 +302,9 @@ export const CreationStudio: React.FC = memo(() => {
                         {tool.icon}
                       </div>
                       <div>
-                        <p className="font-medium text-titanium-text-primary text-sm">{tool.label}</p>
+                        <p className="font-medium text-titanium-text-primary text-sm">
+                          {tool.label}
+                        </p>
                         <p className="text-xs text-titanium-text-tertiary">
                           {tool.description}
                         </p>
@@ -369,7 +375,9 @@ export const CreationStudio: React.FC = memo(() => {
               <FolderOpen className="w-4 h-4 text-blue-400" />
               <span className="text-xs text-titanium-text-tertiary">Total projets</span>
             </div>
-            <p className="text-2xl font-bold text-titanium-text-primary">{RECENT_PROJECTS.length}</p>
+            <p className="text-2xl font-bold text-titanium-text-primary">
+              {RECENT_PROJECTS.length}
+            </p>
           </Card>
           <Card variant="solid" padding={3}>
             <div className="flex items-center gap-2 mb-1">

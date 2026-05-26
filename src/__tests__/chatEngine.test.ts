@@ -11,6 +11,41 @@
  */
 
 import { describe, test, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
+
+const aiOrchestratorMock = vi.hoisted(() => ({
+  getProvidersStatus: vi.fn(),
+  generate: vi.fn(),
+}));
+
+const canonicalKernelMock = vi.hoisted(() => ({
+  discern: vi.fn(),
+}));
+
+const singularityBridgeMock = vi.hoisted(() => ({
+  getCachedCoherence: vi.fn(),
+}));
+
+const omegaDevToolsBridgeMock = vi.hoisted(() => ({
+  updateCognitiveState: vi.fn(),
+  reportJournalEntry: vi.fn(),
+}));
+
+vi.mock('@/services/ai/orchestrator', () => ({
+  aiOrchestrator: aiOrchestratorMock,
+}));
+
+vi.mock('@/services/ai/canonicalDiscernmentKernel', () => ({
+  canonicalDiscernmentKernel: canonicalKernelMock,
+}));
+
+vi.mock('@/services/singularityBridge', () => ({
+  SingularityBridge: singularityBridgeMock,
+}));
+
+vi.mock('@/services/ai/omegaDevToolsBridge', () => ({
+  omegaDevToolsBridge: omegaDevToolsBridgeMock,
+}));
+
 import { chatEngine } from '@/services/ai/chatEngine';
 import { cleanupAiSingletons } from './helpers/aiCleanup';
 import { memoryIntegration } from '@/services/ai/memoryIntegration';
@@ -35,6 +70,72 @@ const EMPTY_MEMORY_CONTEXT = {
   activeRituals: [],
   timeline: [],
 };
+
+function createCanonicalDecisionMock() {
+  return {
+    mode: 'default',
+    modeClassification: {
+      canonicalMode: 'STANDARD_CHAT',
+      confidence: 0.82,
+      reasonCode: 'test',
+      signals: [],
+    },
+    profileId: 'BALANCED',
+    profileLabel: 'Balanced',
+    inferenceState: 'SAFE_TO_INFER',
+    memoryInjection: {
+      use: false,
+      sources: [],
+      maxTokens: 0,
+      relevance: 'low',
+    },
+    provider: {
+      name: 'ollama',
+      model: 'auto',
+      fallback: [],
+      temperature: 0.7,
+      maxTokens: 4096,
+      reasoningEffort: 'medium',
+    },
+    skillId: null,
+    fallbackChain: [],
+    truthStatus: 'STABLE',
+    reasoning: 'unit-test',
+    confidence: 0.82,
+    messageComplexity: 0.35,
+    signals: [],
+    timestamp: Date.now(),
+    processingTimeMs: 1,
+  };
+}
+
+beforeEach(() => {
+  aiOrchestratorMock.getProvidersStatus.mockResolvedValue({
+    providers: [{ name: 'ollama', reliability: 100 }],
+  });
+  canonicalKernelMock.discern.mockReturnValue(createCanonicalDecisionMock());
+  singularityBridgeMock.getCachedCoherence.mockReturnValue(0.5);
+  omegaDevToolsBridgeMock.updateCognitiveState.mockResolvedValue(undefined);
+  omegaDevToolsBridgeMock.reportJournalEntry.mockResolvedValue(undefined);
+  vi.spyOn(cognitiveOmega, 'startTrace').mockResolvedValue(undefined);
+  vi.spyOn(cognitiveOmega, 'enrichContext').mockResolvedValue({
+    combined: '',
+    metadata: { memoryCount: 0, goalCount: 0, factCount: 0 },
+  });
+  vi.spyOn(cognitiveOmega, 'logPhase').mockResolvedValue(undefined);
+  vi.spyOn(cognitiveOmega, 'checkConsistency').mockResolvedValue({
+    isConsistent: true,
+    confidence: 1,
+    issues: [],
+  });
+  vi.spyOn(cognitiveOmega, 'autoCorrect').mockResolvedValue({
+    corrected: false,
+    content: '',
+    confidence: 1,
+    corrections: [],
+  });
+  vi.spyOn(cognitiveOmega, 'endTrace').mockResolvedValue(undefined);
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -429,15 +530,7 @@ describe('ChatEngine — default knowledge base integration', () => {
     chatEngine._defaultKbLoaded = false;
     // @ts-expect-error: private state reset for deterministic test
     chatEngine._kbLoadPromise = null;
-    Object.defineProperty(window, '__TAURI_INTERNALS__', {
-      value: {},
-      configurable: true,
-    });
-  });
-
-  afterEach(() => {
-    // @ts-expect-error: cleanup injected backend marker for tests
-    delete window.__TAURI_INTERNALS__;
+    vi.spyOn(chatEngine as never, 'isBackendAvailable').mockReturnValue(true);
   });
 
   test('injects query-relevant knowledge-base excerpts into the backend system prompt', async () => {
@@ -713,6 +806,15 @@ describe('ChatEngine — default knowledge base integration', () => {
   });
 
   test('memory-first answer returns cognitive trace generation metadata and skips backend', async () => {
+    canonicalKernelMock.discern.mockReturnValue({
+      ...createCanonicalDecisionMock(),
+      memoryInjection: {
+        use: true,
+        sources: ['memory'],
+        maxTokens: 512,
+        relevance: 'high',
+      },
+    });
     vi.spyOn(memoryIntegration, 'loadContext').mockResolvedValue(EMPTY_MEMORY_CONTEXT);
     vi.spyOn(memoryIntegration, 'loadPreferences').mockReturnValue([]);
     vi.spyOn(memoryIntegration, 'saveInteraction').mockResolvedValue(undefined);
@@ -796,7 +898,11 @@ describe('ChatEngine — Web Enrichment Pré-Génération (Phase 1.25)', () => {
     vi.mocked(webResearchServiceModule.webSearch).mockResolvedValueOnce({
       ok: true,
       content: [
-        { title: 'Actualité IA', url: 'https://example.com/ai', snippet: 'Avancée LLM récente' },
+        {
+          title: 'Actualité IA',
+          url: 'https://example.com/ai',
+          snippet: 'Avancée LLM récente',
+        },
       ],
       error: null,
     });
@@ -807,7 +913,9 @@ describe('ChatEngine — Web Enrichment Pré-Génération (Phase 1.25)', () => {
     );
 
     expect(
-      response.omegaMetadata?.pipelineSteps.some(s => s.startsWith('web-enrichment:injected'))
+      response.omegaMetadata?.pipelineSteps.some(s =>
+        s.startsWith('web-enrichment:injected')
+      )
     ).toBe(true);
   });
 
@@ -815,10 +923,14 @@ describe('ChatEngine — Web Enrichment Pré-Génération (Phase 1.25)', () => {
     const response = await chatEngine.generate('Raconte-moi une histoire courte', []);
 
     expect(
-      response.omegaMetadata?.pipelineSteps.some(s => s.startsWith('web-enrichment:skipped'))
+      response.omegaMetadata?.pipelineSteps.some(s =>
+        s.startsWith('web-enrichment:skipped')
+      )
     ).toBe(true);
     expect(
-      response.omegaMetadata?.pipelineSteps.some(s => s.startsWith('web-enrichment:injected'))
+      response.omegaMetadata?.pipelineSteps.some(s =>
+        s.startsWith('web-enrichment:injected')
+      )
     ).toBe(false);
   });
 });

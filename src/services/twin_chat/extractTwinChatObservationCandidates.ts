@@ -172,13 +172,7 @@ export function extractTwinChatObservationCandidates(
 
   const candidates = [
     ...collectMatches(normalizedInput, VALUE_PATTERNS, 'value', 0.72, 'medium'),
-    ...collectMatches(
-      normalizedInput,
-      COGNITIVE_PATTERNS,
-      'cognitive',
-      0.74,
-      'low'
-    ),
+    ...collectMatches(normalizedInput, COGNITIVE_PATTERNS, 'cognitive', 0.74, 'low'),
     ...collectMatches(normalizedInput, STYLE_PATTERNS, 'style', 0.76, 'low'),
     ...collectMatches(
       normalizedInput,

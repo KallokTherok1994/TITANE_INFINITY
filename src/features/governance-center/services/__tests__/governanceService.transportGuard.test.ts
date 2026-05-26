@@ -60,12 +60,18 @@ describe('governanceService transport guards', () => {
     expect(policies).toEqual({ ok: false, data: null, error: 'No transport available' });
     expect(matrix).toEqual({ ok: false, data: null, error: 'No transport available' });
     expect(audit).toEqual({ ok: false, data: null, error: 'No transport available' });
-    expect(securityLog).toEqual({ ok: false, data: null, error: 'No transport available' });
+    expect(securityLog).toEqual({
+      ok: false,
+      data: null,
+      error: 'No transport available',
+    });
     expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('ai_check_ollama_status');
     expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('get_ia_policies');
     expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('get_permission_matrix');
     expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('get_permission_audit');
-    expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('get_security_log', { filters: undefined });
+    expect(safeInvokeCanonicalMock).toHaveBeenCalledWith('get_security_log', {
+      filters: undefined,
+    });
     expect(safeInvokeMock).not.toHaveBeenCalled();
   });
 

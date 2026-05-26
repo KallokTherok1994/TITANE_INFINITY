@@ -107,8 +107,12 @@ describe('RealityCenter', () => {
   it('keeps reality meta labels above low-contrast tokens', () => {
     renderPage();
 
-    expect(screen.getByText(/Dernière mise à jour/i)).toHaveClass('text-titanium-text-secondary');
+    expect(screen.getByText(/Dernière mise à jour/i)).toHaveClass(
+      'text-titanium-text-secondary'
+    );
     expect(screen.getAllByText('modules')[0]).toHaveClass('text-titanium-text-secondary');
-    expect(screen.getByText('Module').closest('tr')).toHaveClass('text-titanium-text-secondary');
+    expect(screen.getByText('Module').closest('tr')).toHaveClass(
+      'text-titanium-text-secondary'
+    );
   });
 });

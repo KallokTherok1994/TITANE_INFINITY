@@ -58,7 +58,17 @@ import { registerCustomMode } from '@/config/chatModes.config';
 import { useChatModeStore } from '@/stores/useChatModeStore';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
-import { Download, FileText, Copy, Trash2, Search, Volume2, VolumeX, Mic, Share2 } from 'lucide-react';
+import {
+  Download,
+  FileText,
+  Copy,
+  Trash2,
+  Search,
+  Volume2,
+  VolumeX,
+  Mic,
+  Share2,
+} from 'lucide-react';
 import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
@@ -187,7 +197,7 @@ export const CONVERSATION_MODERN_MODE_IDS: ModernChatModeId[] = [
 ];
 
 const CONVERSATION_SUGGESTIONS = [
-  { label: '💡 Brainstormer', value: "Aide-moi à brainstormer des idées pour..." },
+  { label: '💡 Brainstormer', value: 'Aide-moi à brainstormer des idées pour...' },
   { label: '📝 Résumer', value: 'Résume les points clés de...' },
   { label: '🔍 Analyser', value: 'Analyse ceci pour moi : ' },
   { label: '🧠 Expliquer', value: 'Explique-moi le concept de...' },
@@ -1442,7 +1452,20 @@ const ConversationMessage = memo(
               title="Copier"
               aria-label="Copier le message"
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
               Copier
             </button>
 
@@ -1455,7 +1478,20 @@ const ConversationMessage = memo(
                 aria-label="Renvoyer ce message"
                 disabled={isLoading}
               >
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.58"/></svg>
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="1 4 1 10 7 10" />
+                  <path d="M3.51 15a9 9 0 1 0 .49-4.58" />
+                </svg>
                 Renvoyer
               </button>
             )}
@@ -1467,7 +1503,22 @@ const ConversationMessage = memo(
               title="Supprimer"
               aria-label="Supprimer ce message"
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+              </svg>
             </button>
           </div>
         </div>
@@ -2095,7 +2146,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         moduleId: 'titane.chat',
         route: '/titane?tab=conversation',
         title: 'TITANE — Chat IA',
-        status: healthReport?.status === 'Healthy' ? 'live' : isLoading ? 'partial' : 'degraded',
+        status:
+          healthReport?.status === 'Healthy'
+            ? 'live'
+            : isLoading
+              ? 'partial'
+              : 'degraded',
         source: 'tauri_ipc',
         capabilities: [
           'send_message',
@@ -2118,14 +2174,28 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           { id: 'send_message', label: 'Envoyer un message', status: 'wired' },
           { id: 'switch_provider', label: 'Changer de fournisseur', status: 'wired' },
           { id: 'switch_mode', label: 'Changer de mode', status: 'wired' },
-          { id: 'web_research', label: 'Recherche web', status: 'wired', command: 'web_research' },
-          { id: 'clear_history', label: 'Effacer l\'historique', status: 'wired' },
+          {
+            id: 'web_research',
+            label: 'Recherche web',
+            status: 'wired',
+            command: 'web_research',
+          },
+          { id: 'clear_history', label: "Effacer l'historique", status: 'wired' },
         ],
-        warnings: healthReport?.status !== 'Healthy' && !isLoading
-          ? [`Provider health: ${healthReport?.status ?? 'unknown'}`]
-          : [],
+        warnings:
+          healthReport?.status !== 'Healthy' && !isLoading
+            ? [`Provider health: ${healthReport?.status ?? 'unknown'}`]
+            : [],
       });
-    }, [messages.length, selectedProvider, currentMode, providerReadiness, healthReport, isLoading, conversationId]);
+    }, [
+      messages.length,
+      selectedProvider,
+      currentMode,
+      providerReadiness,
+      healthReport,
+      isLoading,
+      conversationId,
+    ]);
 
     // ═══ COMPUTED VALUES ═══
     const conversationModes = useMemo(() => {
@@ -2536,7 +2606,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     useEffect(() => {
       const saved = localStorage.getItem(draftKey);
       if (saved && !inputValue) setInputValue(saved);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversationId]);
 
     useEffect(() => {
@@ -3252,24 +3322,37 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                     <Share2 size={16} />
                   </button>
                   {showExportMenu && (
-                    <div className="conversation-export-menu" role="menu" data-testid="export-dropdown">
+                    <div
+                      className="conversation-export-menu"
+                      role="menu"
+                      data-testid="export-dropdown"
+                    >
                       <button
                         role="menuitem"
-                        onClick={() => { handleExportJson(); setShowExportMenu(false); }}
+                        onClick={() => {
+                          handleExportJson();
+                          setShowExportMenu(false);
+                        }}
                         disabled={!hasMessages}
                       >
                         <Download size={13} /> JSON
                       </button>
                       <button
                         role="menuitem"
-                        onClick={() => { handleExportMarkdown(); setShowExportMenu(false); }}
+                        onClick={() => {
+                          handleExportMarkdown();
+                          setShowExportMenu(false);
+                        }}
                         disabled={!hasMessages}
                       >
                         <FileText size={13} /> Markdown
                       </button>
                       <button
                         role="menuitem"
-                        onClick={() => { void handleCopyAll(); setShowExportMenu(false); }}
+                        onClick={() => {
+                          void handleCopyAll();
+                          setShowExportMenu(false);
+                        }}
                         disabled={!hasMessages}
                       >
                         <Copy size={13} /> Copier
@@ -3513,44 +3596,53 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           </div>
 
           {/* ═══ THINKING PANEL (conditionnel — masqué si aucune étape ni génération active) ═══ */}
-          {(thinking.isThinking || thinking.steps.length > 0) && <ThinkingPanel
-            steps={thinking.steps}
-            isThinking={thinking.isThinking}
-            state={thinkingState}
-            topology={thinkingTopology}
-            compact={thinking.compact || compactConversationLayout}
-            inline={false}
-            provider={runtimeProviderLabel}
-            elapsedTime={thinkingElapsedTime}
-            xpTrace={latestAssistantMetadata?.xpTrace ?? null}
-            memoryTrace={thinkingMemoryTrace}
-            qualityScore={latestAssistantMetadata?.qualityScore ?? null}
-            responseQualityScore={latestAssistantMetadata?.responseQualityScore ?? null}
-            responseQualityTier={latestAssistantMetadata?.responseQualityTier ?? null}
-            messageLength={latestUserMessage?.content.length}
-            responseLength={latestAssistantMessage?.content.length}
-            reasoningSummary={
-              latestAssistantMetadata?.cognitiveSummary ?? lastResponse?.cognitive_summary
-            }
-            actionsPerformed={latestAssistantMetadata?.actionsPerformed}
-            modeLabel={
-              latestAssistantMetadata?.providerMeta?.mode ?? lastResponse?.meta?.mode
-            }
-            searchLabel={thinkingSearchLabel}
-            saveLabel={thinkingSaveLabel}
-            modelUsed={
-              selectedProvider === 'ollama'
-                ? resolveConversationOllamaModel(selectedProvider, latestAssistantRuntime)
-                : latestAssistantRuntime?.modelUsed
-            }
-            modelRequested={
-              latestAssistantRuntime?.modelRequested ??
-              (selectedProvider === 'ollama'
-                ? resolveConversationOllamaModel(selectedProvider, latestAssistantRuntime)
-                : undefined)
-            }
-            cognitiveTrace={latestAssistantRuntime?.cognitiveTrace ?? null}
-          />}
+          {(thinking.isThinking || thinking.steps.length > 0) && (
+            <ThinkingPanel
+              steps={thinking.steps}
+              isThinking={thinking.isThinking}
+              state={thinkingState}
+              topology={thinkingTopology}
+              compact={thinking.compact || compactConversationLayout}
+              inline={false}
+              provider={runtimeProviderLabel}
+              elapsedTime={thinkingElapsedTime}
+              xpTrace={latestAssistantMetadata?.xpTrace ?? null}
+              memoryTrace={thinkingMemoryTrace}
+              qualityScore={latestAssistantMetadata?.qualityScore ?? null}
+              responseQualityScore={latestAssistantMetadata?.responseQualityScore ?? null}
+              responseQualityTier={latestAssistantMetadata?.responseQualityTier ?? null}
+              messageLength={latestUserMessage?.content.length}
+              responseLength={latestAssistantMessage?.content.length}
+              reasoningSummary={
+                latestAssistantMetadata?.cognitiveSummary ??
+                lastResponse?.cognitive_summary
+              }
+              actionsPerformed={latestAssistantMetadata?.actionsPerformed}
+              modeLabel={
+                latestAssistantMetadata?.providerMeta?.mode ?? lastResponse?.meta?.mode
+              }
+              searchLabel={thinkingSearchLabel}
+              saveLabel={thinkingSaveLabel}
+              modelUsed={
+                selectedProvider === 'ollama'
+                  ? resolveConversationOllamaModel(
+                      selectedProvider,
+                      latestAssistantRuntime
+                    )
+                  : latestAssistantRuntime?.modelUsed
+              }
+              modelRequested={
+                latestAssistantRuntime?.modelRequested ??
+                (selectedProvider === 'ollama'
+                  ? resolveConversationOllamaModel(
+                      selectedProvider,
+                      latestAssistantRuntime
+                    )
+                  : undefined)
+              }
+              cognitiveTrace={latestAssistantRuntime?.cognitiveTrace ?? null}
+            />
+          )}
 
           {/* ═══ MESSAGES AREA ═══ */}
           <div
@@ -3564,26 +3656,34 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 <h3>TITANE∞</h3>
                 <div className="conversation-empty-badges">
                   <span className="conversation-empty-badge">{currentModeLabel}</span>
-                  <span className="conversation-empty-badge-sep" aria-hidden="true">·</span>
-                  <span className="conversation-empty-badge conversation-empty-badge--provider">{selectedProviderLabel}</span>
+                  <span className="conversation-empty-badge-sep" aria-hidden="true">
+                    ·
+                  </span>
+                  <span className="conversation-empty-badge conversation-empty-badge--provider">
+                    {selectedProviderLabel}
+                  </span>
                 </div>
                 <p>Comment puis-je vous aider aujourd'hui&nbsp;?</p>
                 <div className="conversation-empty-suggestions">{suggestionButtons}</div>
                 {fullscreen && (
                   <div className="conversation-empty-shortcuts">
-                    <kbd>Ctrl</kbd><span>+</span><kbd>N</kbd>
-                    <span className="conversation-empty-shortcut-label">Nouvelle conversation</span>
+                    <kbd>Ctrl</kbd>
+                    <span>+</span>
+                    <kbd>N</kbd>
+                    <span className="conversation-empty-shortcut-label">
+                      Nouvelle conversation
+                    </span>
                     <span className="conversation-empty-shortcut-sep">·</span>
-                    <kbd>Ctrl</kbd><span>+</span><kbd>B</kbd>
+                    <kbd>Ctrl</kbd>
+                    <span>+</span>
+                    <kbd>B</kbd>
                     <span className="conversation-empty-shortcut-label">Historique</span>
                   </div>
                 )}
               </div>
             )}
 
-            <AutoHealErrorBoundary>
-              {messageItems}
-            </AutoHealErrorBoundary>
+            <AutoHealErrorBoundary>{messageItems}</AutoHealErrorBoundary>
 
             {showLoadingIndicator && (
               <div
@@ -3647,90 +3747,103 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
           {/* ═══ BOTTOM CHROME: toolbar + input groupés ═══ */}
           <div className="conversation-bottom-chrome">
-          {/* ═══ CHAT TOOLBAR (v35.1.8) ═══ */}
-          <ChatToolbar
-            onFilesAnalyzed={handleFilesAnalyzed}
-            onFileImport={handleFileImport}
-            onScreenCapture={handleScreenCapture}
-            onImageAnalysis={handleImageAnalysis}
-            onDictationResult={handleDictationResult}
-            onAudioRecorded={handleAudioRecorded}
-            onTranscriptionResult={handleTranscriptionResult}
-            onToggleAudioConversation={handleToggleAudioConversation}
-            onToggleCameraLive={handleToggleCameraLive}
-            onToggleTTS={handleToggleTTS}
-            disabled={isLoading}
-            compact={compactConversationLayout}
-          />
+            {/* ═══ CHAT TOOLBAR (v35.1.8) ═══ */}
+            <ChatToolbar
+              onFilesAnalyzed={handleFilesAnalyzed}
+              onFileImport={handleFileImport}
+              onScreenCapture={handleScreenCapture}
+              onImageAnalysis={handleImageAnalysis}
+              onDictationResult={handleDictationResult}
+              onAudioRecorded={handleAudioRecorded}
+              onTranscriptionResult={handleTranscriptionResult}
+              onToggleAudioConversation={handleToggleAudioConversation}
+              onToggleCameraLive={handleToggleCameraLive}
+              onToggleTTS={handleToggleTTS}
+              disabled={isLoading}
+              compact={compactConversationLayout}
+            />
 
-          {/* ═══ INPUT AREA ═══ */}
-          <div className="conversation-input-container">
-            <div
-              data-testid="chat-send-trace"
-              data-state={sendTraceState}
-              data-meta={sendTraceMeta}
-              aria-hidden="true"
-              style={{ display: 'none' }}
-            />
-            <div
-              data-testid="chat-ready"
-              data-state={isLoading ? 'loading' : 'ready'}
-              aria-hidden="true"
-              style={{ display: 'none' }}
-            />
-            {/* ═══ TOOL SELECTOR ═══ */}
-            <ToolSelectorPanel
-              isOpen={showToolSelector}
-              onToggle={() => setShowToolSelector(prev => !prev)}
-              onClose={() => setShowToolSelector(false)}
-              onToolSelect={handleToolSelect}
-              isOnline={navigator.onLine}
-              deepAnalysisActive={
-                userPreferencesEngine.getPreferences().customPreferences[
-                  'deep_internet_analysis'
-                ] === true
-              }
-              disabled={isLoading}
-              data-testid="tool-selector-panel-container"
-            />
-            <textarea
-              ref={conversationInputRef}
-              className="conversation-input"
-              data-testid="chat-input"
-              placeholder="Message… (Entrée ↵ envoyer · Shift+Entrée nouvelle ligne)"
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
-              disabled={isLoading}
-              rows={compactConversationLayout ? 2 : 3}
-            />
-            {inputValue.length > 0 && (
+            {/* ═══ INPUT AREA ═══ */}
+            <div className="conversation-input-container">
               <div
-                className={`conversation-input-counter${inputValue.length > 3500 ? ' conversation-input-counter--warning' : ''}${inputValue.length > 4000 ? ' conversation-input-counter--danger' : ''}`}
-                aria-live="polite"
-              >
-                {inputValue.length.toLocaleString('fr-FR')}
-              </div>
-            )}
-            <button
-              className={`conversation-send-btn${isLoading ? ' conversation-send-btn--loading' : ''}`}
-              data-testid="chat-send"
-              onClick={handleSend}
-              disabled={!sendButtonReady || isLoading}
-              aria-disabled={!sendButtonReady || isLoading}
-              aria-label={isLoading ? 'Envoi en cours…' : 'Envoyer le message'}
-              title={isLoading ? 'Envoi en cours…' : 'Envoyer (Entrée)'}
-            >
-              {isLoading ? (
-                <span className="conversation-send-spinner" aria-hidden="true" />
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                data-testid="chat-send-trace"
+                data-state={sendTraceState}
+                data-meta={sendTraceMeta}
+                aria-hidden="true"
+                style={{ display: 'none' }}
+              />
+              <div
+                data-testid="chat-ready"
+                data-state={isLoading ? 'loading' : 'ready'}
+                aria-hidden="true"
+                style={{ display: 'none' }}
+              />
+              {/* ═══ TOOL SELECTOR ═══ */}
+              <ToolSelectorPanel
+                isOpen={showToolSelector}
+                onToggle={() => setShowToolSelector(prev => !prev)}
+                onClose={() => setShowToolSelector(false)}
+                onToolSelect={handleToolSelect}
+                isOnline={navigator.onLine}
+                deepAnalysisActive={
+                  userPreferencesEngine.getPreferences().customPreferences[
+                    'deep_internet_analysis'
+                  ] === true
+                }
+                disabled={isLoading}
+                data-testid="tool-selector-panel-container"
+              />
+              <textarea
+                ref={conversationInputRef}
+                className="conversation-input"
+                data-testid="chat-input"
+                placeholder="Message… (Entrée ↵ envoyer · Shift+Entrée nouvelle ligne)"
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                disabled={isLoading}
+                rows={compactConversationLayout ? 2 : 3}
+              />
+              {inputValue.length > 0 && (
+                <div
+                  className={`conversation-input-counter${inputValue.length > 3500 ? ' conversation-input-counter--warning' : ''}${inputValue.length > 4000 ? ' conversation-input-counter--danger' : ''}`}
+                  aria-live="polite"
+                >
+                  {inputValue.length.toLocaleString('fr-FR')}
+                </div>
               )}
-              <span>{isLoading ? 'Envoi…' : 'Envoyer'}</span>
-            </button>
+              <button
+                className={`conversation-send-btn${isLoading ? ' conversation-send-btn--loading' : ''}`}
+                data-testid="chat-send"
+                onClick={handleSend}
+                disabled={!sendButtonReady || isLoading}
+                aria-disabled={!sendButtonReady || isLoading}
+                aria-label={isLoading ? 'Envoi en cours…' : 'Envoyer le message'}
+                title={isLoading ? 'Envoi en cours…' : 'Envoyer (Entrée)'}
+              >
+                {isLoading ? (
+                  <span className="conversation-send-spinner" aria-hidden="true" />
+                ) : (
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                )}
+                <span>{isLoading ? 'Envoi…' : 'Envoyer'}</span>
+              </button>
+            </div>
           </div>
-
-          </div>{/* end conversation-bottom-chrome */}
+          {/* end conversation-bottom-chrome */}
 
           {/* ═══ MODE BUILDER MODAL ═══ */}
           {showModeBuilder && (

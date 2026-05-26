@@ -62,8 +62,14 @@ test.describe('v34.0.7 Responsive viewport matrix (7 routes × 3 viewports)', ()
         }
 
         // Body must be non-empty
-        const body = await page.locator('body').innerText().catch(() => '');
-        expect(body.length, `${surface.name}@${viewport.name} body must be non-empty`).toBeGreaterThan(0);
+        const body = await page
+          .locator('body')
+          .innerText()
+          .catch(() => '');
+        expect(
+          body.length,
+          `${surface.name}@${viewport.name} body must be non-empty`
+        ).toBeGreaterThan(0);
 
         // No horizontal scroll (overflow-x) — body scrollWidth <= viewport width
         // Tolerance: 2px for rounding / scrollbars.

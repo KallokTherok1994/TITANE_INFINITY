@@ -74,22 +74,29 @@ describe('Runtime Identity Truth — Tauri Stable', () => {
     expect(surfaceTruth).toBeTruthy();
 
     // Write proof
-    const proofDir = path.join(__dirname, '../../proof_packs/RUNTIME_VISIBILITY_ROOT_CAUSE_SEAL_2026_05_16');
+    const proofDir = path.join(
+      __dirname,
+      '../../proof_packs/RUNTIME_VISIBILITY_ROOT_CAUSE_SEAL_2026_05_16'
+    );
     fs.mkdirSync(proofDir, { recursive: true });
     fs.writeFileSync(
       path.join(proofDir, 'runtime-identity-proof.json'),
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        surfaceTruth,
-        runtimeKindFromDOM: await browser.execute(() =>
-          document.documentElement.getAttribute('data-runtime-kind')
-        ),
-        appVersionFromDOM: await browser.execute(() =>
-          document.documentElement.getAttribute('data-app-version')
-        ),
-        title: await browser.getTitle(),
-        url: await browser.getUrl(),
-      }, null, 2)
+      JSON.stringify(
+        {
+          timestamp: new Date().toISOString(),
+          surfaceTruth,
+          runtimeKindFromDOM: await browser.execute(() =>
+            document.documentElement.getAttribute('data-runtime-kind')
+          ),
+          appVersionFromDOM: await browser.execute(() =>
+            document.documentElement.getAttribute('data-app-version')
+          ),
+          title: await browser.getTitle(),
+          url: await browser.getUrl(),
+        },
+        null,
+        2
+      )
     );
   });
 });

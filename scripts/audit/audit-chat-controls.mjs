@@ -22,7 +22,11 @@ const TARGETS = [
 
 function walk(p, out = []) {
   let st;
-  try { st = statSync(p); } catch { return out; }
+  try {
+    st = statSync(p);
+  } catch {
+    return out;
+  }
   if (st.isDirectory()) {
     for (const entry of readdirSync(p)) walk(join(p, entry), out);
   } else if (/\.(tsx?|jsx?)$/.test(p)) {
@@ -34,11 +38,17 @@ function walk(p, out = []) {
 const files = [];
 for (const t of TARGETS) {
   const abs = join(ROOT, t);
-  try { statSync(abs); walk(abs, files); } catch { /* ignore missing */ }
+  try {
+    statSync(abs);
+    walk(abs, files);
+  } catch {
+    /* ignore missing */
+  }
 }
 
 const TESTID_RE = /data-testid\s*=\s*["'`]([^"'`{}]+)["'`]/g;
-const HANDLER_RE = /(?:onClick|onChange|onSubmit|onKeyDown|onKeyUp|onBlur|onFocus|onInput)\s*=\s*\{([^}]+)\}/g;
+const HANDLER_RE =
+  /(?:onClick|onChange|onSubmit|onKeyDown|onKeyUp|onBlur|onFocus|onInput)\s*=\s*\{([^}]+)\}/g;
 const STUB_RE = /^\s*\(?\s*\)?\s*=>\s*\{?\s*\}?\s*$/;
 
 const results = [];
@@ -88,5 +98,7 @@ const outDir = join(ROOT, 'reports');
 mkdirSync(outDir, { recursive: true });
 const out = join(outDir, 'chat-controls-inventory-v35.1.4.json');
 writeFileSync(out, JSON.stringify(summary, null, 2));
-console.log(`OK files_scanned=${summary.files_scanned} testids=${summary.total_testids} handlers=${summary.total_handlers} stubs=${summary.total_stub_handlers} verdict=${summary.verdict}`);
+console.log(
+  `OK files_scanned=${summary.files_scanned} testids=${summary.total_testids} handlers=${summary.total_handlers} stubs=${summary.total_stub_handlers} verdict=${summary.verdict}`
+);
 console.log(`-> ${relative(ROOT, out)}`);

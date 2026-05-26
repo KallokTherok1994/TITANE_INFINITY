@@ -280,7 +280,9 @@ export const MonitoringDashboard: React.FC = memo(() => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-titanium-text-primary mb-2">Monitoring Dashboard</h1>
+            <h1 className="text-3xl font-bold text-titanium-text-primary mb-2">
+              Monitoring Dashboard
+            </h1>
             <p className="text-titanium-text-tertiary">
               Métriques de performance en temps réel - Refresh auto toutes les 5s
             </p>
@@ -321,7 +323,9 @@ export const MonitoringDashboard: React.FC = memo(() => {
 
         {/* Services Grid */}
         <div>
-          <h2 className="text-2xl font-bold text-titanium-text-primary mb-4">Services Monitoring</h2>
+          <h2 className="text-2xl font-bold text-titanium-text-primary mb-4">
+            Services Monitoring
+          </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             <ServiceMetricsPanel service="memory" autoRefresh refreshInterval={5000} />
             <ServiceMetricsPanel service="chat" autoRefresh refreshInterval={5000} />

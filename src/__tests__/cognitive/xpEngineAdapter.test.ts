@@ -66,26 +66,33 @@ const serviceMock = vi.hoisted(() => {
     buildState,
     initExperienceService: vi.fn(async () => undefined),
     getExperienceState: vi.fn(() => serviceMock.state),
-    awardExperience: vi.fn(async (domainId: string, amount: number, source: string, metadata?: Record<string, unknown>) => {
-      serviceMock.state = {
-        ...serviceMock.state,
-        totalXp: serviceMock.state.totalXp + amount,
-        history: [
-          {
-            id: 'awarded-event',
-            domainId,
-            amount,
-            source,
-            metadata,
-            timestamp: 4,
-          },
-          ...serviceMock.state.history,
-        ],
-        lastUpdated: 4,
-      };
-      serviceMock.listeners.forEach(listener => listener(serviceMock.state));
-      return serviceMock.state.domains[domainId] ?? null;
-    }),
+    awardExperience: vi.fn(
+      async (
+        domainId: string,
+        amount: number,
+        source: string,
+        metadata?: Record<string, unknown>
+      ) => {
+        serviceMock.state = {
+          ...serviceMock.state,
+          totalXp: serviceMock.state.totalXp + amount,
+          history: [
+            {
+              id: 'awarded-event',
+              domainId,
+              amount,
+              source,
+              metadata,
+              timestamp: 4,
+            },
+            ...serviceMock.state.history,
+          ],
+          lastUpdated: 4,
+        };
+        serviceMock.listeners.forEach(listener => listener(serviceMock.state));
+        return serviceMock.state.domains[domainId] ?? null;
+      }
+    ),
     subscribeToExperience: vi.fn((listener: (state: any) => void) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -126,9 +133,8 @@ describe('xpEngine adapter', () => {
   });
 
   it('derives progression state from canonical ExperienceState history', async () => {
-    const { createProgressionStateFromExperience } = await import(
-      '@/cognitive/progression/xpEngine'
-    );
+    const { createProgressionStateFromExperience } =
+      await import('@/cognitive/progression/xpEngine');
 
     const progression = createProgressionStateFromExperience(serviceMock.state as any);
 

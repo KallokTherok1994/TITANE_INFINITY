@@ -26,8 +26,11 @@ vi.mock('@/services/ai/memoryIntegration', () => ({
   MemoryContext: {},
 }));
 
-const capturedRequest = { system: '', messages: [] as Array<{ role: string; content: string }> };
-const ollamaGenerateMock = vi.fn().mockImplementation((req) => {
+const capturedRequest = {
+  system: '',
+  messages: [] as Array<{ role: string; content: string }>,
+};
+const ollamaGenerateMock = vi.fn().mockImplementation(req => {
   capturedRequest.system = req.system || '';
   capturedRequest.messages = [];
   return Promise.resolve({
@@ -67,7 +70,15 @@ vi.mock('@/services/twin_chat/reviewQueue', () => ({
         route: null,
         moduleId: null,
       },
-      decision: { candidateId: 'twin-1', verdict: 'allowed', observationType: 'cognitive', validationStatus: 'valid', riskLevel: 'low', canWriteTwin: false, requiresKevinValidation: false },
+      decision: {
+        candidateId: 'twin-1',
+        verdict: 'allowed',
+        observationType: 'cognitive',
+        validationStatus: 'valid',
+        riskLevel: 'low',
+        canWriteTwin: false,
+        requiresKevinValidation: false,
+      },
       recordedAt: '2026-05-23T00:00:00Z',
       lastSeenAt: '2026-05-23T00:00:00Z',
       writeStatus: 'approved',
@@ -80,31 +91,176 @@ vi.mock('@/services/twin_chat/reviewQueue', () => ({
 function makeMemoryContext(overrides = {}) {
   return {
     activeProjects: [
-      { id: 'p1', title: 'Projet Alpha', status: 'active', progress: 65, priority: 'high', lastActivity: '2026-05-20T00:00:00Z', tags: [], description: 'Plateforme e-commerce B2C avec paiement intégré' },
-      { id: 'p2', title: 'Projet Beta', status: 'active', progress: 30, priority: 'medium', lastActivity: '2026-05-21T00:00:00Z', tags: [], description: undefined },
+      {
+        id: 'p1',
+        title: 'Projet Alpha',
+        status: 'active',
+        progress: 65,
+        priority: 'high',
+        lastActivity: '2026-05-20T00:00:00Z',
+        tags: [],
+        description: 'Plateforme e-commerce B2C avec paiement intégré',
+      },
+      {
+        id: 'p2',
+        title: 'Projet Beta',
+        status: 'active',
+        progress: 30,
+        priority: 'medium',
+        lastActivity: '2026-05-21T00:00:00Z',
+        tags: [],
+        description: undefined,
+      },
     ],
     recentDecisions: [
-      { id: 'd1', title: 'Migrer vers PostgreSQL', timestamp: '2026-05-18T00:00:00Z', category: 'technical', impact: 'high', status: 'implemented', rationale: 'Performances insuffisantes avec SQLite en production', relatedProjects: ['p1'] },
-      { id: 'd2', title: 'Adopter React 19', timestamp: '2026-05-19T00:00:00Z', category: 'technical', impact: 'medium', status: 'pending', rationale: undefined, relatedProjects: [] },
-      { id: 'd3', title: 'Décision 3', timestamp: '2026-05-15T00:00:00Z', category: 'strategic', impact: 'low', status: 'implemented', rationale: 'Optimisation des coûts serveur', relatedProjects: [] },
-      { id: 'd4', title: 'Décision 4', timestamp: '2026-05-14T00:00:00Z', category: 'operational', impact: 'low', status: 'implemented', rationale: 'Normalisation des processus CI/CD', relatedProjects: [] },
-      { id: 'd5', title: 'Décision 5', timestamp: '2026-05-13T00:00:00Z', category: 'operational', impact: 'low', status: 'pending', rationale: 'Amélioration de la DX développeur', relatedProjects: [] },
-      { id: 'd6', title: 'Décision 6 — ancienne', timestamp: '2026-05-01T00:00:00Z', category: 'strategic', impact: 'low', status: 'abandoned', rationale: 'Non pertinente', relatedProjects: [] },
+      {
+        id: 'd1',
+        title: 'Migrer vers PostgreSQL',
+        timestamp: '2026-05-18T00:00:00Z',
+        category: 'technical',
+        impact: 'high',
+        status: 'implemented',
+        rationale: 'Performances insuffisantes avec SQLite en production',
+        relatedProjects: ['p1'],
+      },
+      {
+        id: 'd2',
+        title: 'Adopter React 19',
+        timestamp: '2026-05-19T00:00:00Z',
+        category: 'technical',
+        impact: 'medium',
+        status: 'pending',
+        rationale: undefined,
+        relatedProjects: [],
+      },
+      {
+        id: 'd3',
+        title: 'Décision 3',
+        timestamp: '2026-05-15T00:00:00Z',
+        category: 'strategic',
+        impact: 'low',
+        status: 'implemented',
+        rationale: 'Optimisation des coûts serveur',
+        relatedProjects: [],
+      },
+      {
+        id: 'd4',
+        title: 'Décision 4',
+        timestamp: '2026-05-14T00:00:00Z',
+        category: 'operational',
+        impact: 'low',
+        status: 'implemented',
+        rationale: 'Normalisation des processus CI/CD',
+        relatedProjects: [],
+      },
+      {
+        id: 'd5',
+        title: 'Décision 5',
+        timestamp: '2026-05-13T00:00:00Z',
+        category: 'operational',
+        impact: 'low',
+        status: 'pending',
+        rationale: 'Amélioration de la DX développeur',
+        relatedProjects: [],
+      },
+      {
+        id: 'd6',
+        title: 'Décision 6 — ancienne',
+        timestamp: '2026-05-01T00:00:00Z',
+        category: 'strategic',
+        impact: 'low',
+        status: 'abandoned',
+        rationale: 'Non pertinente',
+        relatedProjects: [],
+      },
     ],
     relevantKnowledge: [
-      { id: 'k1', title: 'Architecture microservices', category: 'tech', content: 'Pattern de découpage fonctionnel pour haute scalabilité et résilience', relevance: 0.9, lastAccessed: '2026-05-20T00:00:00Z', tags: [] },
-      { id: 'k2', title: 'React Hooks', category: 'frontend', content: 'Mécanismes de gestion d état et d effets dans React', relevance: 0.8, lastAccessed: '2026-05-19T00:00:00Z', tags: [] },
-      { id: 'k3', title: 'Rust ownership', category: 'backend', content: 'Modèle de propriété mémoire de Rust', relevance: 0.75, lastAccessed: '2026-05-18T00:00:00Z', tags: [] },
-      { id: 'k4', title: 'TypeScript types', category: 'frontend', content: 'Système de types avancé pour JavaScript', relevance: 0.7, lastAccessed: '2026-05-17T00:00:00Z', tags: [] },
-      { id: 'k5', title: 'PostgreSQL indexes', category: 'database', content: 'Optimisation des requêtes via indexes B-tree et GIN', relevance: 0.65, lastAccessed: '2026-05-16T00:00:00Z', tags: [] },
-      { id: 'k6', title: 'Sixième entrée KB', category: 'other', content: 'Entrée non visible si limite = 5', relevance: 0.5, lastAccessed: '2026-05-15T00:00:00Z', tags: [] },
+      {
+        id: 'k1',
+        title: 'Architecture microservices',
+        category: 'tech',
+        content: 'Pattern de découpage fonctionnel pour haute scalabilité et résilience',
+        relevance: 0.9,
+        lastAccessed: '2026-05-20T00:00:00Z',
+        tags: [],
+      },
+      {
+        id: 'k2',
+        title: 'React Hooks',
+        category: 'frontend',
+        content: 'Mécanismes de gestion d état et d effets dans React',
+        relevance: 0.8,
+        lastAccessed: '2026-05-19T00:00:00Z',
+        tags: [],
+      },
+      {
+        id: 'k3',
+        title: 'Rust ownership',
+        category: 'backend',
+        content: 'Modèle de propriété mémoire de Rust',
+        relevance: 0.75,
+        lastAccessed: '2026-05-18T00:00:00Z',
+        tags: [],
+      },
+      {
+        id: 'k4',
+        title: 'TypeScript types',
+        category: 'frontend',
+        content: 'Système de types avancé pour JavaScript',
+        relevance: 0.7,
+        lastAccessed: '2026-05-17T00:00:00Z',
+        tags: [],
+      },
+      {
+        id: 'k5',
+        title: 'PostgreSQL indexes',
+        category: 'database',
+        content: 'Optimisation des requêtes via indexes B-tree et GIN',
+        relevance: 0.65,
+        lastAccessed: '2026-05-16T00:00:00Z',
+        tags: [],
+      },
+      {
+        id: 'k6',
+        title: 'Sixième entrée KB',
+        category: 'other',
+        content: 'Entrée non visible si limite = 5',
+        relevance: 0.5,
+        lastAccessed: '2026-05-15T00:00:00Z',
+        tags: [],
+      },
     ],
     activeRituals: [
-      { id: 'r1', name: 'Revue hebdomadaire', frequency: 'weekly', lastExecution: '2026-05-17T00:00:00Z', nextDue: '2026-05-24T00:00:00Z', status: 'active', completionRate: 87, tags: [] },
+      {
+        id: 'r1',
+        name: 'Revue hebdomadaire',
+        frequency: 'weekly',
+        lastExecution: '2026-05-17T00:00:00Z',
+        nextDue: '2026-05-24T00:00:00Z',
+        status: 'active',
+        completionRate: 87,
+        tags: [],
+      },
     ],
     timeline: [
-      { id: 't1', timestamp: '2026-05-21T14:30:00Z', type: 'decision', title: 'Migration PostgreSQL lancée', description: 'Début de la migration en production', relatedEntities: ['d1'], importance: 'high' },
-      { id: 't2', timestamp: '2026-05-20T09:00:00Z', type: 'project', title: 'Projet Alpha sprint 3 démarré', description: undefined, relatedEntities: ['p1'], importance: 'medium' },
+      {
+        id: 't1',
+        timestamp: '2026-05-21T14:30:00Z',
+        type: 'decision',
+        title: 'Migration PostgreSQL lancée',
+        description: 'Début de la migration en production',
+        relatedEntities: ['d1'],
+        importance: 'high',
+      },
+      {
+        id: 't2',
+        timestamp: '2026-05-20T09:00:00Z',
+        type: 'project',
+        title: 'Projet Alpha sprint 3 démarré',
+        description: undefined,
+        relatedEntities: ['p1'],
+        importance: 'medium',
+      },
     ],
     ...overrides,
   };
@@ -116,7 +272,7 @@ describe('Chat context injection — Ollama provider', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
-    ollamaGenerateMock.mockImplementation((req) => {
+    ollamaGenerateMock.mockImplementation(req => {
       capturedRequest.system = req.system || '';
       return Promise.resolve({
         ok: true,

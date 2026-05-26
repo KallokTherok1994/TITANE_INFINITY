@@ -3,6 +3,7 @@
 ## [35.1.9] — 2026-05-22 (Chat + Ollama Fine-Tuning)
 
 ### Changed
+
 - **`src/services/ai/providers/ollama.ts`**: Context history window expanded from 10 → 20 messages (`MAX_CONTEXT_HISTORY_MESSAGES` constant)
 - **`src/services/ai/providers/ollama.ts`**: `stream()` timeout now uses `STREAM_CONFIG.totalTimeoutMs` (58s) instead of `OLLAMA_CONFIG.timeout` (45s), preventing premature stream termination
 - **`src/services/ai/providers/ollama.ts`**: KB memory context now injects entry titles into system prompt (`Base de connaissances: <title1>; <title2>`) instead of count only
@@ -10,24 +11,26 @@
 - **`src/services/ai/providers/ollama.ts`**: `generate()` now uses `getOllamaEffortTimeout()` instead of inline ternary
 
 ### Fixed
+
 - **`src/__tests__/chatEngine.test.ts`**: Added `afterAll` teardown for `responseCache`, `aiOrchestrator`, `aiHealthMonitor` to reduce fork worker teardown errors (partial fix — architectural pre-existing issue)
 
 ### Audit (v35.1.9 — 2026-05-22)
 
-| Gate | Résultat |
-|---|---|
-| `tsc --noEmit` | PASS — 0 erreurs TypeScript |
-| `eslint` | PASS — 0 erreurs |
-| `pnpm run test --run` | PARTIAL — 9540/9595 tests, 668/671 fichiers (chatEngine teardown pre-existing) |
-| `TWIN_UNIT_TESTS` | PASS — 15/15 |
-| `OMEGA_UNIT_TESTS` | PASS — 20/20 |
-| `SINGULARITY_UNIT_TESTS` | PASS — 131/131 |
-| `WINDOWS_MSI_ARTIFACT` | PASS — 35.1.9 |
-| `WINDOWS_INSTALL_SMOKE` | BLOCKED_ADMIN_REQUIRED |
+| Gate                     | Résultat                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------ |
+| `tsc --noEmit`           | PASS — 0 erreurs TypeScript                                                    |
+| `eslint`                 | PASS — 0 erreurs                                                               |
+| `pnpm run test --run`    | PARTIAL — 9540/9595 tests, 668/671 fichiers (chatEngine teardown pre-existing) |
+| `TWIN_UNIT_TESTS`        | PASS — 15/15                                                                   |
+| `OMEGA_UNIT_TESTS`       | PASS — 20/20                                                                   |
+| `SINGULARITY_UNIT_TESTS` | PASS — 131/131                                                                 |
+| `WINDOWS_MSI_ARTIFACT`   | PASS — 35.1.9                                                                  |
+| `WINDOWS_INSTALL_SMOKE`  | BLOCKED_ADMIN_REQUIRED                                                         |
 
 ## [35.1.9] — 2026-05-21 (Windows MSI v35 Build Proven, Smoke Blocked)
 
 ### Proof
+
 - `WINDOWS_11_MSI_V35_BUILD_AND_SMOKE_BLOCKED`
 - Fresh local Windows build command: `pnpm run build:windows:msi`.
 - MSI artifact: `titane-infinity_35.1.9_x64_en-US.msi`, `22417408` bytes.
@@ -41,6 +44,7 @@
 ## [35.1.9-dev] — 2026-05-21 (Windows 11 Dev Runtime Proof)
 
 ### Proof
+
 - `WINDOWS_11_DEV_RUNTIME_PROOF`
 - `pnpm run dev:tauri -- --smoke 45` exited 0 with `BOOT:READY`, `warn_count=0`, `error_count=0`, `timeout_count=0`, `unknown_count=0`.
 - Dev runtime title/version: `Titan-Dev v35.1.9 [DEV] — TITANE∞ Development`, `35.1.9-dev`.
@@ -50,6 +54,7 @@
 ## [35.1.9] — 2026-05-21 (Windows 11 Operational Proof Surface)
 
 ### Added
+
 - Windows 11 local DEV_HOST remains primary.
 - Linux v35.1.9 = PROVEN.
 - Windows MSI v34.0.12 = HISTORICALLY_PROVEN.
@@ -57,6 +62,7 @@
 - Windows operational proof surface = PATCHED after this mission.
 
 ### Verdict
+
 - `WINDOWS_11_OPERATIONAL_PROOF_SURFACE_PATCHED`
 - No Windows v35 MSI release proof is claimed in this entry.
 
@@ -65,6 +71,7 @@
 > **Mode:** SEAL | **Scope:** Frontend/UI-UX certification + test gate repair | **Branch:** MAIN | **Commit:** `558119238`
 
 ### Added
+
 - Light/dark mode complet via `UIThemeProvider` + `html.light` + toggle Sun/Moon dans `TopNav`
 - Proof pack: `proof_packs/frontend-ui-ux-redesign-seal-2026-05-15/` (VERDICT, TEST_RESULTS, STATIC_AUDIT, FILES_CHANGED, ROLLBACK, RISKS_AND_LIMITS, COMMIT_SUMMARY)
 - `docs/ui/ui-ux-research-notes.md` — notes de recherche UX macOS-level
@@ -74,7 +81,8 @@
 - D4 proof pack `proof_packs/LOCK_D4_SELF_IMPROVEMENT_LAB_2026-05-06/VERDICT.md`
 
 ### Changed
-- **tailwind.config.ts** : toutes les classes `titanium-*` branchées sur CSS custom properties (var(--color-*))
+
+- **tailwind.config.ts** : toutes les classes `titanium-*` branchées sur CSS custom properties (var(--color-\*))
 - **150+ fichiers source** migrés de `text-gray-*`/`bg-slate-*` vers tokens sémantiques titanium
 - **`src/styles/animations.css`** : transitions 500ms→200ms, animations décoratives dans `.dev-only-animations`
 - **`src/styles/css-vars.css`** : bloc `html.light` ajouté (40+ overrides CSS vars)
@@ -87,19 +95,20 @@
 - **`scripts/verify/verify-ollama-copilot-boundary.sh`** : check `chat.mcp.enabled` ajouté
 
 ### Fixed
+
 - 38 tests réparés : wrappers `QueryClientProvider`, assertions de classe token, snapshots, testid `tab-memory`, count KB 273→283, nav-projects inventory, D4 proof pack
 - ZodError `KnowledgeRegistry` causé par domaine `biodiversity` absent du schema Zod
 - `TitanePage.tabs.test.tsx` : `TAB_TEST_IDS` map (testid `tab-memory` pour tab id `memory-map`)
 
 ### Audit (v35.1.6 — 2026-05-16)
 
-| Gate | Résultat |
-|---|---|
-| `pnpm run check` | PASS — 0 erreurs TypeScript |
-| `pnpm run lint` | PASS — 0 erreurs ESLint |
-| `pnpm run test --run` | PASS — **9471/9471** tests, 653 fichiers |
-| `pnpm run build` | PASS — built in 17.27s |
-| Targeted former-failure lanes | PASS — 5 lanes, 370 tests |
+| Gate                          | Résultat                                 |
+| ----------------------------- | ---------------------------------------- |
+| `pnpm run check`              | PASS — 0 erreurs TypeScript              |
+| `pnpm run lint`               | PASS — 0 erreurs ESLint                  |
+| `pnpm run test --run`         | PASS — **9471/9471** tests, 653 fichiers |
+| `pnpm run build`              | PASS — built in 17.27s                   |
+| Targeted former-failure lanes | PASS — 5 lanes, 370 tests                |
 
 ## [35.1.5] — 2026-05-14 (Twins local portrait + AppShell hardening)
 
@@ -147,13 +156,13 @@
 
 ### Release artifacts SHA256
 
-| Artifact | Size | SHA256 |
-|----------|------|--------|
-| `titane-infinity_34.0.12_amd64.deb` | 24.9 MB | `539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4` |
-| `titane-infinity-34.0.12-1.x86_64.rpm` | 24.9 MB | `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169` |
-| `titane-infinity_34.0.12_amd64.AppImage` | 95 MB  | `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2` |
-| `titane-infinity-34.0.12` (raw binary) | 53 MB  | `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2` |
-| `titane-infinity_34.0.12_x64_en-US.msi` (Windows MSI, WiX 3.14) | 21 MB  | `3197383127849031a0c9ac58b326367b2e788c3a0d8565877a18e00602a8979c` |
+| Artifact                                                        | Size    | SHA256                                                             |
+| --------------------------------------------------------------- | ------- | ------------------------------------------------------------------ |
+| `titane-infinity_34.0.12_amd64.deb`                             | 24.9 MB | `539d6f1e621419ac816fddc814a1b26788ccaeeacb7d50fdd69e9fd3a67f8ac4` |
+| `titane-infinity-34.0.12-1.x86_64.rpm`                          | 24.9 MB | `2941819abb715c8a9617d0be0cb3c4eee267354d45d5427196b2d392ec295169` |
+| `titane-infinity_34.0.12_amd64.AppImage`                        | 95 MB   | `35be0a4a00b63dc757e38612c76b03291c63f048f6b14b5c736d6ae4713e04e2` |
+| `titane-infinity-34.0.12` (raw binary)                          | 53 MB   | `2ff2598fa5541bb7f024d8989810d9ba0bc1690c70d72a7fa46f273bc8773fb2` |
+| `titane-infinity_34.0.12_x64_en-US.msi` (Windows MSI, WiX 3.14) | 21 MB   | `3197383127849031a0c9ac58b326367b2e788c3a0d8565877a18e00602a8979c` |
 
 ### Windows MSI (2026-05-13 23:28 UTC, on-demand)
 
@@ -282,7 +291,7 @@
 ### Build
 
 - Version bump MAJOR 33.0.18 → 34.0.0 (`node scripts/sync-versions.mjs` — 8 fichiers: package.json, Cargo.toml, tauri.conf.json, tauri.base.json, src-tauri/tauri.base.json, runtime/stable/tauri.conf.json, runtime/stable/manifest.json, index.html)
-- Prettier format:check: 8 fichiers corrigés post-bump (CHANGELOG.md, runtime/stable/*.json, src-tauri/*.json, src/__tests__/pages/RealityCenter.test.tsx, src/__tests__/pages/Stats.test.tsx)
+- Prettier format:check: 8 fichiers corrigés post-bump (CHANGELOG.md, runtime/stable/_.json, src-tauri/_.json, src/**tests**/pages/RealityCenter.test.tsx, src/**tests**/pages/Stats.test.tsx)
 - Tauri production build v34.0.0 (AppImage + DEB + RPM)
 
 ### Sealed

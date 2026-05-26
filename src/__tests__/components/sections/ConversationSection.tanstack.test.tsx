@@ -12,7 +12,10 @@
 import { describe, it, expect, vi } from 'vitest';
 
 vi.mock('../../../../lib/security', () => ({
-  secureInvoke: vi.fn(async (_cmd: string, _payload?: unknown) => ({ ok: true, value: _cmd })),
+  secureInvoke: vi.fn(async (_cmd: string, _payload?: unknown) => ({
+    ok: true,
+    value: _cmd,
+  })),
   isAllowedTauriCommand: () => true,
 }));
 

@@ -9,7 +9,12 @@ const mockRecalculate = vi.fn().mockResolvedValue(0.87);
 
 vi.mock('@/hooks/useTwinIdentity', () => ({
   useTwinIdentity: () => ({
-    identity: { id: 'twin-kevin', name: 'Kevin', version: '35.1.9', signature: 'TITANE Twin v∞' },
+    identity: {
+      id: 'twin-kevin',
+      name: 'Kevin',
+      version: '35.1.9',
+      signature: 'TITANE Twin v∞',
+    },
     isLoading: false,
     coreValues: ['présence', 'clarté', 'rigueur'],
     humanStyle: 'analytique et précis',

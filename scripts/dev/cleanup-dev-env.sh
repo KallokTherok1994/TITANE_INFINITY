@@ -17,12 +17,42 @@ get_port_pid() {
     (ss -ltnp 2>/dev/null || ss -ltn 2>/dev/null) | grep ":$port " | grep -o "pid=[0-9]*" | cut -d= -f2 | head -1 || true
 }
 
+get_pids_by_pattern() {
+    local pattern="$1"
+    if command -v pgrep >/dev/null 2>&1; then
+        pgrep -f "$pattern" || true
+        return
+    fi
+
+    if command -v powershell.exe >/dev/null 2>&1; then
+        powershell.exe -NoProfile -Command \
+            "\$pattern = '$pattern'; Get-CimInstance Win32_Process | Where-Object { (\$_.CommandLine -match \$pattern -or \$_.Name -match \$pattern) -and \$_.Name -notmatch '^(powershell|pwsh|bash|sh|grep|tr)(\\.exe)?$' } | ForEach-Object { \$_.ProcessId }" \
+            2>/dev/null | tr -d '\r' | awk 'NF' || true
+        return
+    fi
+}
+
+get_process_lines_by_pattern() {
+    local pattern="$1"
+    if command -v pgrep >/dev/null 2>&1; then
+        pgrep -af "$pattern" || true
+        return
+    fi
+
+    if command -v powershell.exe >/dev/null 2>&1; then
+        powershell.exe -NoProfile -Command \
+            "\$pattern = '$pattern'; Get-CimInstance Win32_Process | Where-Object { (\$_.CommandLine -match \$pattern -or \$_.Name -match \$pattern) -and \$_.Name -notmatch '^(powershell|pwsh|bash|sh|grep|tr)(\\.exe)?$' } | ForEach-Object { \"\$($_.ProcessId) \$($_.CommandLine)\" }" \
+            2>/dev/null | tr -d '\r' | awk 'NF' || true
+        return
+    fi
+}
+
 get_titane_pids() {
-    pgrep -f "$TITANE_PROCESS_PATTERN" || true
+    get_pids_by_pattern "$TITANE_PROCESS_PATTERN"
 }
 
 get_titane_process_lines() {
-    pgrep -af "$TITANE_PROCESS_PATTERN" || true
+    get_process_lines_by_pattern "$TITANE_PROCESS_PATTERN"
 }
 
 # 1. Nettoyer les anciens processus TITANE
@@ -55,7 +85,7 @@ fi
 # 2. Nettoyer les processus Vite orphelins
 echo -e "\n2️⃣ Nettoyage des processus Vite..."
 # Le dépôt utilise aussi des Vite legacy sur 4000/4173 sans argument `dev` explicite.
-VITE_PIDS=$(pgrep -f "vite" || true)
+VITE_PIDS=$(get_pids_by_pattern "vite")
 if [[ -n "$VITE_PIDS" ]]; then
     echo "   Arrêt des processus Vite: $VITE_PIDS"
     for pid in $VITE_PIDS; do
@@ -63,7 +93,7 @@ if [[ -n "$VITE_PIDS" ]]; then
     done
     sleep 2
 
-    REMAINING_VITE_PIDS=$(pgrep -f "vite" || true)
+    REMAINING_VITE_PIDS=$(get_pids_by_pattern "vite")
     if [[ -n "$REMAINING_VITE_PIDS" ]]; then
         echo "   Force kill des processus Vite restants: $REMAINING_VITE_PIDS"
         for pid in $REMAINING_VITE_PIDS; do
@@ -122,7 +152,7 @@ fi
 # 6. Vérification finale
 echo -e "\n6️⃣ Vérification finale..."
 REMAINING_TITANE=$(get_titane_process_lines)
-REMAINING_VITE=$(pgrep -f "vite" || true)
+REMAINING_VITE=$(get_process_lines_by_pattern "vite")
 
 if [[ -z "$REMAINING_TITANE" && -z "$REMAINING_VITE" ]]; then
     echo "   ✅ Nettoyage terminé - environnement dev propre"

@@ -574,7 +574,9 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🧠</span>
-          <h2 className="text-lg font-semibold text-titanium-text-primary">Mémoire 3 niveaux</h2>
+          <h2 className="text-lg font-semibold text-titanium-text-primary">
+            Mémoire 3 niveaux
+          </h2>
           <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded-full">
             {isEmptyPersistentMemory
               ? '0 entrée mémoire'

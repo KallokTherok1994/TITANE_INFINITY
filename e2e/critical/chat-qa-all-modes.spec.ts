@@ -132,9 +132,7 @@ async function getActiveMode(page: Page): Promise<string> {
 // ─── TESTS ────────────────────────────────────────────────────────────────────
 
 test.describe('Chat Q&A — Sélecteur de modes disponibles', () => {
-  test('Les 6 modes actifs sont accessibles via chat-mode-selector', async ({
-    page,
-  }) => {
+  test('Les 6 modes actifs sont accessibles via chat-mode-selector', async ({ page }) => {
     await openTitane(page);
     await ensureChatReady(page);
 

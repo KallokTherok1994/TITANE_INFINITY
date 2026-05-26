@@ -135,7 +135,9 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
           <div className="flex items-center gap-3">
             <Edit2 className="h-6 w-6 text-blue-400" />
             <div>
-              <h2 className="text-2xl font-bold text-titanium-text-primary">Éditeur de Menu</h2>
+              <h2 className="text-2xl font-bold text-titanium-text-primary">
+                Éditeur de Menu
+              </h2>
               <p className="text-sm text-titanium-text-tertiary">
                 Glissez-déposez pour réorganiser, cliquez pour modifier
               </p>
@@ -231,9 +233,15 @@ export const MenuEditor: React.FC<MenuEditorProps> = ({ sections, onSave, onClos
 
                   {/* Content */}
                   <div className="flex-1">
-                    <div className="font-bold text-titanium-text-primary">{section.label}</div>
-                    <div className="text-sm text-titanium-text-tertiary">{section.description}</div>
-                    <code className="mt-1 text-xs text-titanium-text-disabled">{section.route}</code>
+                    <div className="font-bold text-titanium-text-primary">
+                      {section.label}
+                    </div>
+                    <div className="text-sm text-titanium-text-tertiary">
+                      {section.description}
+                    </div>
+                    <code className="mt-1 text-xs text-titanium-text-disabled">
+                      {section.route}
+                    </code>
                   </div>
 
                   {/* Actions */}

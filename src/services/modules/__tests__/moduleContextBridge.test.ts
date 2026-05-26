@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { buildModuleContextInjection, getActiveModuleContext } from '../moduleContextBridge';
+import {
+  buildModuleContextInjection,
+  getActiveModuleContext,
+} from '../moduleContextBridge';
 import { moduleContextRegistry } from '../moduleContextRegistry';
 
 describe('moduleContextBridge', () => {

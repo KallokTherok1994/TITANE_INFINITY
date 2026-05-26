@@ -1117,11 +1117,23 @@ Format: [Audit complet] + [Réponse utilisateur]
       const webPolicy = evaluateWebTruthPolicy({ userMessage: validatedMessage });
       if (webPolicy.shouldUseWeb) {
         try {
-          const webTimeout = new Promise<null>(resolve => setTimeout(() => resolve(null), 4000));
-          const webResult = await Promise.race([webSearch(validatedMessage, 5), webTimeout]);
-          if (webResult && webResult.ok && webResult.content && webResult.content.length > 0) {
+          const webTimeout = new Promise<null>(resolve =>
+            setTimeout(() => resolve(null), 4000)
+          );
+          const webResult = await Promise.race([
+            webSearch(validatedMessage, 5),
+            webTimeout,
+          ]);
+          if (
+            webResult &&
+            webResult.ok &&
+            webResult.content &&
+            webResult.content.length > 0
+          ) {
             const webBlock = webResult.content
-              .map((r: { title: string; snippet: string }) => `• ${r.title}: ${r.snippet}`)
+              .map(
+                (r: { title: string; snippet: string }) => `• ${r.title}: ${r.snippet}`
+              )
               .join('\n');
             systemPrompt = `${systemPrompt}\n\n🌐 Sources web récentes (${webPolicy.need}):\n${webBlock}`;
             pipelineSteps.push(`web-enrichment:injected:${webResult.content.length}`);
@@ -1131,7 +1143,10 @@ Format: [Audit complet] + [Réponse utilisateur]
               available: true,
               sourceCount: webResult.content.length,
               limitations: [],
-              reasonCode: webPolicy.need === 'freshness_required' ? 'freshness_required' : 'web_success',
+              reasonCode:
+                webPolicy.need === 'freshness_required'
+                  ? 'freshness_required'
+                  : 'web_success',
             });
           } else {
             pipelineSteps.push('web-enrichment:empty');
@@ -3519,7 +3534,10 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       if (contextPayload.emotionState) {
         const es = this.convertEmotionState(contextPayload.emotionState);
         if (es) {
-          const valenceStr = es.valence > 0 ? `+${Math.round(es.valence * 100)}%` : `${Math.round(es.valence * 100)}%`;
+          const valenceStr =
+            es.valence > 0
+              ? `+${Math.round(es.valence * 100)}%`
+              : `${Math.round(es.valence * 100)}%`;
           volatileSuffix += `\n\n🎭 État émotionnel: ${es.dominant_emotion} (activation: ${Math.round(es.activation * 100)}%, valence: ${valenceStr})`;
         }
       }
@@ -3528,7 +3546,11 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
       try {
         const twinItems = listTwinChatReviewItems();
         const relevantItems = twinItems
-          .filter(item => item.writeStatus === 'approved' || (item.writeStatus === 'pending' && item.candidate.confidence >= 0.7))
+          .filter(
+            item =>
+              item.writeStatus === 'approved' ||
+              (item.writeStatus === 'pending' && item.candidate.confidence >= 0.7)
+          )
           .slice(0, 5);
         if (relevantItems.length > 0) {
           const twinLines = relevantItems.map(
@@ -3552,13 +3574,21 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
             valueMap?: { confirmedValues?: string[] };
             cognitivePatterns?: { reasoningStyle?: string };
           };
-          const score = snap.globalScore != null ? `${Math.round(snap.globalScore * 100)}%` : null;
+          const score =
+            snap.globalScore != null ? `${Math.round(snap.globalScore * 100)}%` : null;
           const phase = snap.currentPhase ?? null;
           const trend = snap.trend ?? null;
-          const values = (snap.valueMap?.confirmedValues ?? snap.identityCore?.coreValues ?? [])
+          const values = (
+            snap.valueMap?.confirmedValues ??
+            snap.identityCore?.coreValues ??
+            []
+          )
             .slice(0, 3)
             .join(', ');
-          const style = snap.cognitivePatterns?.reasoningStyle ?? snap.identityCore?.humanStyle ?? null;
+          const style =
+            snap.cognitivePatterns?.reasoningStyle ??
+            snap.identityCore?.humanStyle ??
+            null;
           const parts: string[] = [];
           if (phase) parts.push(`Phase: ${phase}`);
           if (score) parts.push(`Fusion: ${score}${trend ? ` (${trend})` : ''}`);

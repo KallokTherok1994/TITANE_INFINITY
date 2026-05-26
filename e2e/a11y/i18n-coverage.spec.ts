@@ -26,7 +26,8 @@ const ROUTES = [
 const LANGS = ['fr', 'en'] as const;
 
 // Regex matching a likely-unresolved key like `chat.send` or `Module.title.label`
-const RAW_KEY_PATTERN = /\b[a-z][a-zA-Z0-9_]*\.[a-z][a-zA-Z0-9_]+(?:\.[a-z][a-zA-Z0-9_]+)*\b/;
+const RAW_KEY_PATTERN =
+  /\b[a-z][a-zA-Z0-9_]*\.[a-z][a-zA-Z0-9_]+(?:\.[a-z][a-zA-Z0-9_]+)*\b/;
 
 test.describe('v34.0.8 i18n coverage fr/en (Phase P)', () => {
   for (const route of ROUTES) {
@@ -48,7 +49,11 @@ test.describe('v34.0.8 i18n coverage fr/en (Phase P)', () => {
         await page
           .evaluate(async l => {
             try {
-              const mod = (window as unknown as { i18n?: { changeLanguage?: (x: string) => unknown } }).i18n;
+              const mod = (
+                window as unknown as {
+                  i18n?: { changeLanguage?: (x: string) => unknown };
+                }
+              ).i18n;
               await mod?.changeLanguage?.(l);
             } catch {}
             document.documentElement.setAttribute('lang', l);
@@ -57,12 +62,12 @@ test.describe('v34.0.8 i18n coverage fr/en (Phase P)', () => {
         await page.waitForTimeout(300);
 
         const lockedLang = await page.evaluate(() =>
-          document.documentElement.getAttribute('lang'),
+          document.documentElement.getAttribute('lang')
         );
 
         // Sample visible text from body (limited length) to detect raw keys
         const visibleText = await page.evaluate(() =>
-          (document.body?.innerText ?? '').slice(0, 4000),
+          (document.body?.innerText ?? '').slice(0, 4000)
         );
 
         // Count tokens that look like dotted unresolved i18n keys but are NOT
@@ -97,13 +102,13 @@ test.describe('v34.0.8 i18n coverage fr/en (Phase P)', () => {
               timestamp: new Date().toISOString(),
             },
             null,
-            2,
+            2
           ),
-          'utf-8',
+          'utf-8'
         );
 
         console.log(
-          `[i18n:${route.name}:${lang}] lang=${lockedLang} suspectedRawKeys=${matches.size}`,
+          `[i18n:${route.name}:${lang}] lang=${lockedLang} suspectedRawKeys=${matches.size}`
         );
 
         // Invariant: <html lang> matches the requested language

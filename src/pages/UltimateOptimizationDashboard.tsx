@@ -453,7 +453,9 @@ export const UltimateOptimizationDashboard: React.FC = memo(() => {
                         <Badge variant={PRIORITY_COLORS[rec.priority]} size="sm">
                           {rec.priority}
                         </Badge>
-                        <p className="text-sm font-medium text-titanium-text-primary">{rec.title}</p>
+                        <p className="text-sm font-medium text-titanium-text-primary">
+                          {rec.title}
+                        </p>
                         {rec.applied && (
                           <Badge variant="success" size="sm">
                             ✓ Appliquée

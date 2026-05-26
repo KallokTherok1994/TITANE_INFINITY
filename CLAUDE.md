@@ -47,9 +47,10 @@ bash scripts/verify/prebuild-frontend-runtime-certifier.sh --fast
 PostCSS strict mode enforces W3C CSS spec — `@config` after `@import` crashes the Vite dev server.
 
 **IPC whitelist rule**: Every new `#[tauri::command]` in Rust MUST be added to BOTH:
+
 1. `src/lib/tauriCommands.ts` — the string value of the command
 2. `ALLOWED_COMMANDS` in `src/lib/security.ts` — or it will be silently blocked at runtime
-Lane 8.6 (`gate-ipc-whitelist-completeness.sh`) detects omissions before every build.
+   Lane 8.6 (`gate-ipc-whitelist-completeness.sh`) detects omissions before every build.
 
 Build is allowed only if:
 
@@ -62,7 +63,7 @@ If any lane is FAIL, BLOCKED, BLOCKED_ENV, UNKNOWN, PARTIAL, or NARRATIVE_ONLY: 
 
 ## Claude Code file structure
 
-- `.claude/rules/frontend-runtime.md` — path-scoped frontend/runtime rules (loaded on src/** touch)
+- `.claude/rules/frontend-runtime.md` — path-scoped frontend/runtime rules (loaded on src/\*\* touch)
 - `.claude/agents/ui-runtime-auditor.md` — read-only audit subagent
 - `.claude/agents/build-launcher-certifier.md` — certifier subagent
 - `.claude/skills/frontend-runtime-certifier/SKILL.md` — reusable certifier workflow

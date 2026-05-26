@@ -187,7 +187,9 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
             </div>
 
             <div className="bg-linear-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <div className="text-titanium-text-tertiary text-sm mb-2">Profondeur Cognitive</div>
+              <div className="text-titanium-text-tertiary text-sm mb-2">
+                Profondeur Cognitive
+              </div>
               <div
                 className={`text-3xl font-bold ${getMetricColor(stats.current_metrics.cognitive_depth, 80)}`}
               >
@@ -227,7 +229,9 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
                 {lastReport && (
                   <>
                     <div className="border-t border-titanium-border-default pt-4">
-                      <div className="text-titanium-text-tertiary text-sm mb-2">Dernier Cycle</div>
+                      <div className="text-titanium-text-tertiary text-sm mb-2">
+                        Dernier Cycle
+                      </div>
                       <div className="flex justify-between items-center">
                         <span className="text-titanium-text-tertiary">Proposées</span>
                         <span className="text-yellow-400 font-bold">
@@ -248,14 +252,21 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
             {/* Improvement Tracking */}
             <div className="bg-titanium-bg-elevated/50 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">Améliorations</h2>
+              <h2 className="text-xl font-semibold text-titanium-text-primary mb-4">
+                Améliorations
+              </h2>
 
               <div className="space-y-3">
                 {Object.entries(stats.improvement_history).length > 0 ? (
                   Object.entries(stats.improvement_history).map(([metric, delta]) => (
-                    <div key={metric} className="bg-titanium-bg-interactive/30 rounded-lg p-3">
+                    <div
+                      key={metric}
+                      className="bg-titanium-bg-interactive/30 rounded-lg p-3"
+                    >
                       <div className="flex justify-between items-center">
-                        <span className="text-titanium-text-primary capitalize">{metric}</span>
+                        <span className="text-titanium-text-primary capitalize">
+                          {metric}
+                        </span>
                         <span className={delta >= 0 ? 'text-green-400' : 'text-red-400'}>
                           {delta >= 0 ? '↑' : '↓'} {Math.abs(delta).toFixed(2)}%
                         </span>
@@ -280,7 +291,9 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
-                  <div className="text-titanium-text-tertiary text-sm mb-1">Stabilité</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-1">
+                    Stabilité
+                  </div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.stability, 90)}`}
                   >
@@ -288,7 +301,9 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
                   </div>
                 </div>
                 <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
-                  <div className="text-titanium-text-tertiary text-sm mb-1">Cohérence</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-1">
+                    Cohérence
+                  </div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.coherence, 95)}`}
                   >
@@ -296,7 +311,9 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
                   </div>
                 </div>
                 <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
-                  <div className="text-titanium-text-tertiary text-sm mb-1">Performance</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-1">
+                    Performance
+                  </div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.performance, 85)}`}
                   >
@@ -304,7 +321,9 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
                   </div>
                 </div>
                 <div className="bg-titanium-bg-interactive/30 rounded-lg p-4">
-                  <div className="text-titanium-text-tertiary text-sm mb-1">Profondeur Cognitive</div>
+                  <div className="text-titanium-text-tertiary text-sm mb-1">
+                    Profondeur Cognitive
+                  </div>
                   <div
                     className={`text-xl font-bold ${getMetricColor(lastReport.metrics.cognitive_depth, 80)}`}
                   >

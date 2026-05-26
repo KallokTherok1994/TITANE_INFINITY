@@ -20,8 +20,6 @@
 >
 > **Rollback** : retrait du mount `<QueryPilotsLiveStatus />` + suppression `src/hooks/queries/**` + `src/lib/queryKeys.ts` + import DevTools dans App.tsx. `QueryClientProvider` racine reste de v34.1.0.
 
-
-
 > Patch bump 34.0.13 → 34.1.0. Architecture "UN SEUL TITANE VIVANT" — un seul code, un seul service, transport négocié à runtime.
 >
 > **Ring 3 (Transport)** — [src/api/tauriClient.ts](src/api/tauriClient.ts) expose `getActiveTransport({force?, remoteUrl?, fetchImpl?})` qui résout dans l'ordre: (1) Tauri direct si `window.__TAURI_INTERNALS__` présent; (2) Remote Gateway HTTP signé si probe `GET ${remoteUrl}/api/health` répond < 2 s (AbortController); (3) `'degraded'` sinon. Cache 30 s. Source URL: `VITE_TITANE_REMOTE_URL` ou `localStorage.titane_remote_url`. Publie l'état sur `useTransportState` (Zustand volatile).
@@ -60,7 +58,7 @@
 
 > Patch bump 34.0.5 → 34.0.6. IPC coverage truth alignment across L1 (`src/lib/security.ts` ALLOWED_COMMANDS), L2 (`src-tauri/tauri.conf.json` main-capability allow[]), L3 (`src-tauri/src/main.rs` invoke_handler!), L4 (`#[tauri::command]` handlers).
 >
-> **Phase 1** (commit af7d2010c): 33 active surfaces aligned (auth_* x9, security_log x3, ia_policy x4, memory_debug_scan, engine_get_*_state x3, evolution x2, desktop_open_session, ai_check_ollama_status, analyze_logs_intelligent, conversation_generate, read_json_file, remote_key_* x4, singularity_get_state real). Baseline `scripts/verify/ipc-coverage-baseline.txt` reduced 48 → 15.
+> **Phase 1** (commit af7d2010c): 33 active surfaces aligned (auth*\* x9, security_log x3, ia_policy x4, memory_debug_scan, engine_get*_*state x3, evolution x2, desktop_open_session, ai_check_ollama_status, analyze_logs_intelligent, conversation_generate, read_json_file, remote_key*_ x4, singularity_get_state real). Baseline `scripts/verify/ipc-coverage-baseline.txt` reduced 48 → 15.
 >
 > **Phase 2** (this commit): 4 `desktop_*_session` lifecycle commands aligned (pause/resume/handoff/kill_switch). L4 already existed in `src-tauri/src/commands/desktop_perception.rs`; L1/L2/L3 added. Baseline reduced 15 → 11.
 >
@@ -931,7 +929,7 @@ Conformité validée par tests 100/100 (avril 2026).
 
 > Nouveau service Ring 3 [src/services/twin_chat/index.ts](src/services/twin_chat/index.ts) branché sur la voie canonique Ring 3 [src/hooks/useConversationEngine.ts](src/hooks/useConversationEngine.ts). Le service produit des candidats TWIN derives depuis le tour utilisateur (`value`, `cognitive`, `style`, `emotional`) via [src/services/twin_chat/extractTwinChatObservationCandidates.ts](src/services/twin_chat/extractTwinChatObservationCandidates.ts), sans appel IPC ni write vers NumericTwin.
 
-> Flux canonique: UI conversation -> `useConversationEngine.sendMessage()` -> twin_chat shadow extractor -> `processMessage()` -> `conversation_generate`. Le resume shadow voyage uniquement comme metadonnee frontend `twinChatShadowSummary`; [src/services/conversationEngine.ts](src/services/conversationEngine.ts) expose ensuite des marqueurs techniques `twin-chat-shadow:*` / `twin_chat_*` pour observabilite.
+> Flux canonique: UI conversation -> `useConversationEngine.sendMessage()` -> twin*chat shadow extractor -> `processMessage()` -> `conversation_generate`. Le resume shadow voyage uniquement comme metadonnee frontend `twinChatShadowSummary`; [src/services/conversationEngine.ts](src/services/conversationEngine.ts) expose ensuite des marqueurs techniques `twin-chat-shadow:*`/`twin_chat\*\*` pour observabilite.
 
 > Invariant de cette phase: zero mutation Ring 0/1/2, zero stockage de message brut, zero write TWIN, zero pollution `twinsContext`. La phase suivante D3 devra reutiliser [src/services/twin_consent/TwinConsentLedgerContract.ts](src/services/twin_consent/TwinConsentLedgerContract.ts) avant toute activation d ecriture.
 

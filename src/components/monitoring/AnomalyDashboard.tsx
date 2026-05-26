@@ -134,7 +134,9 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
             <AlertTriangle className="w-4 h-4 text-yellow-500" />
             <span className="text-sm text-titanium-text-tertiary">Total Anomalies</span>
           </div>
-          <div className="text-2xl font-bold text-titanium-text-primary">{stats.total}</div>
+          <div className="text-2xl font-bold text-titanium-text-primary">
+            {stats.total}
+          </div>
           <div className="text-xs text-titanium-text-disabled mt-1">
             {stats.last24h} dernières 24h
           </div>
@@ -182,7 +184,9 @@ export const AnomalyDashboard: React.FC<AnomalyDashboardProps> = ({
         <div className="px-6 py-4 border-b border-titanium-border-default flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Activity className="w-5 h-5 text-blue-500" />
-            <h3 className="text-lg font-semibold text-titanium-text-primary">Anomalies Détectées</h3>
+            <h3 className="text-lg font-semibold text-titanium-text-primary">
+              Anomalies Détectées
+            </h3>
             <span className="text-sm text-titanium-text-tertiary">
               ({anomalies.length})
             </span>

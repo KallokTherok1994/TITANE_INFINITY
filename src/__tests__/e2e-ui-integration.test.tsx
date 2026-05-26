@@ -14,7 +14,8 @@ import Chat from '../ui/pages/Chat';
 import { setupE2ETest, teardownE2ETest } from './e2e-setup';
 import { createTestMessage } from './e2e-test-utils';
 
-const makeQueryClient = () => new QueryClient({ defaultOptions: { queries: { retry: false } } });
+const makeQueryClient = () =>
+  new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 const renderCanonicalChat = () =>
   render(

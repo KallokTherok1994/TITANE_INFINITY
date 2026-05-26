@@ -88,7 +88,12 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
         title: 'Progression & XP',
         status: progression != null ? 'live' : 'partial',
         source: 'tauri_ipc',
-        capabilities: ['xp-progression', 'achievement-tracking', 'talent-system', 'milestone-visibility'],
+        capabilities: [
+          'xp-progression',
+          'achievement-tracking',
+          'talent-system',
+          'milestone-visibility',
+        ],
         visibleMetrics: {
           level: stats.level,
           totalXP: stats.totalXP,
@@ -105,7 +110,15 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
         memoryRefs: ['xp_progression_filters'],
         warnings: progression == null ? ['Progression state loading'] : [],
       });
-    }, [stats.level, stats.totalXP, stats.evolutionScore, chatMessageCount, progression, resolvedAchievements.length, talents.length]);
+    }, [
+      stats.level,
+      stats.totalXP,
+      stats.evolutionScore,
+      chatMessageCount,
+      progression,
+      resolvedAchievements.length,
+      talents.length,
+    ]);
 
     // Filter achievements by category
     const categories = useMemo(
@@ -119,7 +132,10 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
     );
 
     return (
-      <div className="titane-section titane-section-progression" data-testid="progression-section">
+      <div
+        className="titane-section titane-section-progression"
+        data-testid="progression-section"
+      >
         <TSectionHeader
           title="⚡ Progression & XP"
           subtitle="Système XP, milestones, talents et achievements"

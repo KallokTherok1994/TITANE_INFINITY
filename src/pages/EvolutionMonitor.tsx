@@ -205,7 +205,9 @@ export const EvolutionMonitor: React.FC = memo(() => {
           <div className="flex items-center gap-3">
             <TrendingUp className="w-7 h-7 text-green-400" />
             <div>
-              <h1 className="text-2xl font-bold text-titanium-text-primary">Evolution Monitor</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">
+                Evolution Monitor
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 Timeline d'évolution — Historique des changements &amp; Métriques
               </p>
@@ -379,7 +381,9 @@ export const EvolutionMonitor: React.FC = memo(() => {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm font-medium text-titanium-text-primary">{entry.title}</p>
+                        <p className="text-sm font-medium text-titanium-text-primary">
+                          {entry.title}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1 text-xs text-titanium-text-secondary">
                         <Clock className="w-3 h-3" />

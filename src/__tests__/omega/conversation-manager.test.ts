@@ -16,6 +16,35 @@ import {
 import type { ConversationMessage } from '../../types/conversation';
 import { DEFAULT_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 
+vi.mock('@tauri-apps/api/event', () => ({
+  emit: vi.fn(async () => undefined),
+}));
+
+vi.mock('@/services/unified', () => ({
+  createUnifiedMemory: vi.fn(async () => ({
+    buildContext: vi.fn(async () => ({
+      memories: [],
+      summary: '',
+    })),
+    createMemory: vi.fn(async () => ({ id: `memory-${Date.now()}` })),
+  })),
+}));
+
+vi.mock('@/services/tauri/chatEngine.commands', () => ({
+  default: {
+    generate: vi.fn(async request => ({
+      content: `Mock omega response: ${request.message ?? 'test'}`,
+      conversationId: request.conversationId ?? 'test-conversation',
+      messageId: `mock-msg-${Date.now()}`,
+      frenchMasteryApplied: true,
+      latencyMs: 5,
+      metadata: {
+        provider: request.provider ?? 'mock',
+      },
+    })),
+  },
+}));
+
 // Mock secureInvoke with proper isolation
 vi.mock('@/lib/security', async importOriginal => {
   const actual = (await importOriginal()) as any;

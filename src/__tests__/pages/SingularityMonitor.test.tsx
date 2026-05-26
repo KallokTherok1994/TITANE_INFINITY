@@ -91,7 +91,9 @@ describe('SingularityMonitor', () => {
   it('keeps singularity meta labels above low-contrast tokens', () => {
     renderPage();
 
-    expect(screen.getByText('Énergie normalisée')).toHaveClass('text-titanium-text-secondary');
+    expect(screen.getByText('Énergie normalisée')).toHaveClass(
+      'text-titanium-text-secondary'
+    );
     expect(screen.getByText('Historique')).toHaveClass('text-titanium-text-secondary');
   });
 });

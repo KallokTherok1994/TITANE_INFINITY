@@ -598,7 +598,13 @@ export const TimePage: React.FC = () => {
       title: 'TIME — Centre Temporel',
       status: snapshots.length > 0 || agendaEvents.length > 0 ? 'partial' : 'live',
       source: 'tauri_ipc',
-      capabilities: ['temporal-awareness', 'agenda-sync', 'snapshot-list', 'travel-stats', 'cognitive-flow'],
+      capabilities: [
+        'temporal-awareness',
+        'agenda-sync',
+        'snapshot-list',
+        'travel-stats',
+        'cognitive-flow',
+      ],
       visibleMetrics: {
         activeTab,
         snapshotCount: snapshots.length,
@@ -609,10 +615,24 @@ export const TimePage: React.FC = () => {
       actions: [
         { id: 'list_snapshots', label: 'Lister les snapshots', status: 'wired' },
         { id: 'create_snapshot', label: 'Créer un snapshot', status: 'wired' },
-        { id: 'restore_snapshot', label: 'Restaurer un snapshot', status: 'wired', command: 'restore_snapshot' },
-        { id: 'sync_agenda', label: 'Synchroniser l\'agenda', status: snapshots.length > 0 ? 'wired' : 'blocked', reason: syncError ?? undefined },
+        {
+          id: 'restore_snapshot',
+          label: 'Restaurer un snapshot',
+          status: 'wired',
+          command: 'restore_snapshot',
+        },
+        {
+          id: 'sync_agenda',
+          label: "Synchroniser l'agenda",
+          status: snapshots.length > 0 ? 'wired' : 'blocked',
+          reason: syncError ?? undefined,
+        },
       ],
-      curatedSections: ['time.cognitive.sessions_deep_work', 'time.cognitive.flow_kpis', 'time.cognitive.intelligence_kpis'],
+      curatedSections: [
+        'time.cognitive.sessions_deep_work',
+        'time.cognitive.flow_kpis',
+        'time.cognitive.intelligence_kpis',
+      ],
       memoryRefs: ['titane_time_runtime_context_v1', 'titane_cognitive_state'],
       warnings: syncError ? [syncError] : [],
     });
@@ -821,7 +841,9 @@ const TemporalMemorySection: React.FC = () => {
       className="space-y-4 rounded-lg border border-titanium-border-subtle bg-titanium-bg-base/40 p-4"
     >
       <header className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-titanium-text-primary">🧬 Mémoire temporelle</h2>
+        <h2 className="text-lg font-semibold text-titanium-text-primary">
+          🧬 Mémoire temporelle
+        </h2>
         <div className="flex gap-2">
           <button
             type="button"
@@ -897,7 +919,9 @@ const TemporalTwinSection: React.FC = () => {
       className="space-y-4 rounded-lg border border-titanium-border-subtle bg-titanium-bg-base/40 p-4"
     >
       <header className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-titanium-text-primary">🪞 Twin & Health</h2>
+        <h2 className="text-lg font-semibold text-titanium-text-primary">
+          🪞 Twin & Health
+        </h2>
         <div className="flex gap-2">
           <button
             type="button"
@@ -1394,7 +1418,9 @@ const AgendaSection: React.FC<AgendaSectionProps> = ({
                 className="flex items-start justify-between gap-4 rounded-lg border border-titanium-border-default bg-titanium-bg-base p-4"
               >
                 <div>
-                  <div className="font-semibold text-titanium-text-primary">{event.title}</div>
+                  <div className="font-semibold text-titanium-text-primary">
+                    {event.title}
+                  </div>
                   <div className="text-sm text-titanium-text-tertiary">
                     {new Date(event.startDateTime).toLocaleDateString('fr-FR', {
                       weekday: 'long',
@@ -2379,7 +2405,9 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({
 
       {/* ── RITUELS TEMPORELS ── */}
       <div className="bg-titanium-bg-elevated rounded-lg p-6 border border-titanium-border-default">
-        <h3 className="text-xl font-semibold mb-4 text-blue-400">🔄 Rituels Temporels (Exemples)</h3>
+        <h3 className="text-xl font-semibold mb-4 text-blue-400">
+          🔄 Rituels Temporels (Exemples)
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-titanium-bg-base p-4 rounded">
             <div className="text-lg font-medium mb-2">🌅 Matin de Création</div>

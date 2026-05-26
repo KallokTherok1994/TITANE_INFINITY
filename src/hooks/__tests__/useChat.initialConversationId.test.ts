@@ -31,7 +31,8 @@ describe('useChat — initial conversationId from conversationStorage', () => {
 
   it('uses the active conversation ID returned by conversationStorage (no fallback warning)', async () => {
     mockGetActiveConversationId.mockReturnValue('test-conv-id');
-    const { conversationStorage } = await import('@/services/conversation/conversationStorage');
+    const { conversationStorage } =
+      await import('@/services/conversation/conversationStorage');
     const { chatLogger } = await import('@/utils/chatLogger');
 
     const id = conversationStorage.getActiveConversationId();
@@ -39,10 +40,15 @@ describe('useChat — initial conversationId from conversationStorage', () => {
 
     // Simulate the useChat lazy initializer logic
     if (id) {
-      chatLogger.info('🔄 Using active conversation from conversationStorage', { activeId: id });
+      chatLogger.info('🔄 Using active conversation from conversationStorage', {
+        activeId: id,
+      });
     } else {
       const fallbackId = `conv-${Date.now()}-fallback`;
-      chatLogger.warn('⚠️ No active conversation in conversationStorage, using fallback ID', { fallbackId });
+      chatLogger.warn(
+        '⚠️ No active conversation in conversationStorage, using fallback ID',
+        { fallbackId }
+      );
     }
 
     expect(mockWarn).not.toHaveBeenCalled();
@@ -50,7 +56,8 @@ describe('useChat — initial conversationId from conversationStorage', () => {
 
   it('generates a conv- prefixed fallback when storage returns null', async () => {
     mockGetActiveConversationId.mockReturnValue(null);
-    const { conversationStorage } = await import('@/services/conversation/conversationStorage');
+    const { conversationStorage } =
+      await import('@/services/conversation/conversationStorage');
     const { chatLogger } = await import('@/utils/chatLogger');
 
     const id = conversationStorage.getActiveConversationId();
@@ -59,7 +66,10 @@ describe('useChat — initial conversationId from conversationStorage', () => {
     let generatedId: string | null = null;
     if (!id) {
       generatedId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-      chatLogger.warn('⚠️ No active conversation in conversationStorage, using fallback ID', { fallbackId: generatedId });
+      chatLogger.warn(
+        '⚠️ No active conversation in conversationStorage, using fallback ID',
+        { fallbackId: generatedId }
+      );
     }
 
     expect(generatedId).not.toBeNull();
@@ -72,7 +82,8 @@ describe('useChat — initial conversationId from conversationStorage', () => {
 
   it('storage is read exactly once per mount (not re-read on re-render)', async () => {
     mockGetActiveConversationId.mockReturnValue(null);
-    const { conversationStorage } = await import('@/services/conversation/conversationStorage');
+    const { conversationStorage } =
+      await import('@/services/conversation/conversationStorage');
 
     // Simulate useState lazy initializer running once
     conversationStorage.getActiveConversationId();

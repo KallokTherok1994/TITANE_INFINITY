@@ -184,8 +184,7 @@ describe('TotalDevPage', () => {
         command: 'pnpm run verify:ollama:dev:global-awareness',
         exit_code: 0,
         duration_ms: 1200,
-        output_tail:
-          'PASS: OLLAMA_DEV_AWARENESS_MANIFEST\nPASS: GLOBAL_REPO_GATES_PASS',
+        output_tail: 'PASS: OLLAMA_DEV_AWARENESS_MANIFEST\nPASS: GLOBAL_REPO_GATES_PASS',
         artifact_paths: [
           'reports/ollama-dev-awareness/latest.json',
           'reports/ollama-dev-awareness/latest.md',
@@ -207,13 +206,13 @@ describe('TotalDevPage', () => {
     expect(screen.getByTestId('ollama-product-boundary-status')).toHaveTextContent(
       /gemma2:2b/
     );
-    expect(screen.queryByPlaceholderText(/pnpm run|cargo check|commande/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByPlaceholderText(/pnpm run|cargo check|commande/i)
+    ).not.toBeInTheDocument();
 
     await act(async () => {
       fireEvent.click(
-        screen.getByTestId(
-          'total-dev-certification-profile-ollama-global-awareness'
-        )
+        screen.getByTestId('total-dev-certification-profile-ollama-global-awareness')
       );
     });
 

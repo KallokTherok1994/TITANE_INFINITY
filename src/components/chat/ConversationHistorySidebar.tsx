@@ -11,7 +11,13 @@ import { useConversations } from '@/hooks/useConversations';
 import type { ConversationSummary } from '@/types/conversation';
 import './ConversationHistorySidebar.css';
 
-type TitaneTabId = 'conversation' | 'vision' | 'overview' | 'memory-map' | 'progression' | 'transformation';
+type TitaneTabId =
+  | 'conversation'
+  | 'vision'
+  | 'overview'
+  | 'memory-map'
+  | 'progression'
+  | 'transformation';
 
 export interface ConversationHistorySidebarProps {
   isOpen: boolean;
@@ -56,7 +62,12 @@ function groupConversationsByDate(conversations: ConversationSummary[]): {
 }
 
 function formatConvTitle(conv: ConversationSummary): string {
-  if (conv.title && conv.title.trim() && conv.title !== 'Untitled' && conv.title !== 'Nouvelle conversation') {
+  if (
+    conv.title &&
+    conv.title.trim() &&
+    conv.title !== 'Untitled' &&
+    conv.title !== 'Nouvelle conversation'
+  ) {
     const t = conv.title.trim();
     return t.length > 38 ? t.slice(0, 38) + '…' : t;
   }
@@ -74,7 +85,10 @@ function formatRelativeTime(timestamp: number): string {
   if (hours < 24) return `${hours}h`;
   if (days === 1) return 'Hier';
   if (days < 7) return `${days}j`;
-  return new Date(timestamp).toLocaleDateString('fr-CA', { month: 'short', day: 'numeric' });
+  return new Date(timestamp).toLocaleDateString('fr-CA', {
+    month: 'short',
+    day: 'numeric',
+  });
 }
 
 // ═══ NAV ITEMS ═══
@@ -146,44 +160,51 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
     onNewConversation();
   }, [onNewConversation]);
 
-  const handleSelectConversation = useCallback(async (convId: string) => {
-    if (editingId) return; // Don't switch during rename
-    setContextMenuId(null);
-    try {
-      await setActiveConversation(convId);
-    } catch {
-      // non-fatal
-    }
-    onConversationSelect?.(convId);
-  }, [setActiveConversation, onConversationSelect, editingId]);
+  const handleSelectConversation = useCallback(
+    async (convId: string) => {
+      if (editingId) return; // Don't switch during rename
+      setContextMenuId(null);
+      try {
+        await setActiveConversation(convId);
+      } catch {
+        // non-fatal
+      }
+      onConversationSelect?.(convId);
+    },
+    [setActiveConversation, onConversationSelect, editingId]
+  );
 
   const handleContextMenu = useCallback((e: React.MouseEvent, convId: string) => {
     e.stopPropagation();
     e.preventDefault();
-    setContextMenuId(prev => prev === convId ? null : convId);
+    setContextMenuId(prev => (prev === convId ? null : convId));
   }, []);
 
   const handleStartRename = useCallback((conv: ConversationSummary) => {
     setContextMenuId(null);
     setEditingId(conv.id);
-    const rawTitle = conv.title && conv.title !== 'Untitled' && conv.title !== 'Nouvelle conversation'
-      ? conv.title
-      : '';
+    const rawTitle =
+      conv.title && conv.title !== 'Untitled' && conv.title !== 'Nouvelle conversation'
+        ? conv.title
+        : '';
     setEditDraft(rawTitle);
   }, []);
 
-  const handleCommitRename = useCallback(async (convId: string) => {
-    const trimmed = editDraft.trim();
-    if (trimmed) {
-      try {
-        await renameConversation(convId, trimmed);
-      } catch {
-        // non-fatal
+  const handleCommitRename = useCallback(
+    async (convId: string) => {
+      const trimmed = editDraft.trim();
+      if (trimmed) {
+        try {
+          await renameConversation(convId, trimmed);
+        } catch {
+          // non-fatal
+        }
       }
-    }
-    setEditingId(null);
-    setEditDraft('');
-  }, [editDraft, renameConversation]);
+      setEditingId(null);
+      setEditDraft('');
+    },
+    [editDraft, renameConversation]
+  );
 
   const handleCancelRename = useCallback(() => {
     setEditingId(null);
@@ -202,25 +223,32 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
     [handleCommitRename, handleCancelRename]
   );
 
-  const handleArchive = useCallback(async (convId: string) => {
-    setContextMenuId(null);
-    try {
-      await archiveConversation(convId);
-    } catch {
-      // non-fatal
-    }
-  }, [archiveConversation]);
+  const handleArchive = useCallback(
+    async (convId: string) => {
+      setContextMenuId(null);
+      try {
+        await archiveConversation(convId);
+      } catch {
+        // non-fatal
+      }
+    },
+    [archiveConversation]
+  );
 
-  const handleDelete = useCallback(async (convId: string, title: string) => {
-    setContextMenuId(null);
-    const label = title.length > 40 ? title.slice(0, 40) + '…' : title;
-    if (!window.confirm(`Supprimer "${label}" ? Cette action est irréversible.`)) return;
-    try {
-      await deleteConversation(convId);
-    } catch {
-      // non-fatal
-    }
-  }, [deleteConversation]);
+  const handleDelete = useCallback(
+    async (convId: string, title: string) => {
+      setContextMenuId(null);
+      const label = title.length > 40 ? title.slice(0, 40) + '…' : title;
+      if (!window.confirm(`Supprimer "${label}" ? Cette action est irréversible.`))
+        return;
+      try {
+        await deleteConversation(convId);
+      } catch {
+        // non-fatal
+      }
+    },
+    [deleteConversation]
+  );
 
   // Filter to active conversations only, sorted by most recent
   const activeConversations = conversations
@@ -228,9 +256,10 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
     .sort((a, b) => b.updated_at - a.updated_at);
 
   const filtered = searchQuery.trim()
-    ? activeConversations.filter(c =>
-        (c.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        formatConvTitle(c).toLowerCase().includes(searchQuery.toLowerCase())
+    ? activeConversations.filter(
+        c =>
+          (c.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          formatConvTitle(c).toLowerCase().includes(searchQuery.toLowerCase())
       )
     : activeConversations;
 
@@ -271,7 +300,9 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
           data-testid="btn-new-conversation"
         >
           <span className="titane-chat-sidebar-new-icon">✏️</span>
-          {isOpen && <span className="titane-chat-sidebar-new-label">Nouvelle conversation</span>}
+          {isOpen && (
+            <span className="titane-chat-sidebar-new-label">Nouvelle conversation</span>
+          )}
         </button>
       </div>
 
@@ -312,7 +343,9 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
 
         {!isLoading && groups.length === 0 && isOpen && (
           <div className="titane-chat-sidebar-empty">
-            {searchQuery ? 'Aucun résultat' : 'Aucune conversation\nEnvoyez un message pour commencer'}
+            {searchQuery
+              ? 'Aucun résultat'
+              : 'Aucune conversation\nEnvoyez un message pour commencer'}
           </div>
         )}
 
@@ -325,9 +358,7 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
         {groups.map(group => (
           <div key={group.label} className="titane-chat-sidebar-group" role="group">
             {isOpen && (
-              <div className="titane-chat-sidebar-group-label">
-                {group.label}
-              </div>
+              <div className="titane-chat-sidebar-group-label">{group.label}</div>
             )}
             {group.items.map(conv => {
               const isActive = conv.id === resolvedActiveId;
@@ -392,7 +423,10 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
 
                   {/* ── CONTEXT MENU TRIGGER ── */}
                   {isOpen && !isEditing && (
-                    <div className="titane-chat-sidebar-item-menu" ref={showContextMenu ? contextMenuRef : undefined}>
+                    <div
+                      className="titane-chat-sidebar-item-menu"
+                      ref={showContextMenu ? contextMenuRef : undefined}
+                    >
                       <button
                         className="titane-chat-sidebar-item-menu-btn"
                         onClick={e => handleContextMenu(e, conv.id)}
@@ -463,7 +497,9 @@ export const ConversationHistorySidebar: React.FC<ConversationHistorySidebarProp
             aria-current={activeTab === item.id ? 'page' : undefined}
           >
             <span className="titane-chat-sidebar-nav-icon">{item.icon}</span>
-            {isOpen && <span className="titane-chat-sidebar-nav-label">{item.label}</span>}
+            {isOpen && (
+              <span className="titane-chat-sidebar-nav-label">{item.label}</span>
+            )}
           </button>
         ))}
       </nav>

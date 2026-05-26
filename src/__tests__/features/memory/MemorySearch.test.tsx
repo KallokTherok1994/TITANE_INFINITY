@@ -58,7 +58,9 @@ describe('MemorySearchPanel Component', () => {
         screen.getByRole('combobox', { name: /filtrer la recherche mémoire par type/i })
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('combobox', { name: /filtrer la recherche mémoire par période/i })
+        screen.getByRole('combobox', {
+          name: /filtrer la recherche mémoire par période/i,
+        })
       ).toBeInTheDocument();
       expect(screen.getByLabelText(/résultats de recherche mémoire/i)).toHaveAttribute(
         'tabindex',

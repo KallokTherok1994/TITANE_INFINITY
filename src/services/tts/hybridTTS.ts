@@ -307,7 +307,9 @@ class HybridTTSService {
       const _audioBuffer = await _fpCtx.decodeAudioData(_arrayBuffer);
       const _audioData = _audioBuffer.getChannelData(0); // Mono channel
       const _sampleRate = _audioBuffer.sampleRate;
-      await _fpCtx.close().catch(() => { /* ignore */ });
+      await _fpCtx.close().catch(() => {
+        /* ignore */
+      });
 
       const ttsId = antiEchoShield.startTTS(text, result.durationSeconds * 1000);
 

@@ -52,7 +52,9 @@ describe('loadWithRetry (deterministic core)', () => {
 
   it('throws after retries exhausted', async () => {
     const factory = makeFactory(['fail', 'fail', 'fail']);
-    await expect(loadWithRetry(factory, undefined, 3, [1, 1, 1])).rejects.toThrow(/fail#2/);
+    await expect(loadWithRetry(factory, undefined, 3, [1, 1, 1])).rejects.toThrow(
+      /fail#2/
+    );
     expect(factory).toHaveBeenCalledTimes(3);
   });
 

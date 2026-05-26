@@ -25,8 +25,14 @@ export const SectionLoadingFallback: React.FC<SectionLoadingFallbackProps> = ({
         color: 'var(--titanium-text-secondary, #b8b8b8)',
       }}
     >
-      <strong style={{ fontSize: '0.875rem', color: 'var(--titanium-text-primary, #f5f5f5)' }}>{label}</strong>
-      <span style={{ fontSize: '0.8125rem', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}>
+      <strong
+        style={{ fontSize: '0.875rem', color: 'var(--titanium-text-primary, #f5f5f5)' }}
+      >
+        {label}
+      </strong>
+      <span
+        style={{ fontSize: '0.8125rem', color: 'var(--titanium-text-tertiary, #8a8a8a)' }}
+      >
         {note}
       </span>
     </div>

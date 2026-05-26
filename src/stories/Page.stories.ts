@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const LoggedOut: Story = {};
 
-  // NOTE: Interaction testing uses the Storybook 10 `storybook/test` export.
+// NOTE: Interaction testing uses the Storybook 10 `storybook/test` export.
 // Then uncomment the LoggedIn story below
 export const LoggedIn: Story = {
   // Placeholder - interaction tests intentionally disabled for this story.

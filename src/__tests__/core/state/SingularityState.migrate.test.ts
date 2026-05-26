@@ -32,7 +32,12 @@ describe('SingularityState — persist v34 migration', () => {
         state: {
           ui: { mode: 'auto', theme: 'dark', soundEnabled: true },
           context: { page: 'somewhere-stale' },
-          metaMode: { currentMode: 'idle', previousMode: 'idle', transitioning: false, lastUpdate: 0 },
+          metaMode: {
+            currentMode: 'idle',
+            previousMode: 'idle',
+            transitioning: false,
+            lastUpdate: 0,
+          },
           ai: { model: 'gemma2:2b', status: 'idle', error: null, fallbackActive: false },
           engines: { glow: { id: 'x' } },
           enginesData: { helios: { data: { stale: true }, loading: false } },
@@ -43,8 +48,9 @@ describe('SingularityState — persist v34 migration', () => {
 
     const mod = await import('@/core/state/SingularityState');
     // Trigger hydration by reading state
-    const state = (mod as { useSingularityState: { getState: () => unknown } })
-      .useSingularityState.getState();
+    const state = (
+      mod as { useSingularityState: { getState: () => unknown } }
+    ).useSingularityState.getState();
     expect(state).toBeTruthy();
 
     // After hydration, the persisted entry should be re-written without

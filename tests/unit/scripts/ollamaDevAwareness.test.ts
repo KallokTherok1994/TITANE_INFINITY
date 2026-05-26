@@ -5,10 +5,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const rootDir = process.cwd();
-const scriptPath = path.join(
-  rootDir,
-  'scripts/verify/generate-ollama-dev-awareness.mjs'
-);
+const scriptPath = path.join(rootDir, 'scripts/verify/generate-ollama-dev-awareness.mjs');
 
 describe('Ollama DEV awareness manifest', () => {
   it('generates a compact repo-owned manifest without secret paths', () => {
@@ -42,15 +39,13 @@ describe('Ollama DEV awareness manifest', () => {
     expect(sourcePaths).toContain('docs/IPC_CATALOG.md');
     expect(sourcePaths).toContain('src/pages/TotalDevPage.tsx');
     expect(sourcePaths).toContain('src-tauri/src/commands/total_dev_commands.rs');
-    expect(manifest.product_boundary.product_default_dev_model_contamination).toBe(
-      false
-    );
+    expect(manifest.product_boundary.product_default_dev_model_contamination).toBe(false);
     expect(manifest.product_boundary.mcp_declares_dev_model).toBe(true);
     expect(manifest.product_boundary.total_dev_declares_dev_model).toBe(true);
     expect(manifest.safety.sensitive_indexed_paths).toEqual([]);
-    expect(indexedPaths.some((candidate: string) => /(^|\/)\.env($|[./])/i.test(candidate))).toBe(
-      false
-    );
+    expect(
+      indexedPaths.some((candidate: string) => /(^|\/)\.env($|[./])/i.test(candidate))
+    ).toBe(false);
   });
 
   it('is exposed through package.json as a governed verification script', () => {

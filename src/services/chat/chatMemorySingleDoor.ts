@@ -528,8 +528,11 @@ function formatTwinsNarrativeBlock(ctx: ChatContextEnvelope['twinsContext']): st
   const phase = ctx.currentPhase ?? 'Observation';
   const themes = (ctx.ownerThemes ?? []).join(', ') || 'non identifiés';
   const axis = ctx.reflectionAxis ?? 'non défini';
-  const coreValues = (ctx.identityCore?.coreValues ?? [])
-    .map(v => v.name).filter(Boolean).join(', ') || 'non renseignées';
+  const coreValues =
+    (ctx.identityCore?.coreValues ?? [])
+      .map(v => v.name)
+      .filter(Boolean)
+      .join(', ') || 'non renseignées';
   const confirmedValues = (ctx.valueMap?.confirmedValues ?? []).join(', ') || 'aucune';
   const identity = ctx.identityCore?.name ?? 'TITANE∞';
   const signature = ctx.identityCore?.signature ?? '';

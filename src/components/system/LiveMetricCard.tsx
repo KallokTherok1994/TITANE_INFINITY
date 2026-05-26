@@ -22,11 +22,24 @@ interface LiveMetricCardProps {
 }
 
 const SOURCE_STYLES: Record<MetricSource, { badge: string; dot: string }> = {
-  live: { badge: 'bg-green-900/40 text-green-300 border-green-700/40', dot: 'bg-green-400' },
-  cached: { badge: 'bg-blue-900/40 text-blue-300 border-blue-700/40', dot: 'bg-blue-400' },
-  static_curated: { badge: 'bg-amber-900/40 text-amber-300 border-amber-700/40', dot: 'bg-amber-400' },
+  live: {
+    badge: 'bg-green-900/40 text-green-300 border-green-700/40',
+    dot: 'bg-green-400',
+  },
+  cached: {
+    badge: 'bg-blue-900/40 text-blue-300 border-blue-700/40',
+    dot: 'bg-blue-400',
+  },
+  static_curated: {
+    badge: 'bg-amber-900/40 text-amber-300 border-amber-700/40',
+    dot: 'bg-amber-400',
+  },
   degraded: { badge: 'bg-red-900/40 text-red-300 border-red-700/40', dot: 'bg-red-400' },
-  unknown: { badge: 'bg-titanium-bg-overlay text-titanium-text-disabled border-titanium-border-default', dot: 'bg-titanium-text-disabled' },
+  unknown: {
+    badge:
+      'bg-titanium-bg-overlay text-titanium-text-disabled border-titanium-border-default',
+    dot: 'bg-titanium-text-disabled',
+  },
 };
 
 const TREND_ICONS: Record<NonNullable<LiveMetricCardProps['trend']>, string> = {
@@ -57,15 +70,25 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
         flex flex-col gap-1.5 p-4 rounded-lg border
         bg-titanium-bg-elevated border-titanium-border-default
         ${className}
-      `.replace(/\s+/g, ' ').trim()}
+      `
+        .replace(/\s+/g, ' ')
+        .trim()}
     >
       {/* Label + source indicator */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          {icon && <span aria-hidden="true" className="text-base">{icon}</span>}
-          <span className="text-xs text-titanium-text-secondary font-medium">{label}</span>
+          {icon && (
+            <span aria-hidden="true" className="text-base">
+              {icon}
+            </span>
+          )}
+          <span className="text-xs text-titanium-text-secondary font-medium">
+            {label}
+          </span>
         </div>
-        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] border ${styles.badge}`}>
+        <div
+          className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] border ${styles.badge}`}
+        >
           <span className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} aria-hidden="true" />
           {source === 'static_curated' ? 'exemple' : source}
         </div>
@@ -81,7 +104,11 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
           {trend && (
             <span
               className={`text-xs ml-1 ${
-                trend === 'up' ? 'text-green-400' : trend === 'down' ? 'text-red-400' : 'text-titanium-text-disabled'
+                trend === 'up'
+                  ? 'text-green-400'
+                  : trend === 'down'
+                    ? 'text-red-400'
+                    : 'text-titanium-text-disabled'
               }`}
               aria-label={`trend: ${trend}`}
             >
@@ -100,7 +127,11 @@ export const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
 
 /** Horizontal strip of module status indicators */
 export const ModuleHealthStrip: React.FC<{
-  modules: Array<{ id: string; label: string; status: 'live' | 'partial' | 'degraded' | 'unknown' }>;
+  modules: Array<{
+    id: string;
+    label: string;
+    status: 'live' | 'partial' | 'degraded' | 'unknown';
+  }>;
   className?: string;
 }> = ({ modules, className = '' }) => {
   const STATUS_COLORS: Record<string, string> = {
@@ -144,7 +175,8 @@ export const RuntimeStatusPill: React.FC<{
     partial: 'bg-amber-900/40 text-amber-300 border-amber-700/40',
     degraded: 'bg-red-900/40 text-red-300 border-red-700/40',
     blocked: 'bg-red-900/60 text-red-200 border-red-700/60',
-    unknown: 'bg-titanium-bg-overlay text-titanium-text-disabled border-titanium-border-default',
+    unknown:
+      'bg-titanium-bg-overlay text-titanium-text-disabled border-titanium-border-default',
   };
 
   return (

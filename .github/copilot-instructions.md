@@ -107,6 +107,7 @@ Lifecycle: `DISCOVER → CERTIFY → FIX → RE-CERTIFY → BUILD_PERMISSION →
 **Lane 1 — AUTHORITY_MAP / PIPELINE_AUTHORITY**: single canonical build authority, no pipeline conflict. Classify `BLOCKED_AUTHORITY_CONFLICT` if plural.
 
 **Lane 2 — INSTRUCTIONS / AGENT_CONFIG**: run all validators:
+
 ```bash
 bash scripts/verify/verify-pre-build-certifier-agent.sh
 bash scripts/verify/verify_instruction_layers.sh
@@ -137,7 +138,8 @@ pnpm run verify:instructions
 
 **Lane 9 — CLEAN_STALE_CACHE**: `pnpm run dev:cleanup || true`, `pnpm run clean:vite || true`. No stale dist/ artifacts from a previous session.
 
-**Lane 10 — DEV_TAURI_RUNTIME** *(mandatory — added 2026-05-17)*:
+**Lane 10 — DEV_TAURI_RUNTIME** _(mandatory — added 2026-05-17)_:
+
 1. Run `pnpm run sync:versions` — must propagate `{version}-dev` to `runtime/dev/tauri.conf.json` and window title.
 2. Verify `runtime/dev/tauri.conf.json` version == `{package.json version}-dev` (e.g. `35.1.8-dev`). Mismatch = FAIL.
 3. Run `pnpm run dev:tauri` and wait for `BOOT:READY` in logs.
@@ -163,7 +165,7 @@ pnpm run verify:instructions
 
 **Lane 18 — AUTOHEAL**: `bash scripts/autoheal/detect_recurrence.sh` → PASS. No unaddressed recurrence.
 
-**Lane 19 — VALIDATORS**: `pnpm run verify` → all verify:* scripts PASS.
+**Lane 19 — VALIDATORS**: `pnpm run verify` → all verify:\* scripts PASS.
 
 **Lane 20 — RELEASE_SURFACE_PRECHECK**: `bash scripts/verify/gate-stable-artifact-freshness.sh` → PASS. `package.json`, `runtime/stable/manifest.json`, `runtime/stable/tauri.conf.json`, `deployment/latest/MANIFEST.json` all at same version. Stable AppImage/DEB present in `runtime/stable/`.
 
@@ -230,6 +232,7 @@ Browser preview proof is NOT Tauri proof. dist proof is NOT artifact proof. Arti
 Windows 11 is the primary local development host. Every build proof claim must identify the OS on which it was produced. Linux CI proof does not substitute for local Windows proof and vice versa.
 
 **Windows 11 mandatory prerequisites for Tauri development:**
+
 - Microsoft C++ Build Tools 2022 (C++ workload + Windows SDK + MSVC toolchain)
 - Microsoft Edge WebView2 Runtime (included on Windows 11; install manually on Windows 10)
 - Rust stable MSVC toolchain: `x86_64-pc-windows-msvc` (install via `rustup`)
@@ -240,6 +243,7 @@ Windows 11 is the primary local development host. Every build proof claim must i
 **OS-Aware proof rules:** Linux artifacts prove Linux only; Windows MSI proven only when built on Windows/`windows-latest` CI with artifact + SHA256 + smoke-install. CI runner proof ≠ local install proof. Each version requires own proof. `BUILD ALL` Windows = MSI path + SHA256 + smoke exit code (else `UNKNOWN`). PowerShell-first; `corepack pnpm`; never `npm install`.
 
 **Maximum verdict tiers (cannot be upgraded without proof):**
+
 - `WINDOWS_11_INSTRUCTION_ALIGNMENT_PATCHED` — docs and instructions updated, no MSI artifact required.
 - `WINDOWS_11_MSI_RELEASE_PROVEN` — requires MSI v35.x artifact + SHA256 + smoke-test proof.
 - `WINDOWS_11_MIGRATION_SEALED` — requires full Windows runtime + MSI + local install proof.

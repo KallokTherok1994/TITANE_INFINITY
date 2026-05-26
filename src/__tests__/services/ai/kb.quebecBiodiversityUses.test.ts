@@ -13,22 +13,27 @@ describe('KB Quebec biodiversity uses', () => {
 
     expect(kb.doctrine_usage.niveaux_de_preuve.food_use).toContain('alimentaire');
     expect(kb.dossiers_plantes.ail_des_bois.statut_quebec).toContain('vulnerable');
-    expect(kb.dossiers_plantes.ginseng_a_cinq_folioles.statut_quebec).toContain('menacee');
+    expect(kb.dossiers_plantes.ginseng_a_cinq_folioles.statut_quebec).toContain(
+      'menacee'
+    );
     expect(kb.dossiers_plantes.ginseng_a_cinq_folioles.interactions_et_risques).toContain(
       'interaction possible avec la warfarine'
     );
   });
 
   it('records nuanced therapeutic evidence instead of promoting unsupported medical certainty', () => {
-    const plants = usageRaw.quebec_biodiversite_usages_nutritifs_therapeutiques.dossiers_plantes;
+    const plants =
+      usageRaw.quebec_biodiversite_usages_nutritifs_therapeutiques.dossiers_plantes;
 
-    expect(plants.canneberge.usage_therapeutique.niveau_preuve).toBe('limited_human_evidence');
+    expect(plants.canneberge.usage_therapeutique.niveau_preuve).toBe(
+      'limited_human_evidence'
+    );
     expect(plants.pissenlit.usage_therapeutique.niveau_preuve).toBe(
       'conflicting_or_insufficient'
     );
-    expect(plants.aubepine_du_canada_et_groupe_aubepines.usage_therapeutique.niveau_preuve).toBe(
-      'conflicting_or_insufficient'
-    );
+    expect(
+      plants.aubepine_du_canada_et_groupe_aubepines.usage_therapeutique.niveau_preuve
+    ).toBe('conflicting_or_insufficient');
     expect(plants.podophylle_pelte.usage_therapeutique.niveau_preuve).toBe(
       'toxic_or_protected'
     );

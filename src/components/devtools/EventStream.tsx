@@ -30,7 +30,9 @@ export function EventStream({ events, maxEvents = 50 }: EventStreamProps) {
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className="text-sm font-medium text-titanium-text-primary">{event.message}</p>
+              <p className="text-sm font-medium text-titanium-text-primary">
+                {event.message}
+              </p>
               {event.source && (
                 <p className="text-xs text-titanium-text-tertiary mt-1">
                   Source: {event.source}

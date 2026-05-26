@@ -58,7 +58,10 @@
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    sans-serif;
   user-select: none;
 }
 

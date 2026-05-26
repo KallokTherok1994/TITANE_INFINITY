@@ -122,9 +122,7 @@
       },
       "kava": {
         "niveau_preuve": "high_risk_or_controlled",
-        "usages_avec_signal": [
-          "usage populaire pour anxiete"
-        ],
+        "usages_avec_signal": ["usage populaire pour anxiete"],
         "garde_fous": [
           "associee a des lesions hepatiques severes dans des cas rapportes",
           "interactions herb-medicament possibles",
@@ -134,9 +132,7 @@
       "cats_claw": {
         "nom_scientifique": "Uncaria tomentosa / U. guianensis",
         "niveau_preuve": "insufficient_or_mixed",
-        "usages_avec_signal": [
-          "promue pour inflammation, immunite ou infections"
-        ],
+        "usages_avec_signal": ["promue pour inflammation, immunite ou infections"],
         "garde_fous": [
           "pas de preuve scientifique concluante pour un usage de sante chez l humain",
           "peut ralentir la coagulation et augmenter le risque de saignement pendant chirurgie"

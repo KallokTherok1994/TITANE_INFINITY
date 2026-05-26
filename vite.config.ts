@@ -47,7 +47,9 @@ function workboxPlugin(): Plugin {
           swDest: swDestAbs,
           globDirectory: outDirAbs,
           globPatterns: ['assets/**/*.{js,css,woff2}', 'index.html'],
-          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB max
+          // core-runtime chunk is ~5.6MB (normal for this app's complexity)
+          // Increased from 5MB to 10MB to precache all assets
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB max
         });
 
         console.log(
@@ -546,6 +548,14 @@ export default defineConfig(({ command }) => ({
             ) {
               return 'vendor';
             }
+            // FIX CIRCULAR CHUNK: web-vitals imports from vendor, so merge into vendor
+            if (id.includes('web-vitals')) {
+              return 'vendor';
+            }
+            // FIX CIRCULAR CHUNK: validation (zod) imports from vendor, so merge into vendor
+            if (id.includes('zod')) {
+              return 'vendor';
+            }
             if (id.includes('@tauri-apps')) {
               return 'tauri-vendor';
             }
@@ -560,9 +570,6 @@ export default defineConfig(({ command }) => ({
             }
             if (id.includes('i18n')) {
               return 'i18n';
-            }
-            if (id.includes('zod')) {
-              return 'validation';
             }
             if (id.includes('zustand')) {
               return 'vendor';
@@ -581,9 +588,6 @@ export default defineConfig(({ command }) => ({
             }
             if (id.includes('@xenova/transformers')) {
               return 'ai-transformers';
-            }
-            if (id.includes('web-vitals')) {
-              return 'web-vitals';
             }
             if (id.includes('chart.js') || id.includes('chartjs')) {
               return 'charts';

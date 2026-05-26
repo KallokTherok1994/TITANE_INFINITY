@@ -49,7 +49,9 @@ export const PageFrame: React.FC<PageFrameProps> = ({
         ${PADDING_CLASSES[padding]}
         ${layoutClass}
         ${className}
-      `.replace(/\s+/g, ' ').trim()}
+      `
+        .replace(/\s+/g, ' ')
+        .trim()}
     >
       {children}
     </div>
@@ -64,10 +66,7 @@ export const PageSection: React.FC<{
   className?: string;
   children: React.ReactNode;
 }> = ({ title, subtitle, testId, className = '', children }) => (
-  <section
-    data-testid={testId}
-    className={`flex flex-col gap-3 ${className}`}
-  >
+  <section data-testid={testId} className={`flex flex-col gap-3 ${className}`}>
     {(title || subtitle) && (
       <div>
         {title && (

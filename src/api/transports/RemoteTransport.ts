@@ -59,7 +59,8 @@ function resolveBaseUrl(opts: RemoteTransportOptions): string {
   // user to point a single client at a different gateway without rebuild.
   const viteEnv =
     typeof import.meta !== 'undefined' &&
-    typeof (import.meta as ImportMeta & { env?: Record<string, string> }).env !== 'undefined'
+    typeof (import.meta as ImportMeta & { env?: Record<string, string> }).env !==
+      'undefined'
       ? ((import.meta as ImportMeta & { env: Record<string, string> }).env
           .VITE_TITANE_REMOTE_URL as string | undefined)
       : undefined;
@@ -77,10 +78,7 @@ function readCachedJwt(): CachedJwt | null {
     const raw = window.sessionStorage.getItem(JWT_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CachedJwt;
-    if (
-      typeof parsed.token !== 'string' ||
-      typeof parsed.expiresAt !== 'number'
-    ) {
+    if (typeof parsed.token !== 'string' || typeof parsed.expiresAt !== 'number') {
       return null;
     }
     return parsed;
@@ -117,9 +115,9 @@ export class RemoteTransport {
       opts.fetchImpl ??
       (typeof fetch !== 'undefined'
         ? fetch.bind(globalThis)
-        : (() => {
+        : () => {
             throw new Error('RemoteTransport: no fetch implementation available');
-          }));
+          });
     this.jwt = readCachedJwt();
   }
 
@@ -140,9 +138,7 @@ export class RemoteTransport {
       body,
     });
     if (!res.ok) {
-      throw new Error(
-        `RemoteTransport: /api/auth/token failed (HTTP ${res.status})`
-      );
+      throw new Error(`RemoteTransport: /api/auth/token failed (HTTP ${res.status})`);
     }
     const parsed = (await res.json()) as RemoteEnvelope<{ token: string }>;
     if (!parsed.ok || !parsed.content?.token) {
@@ -235,9 +231,7 @@ export class RemoteTransport {
 
 let singleton: RemoteTransport | null = null;
 
-export function getRemoteTransport(
-  opts: RemoteTransportOptions = {}
-): RemoteTransport {
+export function getRemoteTransport(opts: RemoteTransportOptions = {}): RemoteTransport {
   if (!singleton) {
     singleton = new RemoteTransport(opts);
   }

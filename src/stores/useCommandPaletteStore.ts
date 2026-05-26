@@ -12,8 +12,8 @@ export interface CommandPaletteState {
   toggle: () => void;
 }
 
-export const useCommandPaletteStore = create<CommandPaletteState>((set) => ({
+export const useCommandPaletteStore = create<CommandPaletteState>(set => ({
   open: false,
-  setOpen: (open) => set({ open }),
-  toggle: () => set((state) => ({ open: !state.open })),
+  setOpen: open => set({ open }),
+  toggle: () => set(state => ({ open: !state.open })),
 }));

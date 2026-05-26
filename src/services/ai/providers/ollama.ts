@@ -18,7 +18,12 @@ import type { EffortLevel } from '../omegaModeClassifier';
 import { createLogger } from '@/utils/logger';
 import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration';
-import { PROVIDER_TIMEOUTS, AVAILABILITY_CACHE, STREAM_CONFIG, getOllamaEffortTimeout } from '@/config/aiTimeouts.config';
+import {
+  PROVIDER_TIMEOUTS,
+  AVAILABILITY_CACHE,
+  STREAM_CONFIG,
+  getOllamaEffortTimeout,
+} from '@/config/aiTimeouts.config';
 import { DEFAULT_OLLAMA_MODEL as GOVERNED_OLLAMA_MODEL } from '@/config/ollamaDefaults';
 import {
   ollamaCheckHealth,
@@ -68,9 +73,16 @@ let detectedModels: string[] = [];
 
 // Priority: largest context window first, then capability ranking
 const MODEL_PRIORITY: string[] = [
-  'qwen3', 'qwen2.5', 'deepseek', 'llama3.3',
-  'llama3.2', 'mixtral', 'mistral', 'llama3.1',
-  'phi4', 'gemma2',
+  'qwen3',
+  'qwen2.5',
+  'deepseek',
+  'llama3.3',
+  'llama3.2',
+  'mixtral',
+  'mistral',
+  'llama3.1',
+  'phi4',
+  'gemma2',
 ];
 
 export function pickBestModel(available: string[]): string {
@@ -106,7 +118,9 @@ export async function initializeOllama(): Promise<boolean> {
     if (detectedModels.length > 0) {
       const best = pickBestModel(detectedModels);
       if (best !== OLLAMA_CONFIG.model) {
-        logger.info(`Ollama auto-select: ${OLLAMA_CONFIG.model} → ${best} (${detectedModels.length} modèles disponibles)`);
+        logger.info(
+          `Ollama auto-select: ${OLLAMA_CONFIG.model} → ${best} (${detectedModels.length} modèles disponibles)`
+        );
         OLLAMA_CONFIG.model = best;
       } else {
         logger.debug(`Ollama auto-select: ${OLLAMA_CONFIG.model} est déjà optimal`);
@@ -381,7 +395,10 @@ export const ollamaProvider: AIProvider = {
     // Scale timeout based on reasoning effort so DEEP_REASONING/ARCHITECT/CERTIFY chains never cut off
     const reasoningEffort = (finalConfig as { reasoningEffort?: EffortLevel })
       .reasoningEffort;
-    const effortTimeoutSecs = getOllamaEffortTimeout(reasoningEffort, OLLAMA_CONFIG.timeout);
+    const effortTimeoutSecs = getOllamaEffortTimeout(
+      reasoningEffort,
+      OLLAMA_CONFIG.timeout
+    );
 
     // Retry loop
     for (let attempt = 1; attempt <= OLLAMA_CONFIG.maxRetries; attempt++) {

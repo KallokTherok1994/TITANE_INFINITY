@@ -5,7 +5,11 @@
  * staleTime 30s — provider status (Ollama up/down, remote reachable, model loaded) doesn't
  * flip every second.
  */
-import { useQuery, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
+import {
+  useQuery,
+  type UseQueryOptions,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import { secureInvoke } from '../../lib/security';
 import { TAURI_COMMANDS } from '../../lib/tauriCommands';
 import { queryKeys } from '../../lib/queryKeys';
@@ -13,7 +17,12 @@ import { queryKeys } from '../../lib/queryKeys';
 export type ProvidersStatusSnapshot = unknown;
 
 type QueryOpts = Omit<
-  UseQueryOptions<ProvidersStatusSnapshot, Error, ProvidersStatusSnapshot, ReturnType<typeof queryKeys.providers.status>>,
+  UseQueryOptions<
+    ProvidersStatusSnapshot,
+    Error,
+    ProvidersStatusSnapshot,
+    ReturnType<typeof queryKeys.providers.status>
+  >,
   'queryKey' | 'queryFn'
 >;
 

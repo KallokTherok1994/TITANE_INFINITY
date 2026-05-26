@@ -12,7 +12,10 @@ import { QueryClient } from '@tanstack/react-query';
 import { renderHook } from '../../../test-utils/renderHook';
 
 vi.mock('../../../lib/security', () => ({
-  secureInvoke: vi.fn(async (_cmd: string, _payload?: unknown) => ({ ok: true, value: _cmd })),
+  secureInvoke: vi.fn(async (_cmd: string, _payload?: unknown) => ({
+    ok: true,
+    value: _cmd,
+  })),
 }));
 
 import { secureInvoke } from '../../../lib/security';
@@ -44,7 +47,9 @@ describe('Chat query/mutation hooks (v34.4.0)', () => {
   it('useChatConversationQuery calls chat_get_conversation with id payload', async () => {
     const { result } = renderHook(() => useChatConversationQuery('conv-1'));
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(mockedSecureInvoke).toHaveBeenCalledWith('chat_get_conversation', { conversationId: 'conv-1' });
+    expect(mockedSecureInvoke).toHaveBeenCalledWith('chat_get_conversation', {
+      conversationId: 'conv-1',
+    });
   });
 
   it('useChatSendMutation invokes conversation_generate and invalidates conversation cache', async () => {
@@ -65,7 +70,9 @@ describe('Chat query/mutation hooks (v34.4.0)', () => {
     const invalidateSpy = vi.spyOn(QueryClient.prototype, 'invalidateQueries');
     const { result } = renderHook(() => useChatDeleteConversationMutation());
     await result.current.mutateAsync({ conversationId: 'conv-9' });
-    expect(mockedSecureInvoke).toHaveBeenCalledWith('chat_delete_conversation', { conversationId: 'conv-9' });
+    expect(mockedSecureInvoke).toHaveBeenCalledWith('chat_delete_conversation', {
+      conversationId: 'conv-9',
+    });
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: queryKeys.chat.conversation('conv-9'),
     });

@@ -104,7 +104,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
               Total Alertes
             </span>
           </div>
-          <div className="text-2xl font-bold text-titanium-text-primary">{stats.total}</div>
+          <div className="text-2xl font-bold text-titanium-text-primary">
+            {stats.total}
+          </div>
         </div>
 
         <div className="bg-red-50 rounded-lg border-2 border-red-200 p-4">

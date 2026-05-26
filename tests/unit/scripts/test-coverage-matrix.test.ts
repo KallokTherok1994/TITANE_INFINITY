@@ -4,11 +4,16 @@
  * Couverture Vitest pour la matrice de couverture tests (Rule 16).
  */
 import { describe, it, expect } from 'vitest';
-import { hasRustInlineTest, buildCoverageMatrix } from '../../../scripts/ui-audit/test-coverage-matrix.mjs';
+import {
+  hasRustInlineTest,
+  buildCoverageMatrix,
+} from '../../../scripts/ui-audit/test-coverage-matrix.mjs';
 
 describe('test-coverage-matrix — hasRustInlineTest', () => {
   it('détecte #[cfg(test)] mod tests', () => {
-    expect(hasRustInlineTest('#[cfg(test)]\nmod tests { #[test] fn ok() {} }')).toBe(true);
+    expect(hasRustInlineTest('#[cfg(test)]\nmod tests { #[test] fn ok() {} }')).toBe(
+      true
+    );
   });
 
   it('détecte un #[test] isolé', () => {

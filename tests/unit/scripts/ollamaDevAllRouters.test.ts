@@ -1,4 +1,4 @@
- /**
+/**
  * Tests complets et avancés — Ollama Dev Cross-Router Unification
  *
  * Vérifie que les 4 routeurs (VSCode/Copilot, Cline, Total Dev, Console)
@@ -26,7 +26,8 @@ const OLLAMA_HOST = 'http://127.0.0.1:11434';
 // Helper: file exists
 const exists = (p: string): boolean => fs.existsSync(path.resolve(PROJECT_ROOT, p));
 // Helper: read file
-const readFile = (p: string): string => fs.readFileSync(path.resolve(PROJECT_ROOT, p), 'utf-8');
+const readFile = (p: string): string =>
+  fs.readFileSync(path.resolve(PROJECT_ROOT, p), 'utf-8');
 // Helper: grep lines
 const grepLines = (content: string, pattern: RegExp): string[] =>
   content.split('\n').filter(line => pattern.test(line));
@@ -49,7 +50,9 @@ describe('Lane A: Config file structure & consistency', () => {
     expect(mcp.servers).toHaveProperty('ollama-dev');
     expect(mcp.servers['ollama-dev'].type).toBe('stdio');
     expect(mcp.servers['ollama-dev'].command).toBe('bash');
-    expect(mcp.servers['ollama-dev'].args).toContain('scripts/mcp/start-ollama-dev-mcp.sh');
+    expect(mcp.servers['ollama-dev'].args).toContain(
+      'scripts/mcp/start-ollama-dev-mcp.sh'
+    );
   });
 
   it('A3: .clinerules/50-ollama-dev.md exists', () => {
@@ -86,7 +89,9 @@ describe('Lane A: Config file structure & consistency', () => {
 
   it('A7: Cross-router verify script exists and is executable', () => {
     expect(exists('scripts/dev/ollama-dev-verify.sh')).toBe(true);
-    const stat = fs.statSync(path.resolve(PROJECT_ROOT, 'scripts/dev/ollama-dev-verify.sh'));
+    const stat = fs.statSync(
+      path.resolve(PROJECT_ROOT, 'scripts/dev/ollama-dev-verify.sh')
+    );
     if (process.platform !== 'win32') {
       expect((stat.mode & 0o111) !== 0).toBe(true);
     } else {
@@ -191,7 +196,9 @@ describe('Lane C: Product runtime boundary protection', () => {
       const config = readFile('src/config/ollamaDefaults.ts');
       // Should NOT reference qwen3.5:9b as default (dev model)
       // But may reference qwen3.5 in comments or optional configs
-      const defaultModelMatch = config.match(/DEFAULT_OLLAMA_MODEL\s*[:=]\s*['"]([^'"]+)['"]/);
+      const defaultModelMatch = config.match(
+        /DEFAULT_OLLAMA_MODEL\s*[:=]\s*['"]([^'"]+)['"]/
+      );
       if (defaultModelMatch) {
         // Current repo migrated to qwen3.5:9b — that's OK if clearly documented
         // But we check gemma2:2b is mentioned somewhere
@@ -269,7 +276,9 @@ describe('Lane D: Dev script presence & executability', () => {
 
   it('D4: CI stack verification script exists', () => {
     expect(exists('scripts/verify/verify-ollama-dev-stack.sh')).toBe(true);
-    const stat = fs.statSync(path.resolve(PROJECT_ROOT, 'scripts/verify/verify-ollama-dev-stack.sh'));
+    const stat = fs.statSync(
+      path.resolve(PROJECT_ROOT, 'scripts/verify/verify-ollama-dev-stack.sh')
+    );
     if (process.platform !== 'win32') {
       expect((stat.mode & 0o111) !== 0).toBe(true);
     } else {

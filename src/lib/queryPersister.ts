@@ -23,7 +23,13 @@ import type { QueryClient, Query } from '@tanstack/react-query';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 
-const PERSIST_ALLOWLIST_PREFIXES = ['system', 'engines', 'providers', 'conversation', 'chat'] as const;
+const PERSIST_ALLOWLIST_PREFIXES = [
+  'system',
+  'engines',
+  'providers',
+  'conversation',
+  'chat',
+] as const;
 
 const DEFAULT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 

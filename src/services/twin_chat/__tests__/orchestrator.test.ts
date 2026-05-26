@@ -38,7 +38,9 @@ describe('orchestrateTwinChatShadow', () => {
     expect(result.summary.verdictCounts).toEqual(
       expect.objectContaining({ downgraded: 1, review_required: 1 })
     );
-    expect(result.decisions.every(decision => decision.canWriteTwin === false)).toBe(true);
+    expect(result.decisions.every(decision => decision.canWriteTwin === false)).toBe(
+      true
+    );
   });
 
   it('returns an empty summary for empty candidate batches', () => {

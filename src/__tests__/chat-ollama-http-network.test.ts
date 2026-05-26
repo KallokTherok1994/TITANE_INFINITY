@@ -32,7 +32,7 @@ beforeAll(async () => {
       signal: AbortSignal.timeout(3_000),
     });
     if (res.ok) {
-      const body = await res.json() as { version?: string };
+      const body = (await res.json()) as { version?: string };
       // Verify it's actually Ollama (not some other service on the port)
       ollamaAvailable = typeof body.version === 'string' && body.version.length > 0;
     }
@@ -41,7 +41,9 @@ beforeAll(async () => {
   }
 
   if (!ollamaAvailable) {
-    console.warn('[chat-ollama-http-network] Ollama not reachable at 127.0.0.1:11434 — all tests will be skipped');
+    console.warn(
+      '[chat-ollama-http-network] Ollama not reachable at 127.0.0.1:11434 — all tests will be skipped'
+    );
   }
 });
 
@@ -53,7 +55,7 @@ describe('Ollama HTTP — version endpoint', () => {
 
     const res = await fetch(`${OLLAMA_BASE}/api/version`);
     expect(res.ok).toBe(true);
-    const data = await res.json() as { version?: string };
+    const data = (await res.json()) as { version?: string };
     expect(typeof data.version).toBe('string');
     expect(data.version!.length).toBeGreaterThan(0);
   });
@@ -65,7 +67,7 @@ describe('Ollama HTTP — model listing', () => {
 
     const res = await fetch(`${OLLAMA_BASE}/api/tags`);
     expect(res.ok).toBe(true);
-    const data = await res.json() as { models?: Array<{ name: string }> };
+    const data = (await res.json()) as { models?: Array<{ name: string }> };
     expect(Array.isArray(data.models)).toBe(true);
   });
 
@@ -73,9 +75,11 @@ describe('Ollama HTTP — model listing', () => {
     if (!ollamaAvailable) return;
 
     const res = await fetch(`${OLLAMA_BASE}/api/tags`);
-    const data = await res.json() as { models?: Array<{ name: string }> };
+    const data = (await res.json()) as { models?: Array<{ name: string }> };
     const models = data.models ?? [];
-    const hasGemma = models.some(m => m.name === OLLAMA_MODEL || m.name.startsWith('gemma2'));
+    const hasGemma = models.some(
+      m => m.name === OLLAMA_MODEL || m.name.startsWith('gemma2')
+    );
     expect(hasGemma).toBe(true);
   });
 });
@@ -97,7 +101,11 @@ describe('Ollama HTTP — generate completion', () => {
     });
 
     expect(res.ok).toBe(true);
-    const data = await res.json() as { response?: string; model?: string; done?: boolean };
+    const data = (await res.json()) as {
+      response?: string;
+      model?: string;
+      done?: boolean;
+    };
     expect(typeof data.response).toBe('string');
     expect(data.response!.trim().length).toBeGreaterThan(0);
     expect(data.done).toBe(true);
@@ -120,7 +128,7 @@ describe('Ollama HTTP — generate completion', () => {
     });
 
     expect(res.ok).toBe(true);
-    const data = await res.json() as { response?: string };
+    const data = (await res.json()) as { response?: string };
     expect(typeof data.response).toBe('string');
     // Model should follow the system instruction
     expect(data.response!.toUpperCase()).toContain('PING');
@@ -136,9 +144,7 @@ describe('Ollama HTTP — chat completion', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: OLLAMA_MODEL,
-        messages: [
-          { role: 'user', content: 'Dis juste "oui"' },
-        ],
+        messages: [{ role: 'user', content: 'Dis juste "oui"' }],
         stream: false,
         options: { num_predict: 5, temperature: 0 },
       }),
@@ -146,7 +152,10 @@ describe('Ollama HTTP — chat completion', () => {
     });
 
     expect(res.ok).toBe(true);
-    const data = await res.json() as { message?: { role?: string; content?: string }; done?: boolean };
+    const data = (await res.json()) as {
+      message?: { role?: string; content?: string };
+      done?: boolean;
+    };
     expect(data.message?.role).toBe('assistant');
     expect(typeof data.message?.content).toBe('string');
     expect(data.message!.content!.trim().length).toBeGreaterThan(0);
@@ -168,7 +177,7 @@ describe('Ollama HTTP — embeddings', () => {
     });
 
     expect(res.ok).toBe(true);
-    const data = await res.json() as { embedding?: number[] };
+    const data = (await res.json()) as { embedding?: number[] };
     expect(Array.isArray(data.embedding)).toBe(true);
     expect(data.embedding!.length).toBeGreaterThan(0);
     expect(typeof data.embedding![0]).toBe('number');

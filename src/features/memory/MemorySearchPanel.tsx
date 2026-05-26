@@ -237,7 +237,11 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
       )}
 
       {/* Results */}
-      <div className="memory-results" tabIndex={0} aria-label="Résultats de recherche mémoire">
+      <div
+        className="memory-results"
+        tabIndex={0}
+        aria-label="Résultats de recherche mémoire"
+      >
         {isMockData && (
           <div
             className="memory-mock-notice"

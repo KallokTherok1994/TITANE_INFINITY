@@ -12,7 +12,9 @@ describe('pickBestModel', () => {
   });
 
   test('selects qwen3 as highest priority', () => {
-    expect(pickBestModel(['gemma2:2b', 'llama3.2:latest', 'qwen3:latest'])).toBe('qwen3:latest');
+    expect(pickBestModel(['gemma2:2b', 'llama3.2:latest', 'qwen3:latest'])).toBe(
+      'qwen3:latest'
+    );
   });
 
   test('returns gemma2 when it is the only model', () => {

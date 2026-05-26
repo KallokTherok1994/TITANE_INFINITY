@@ -147,7 +147,8 @@ class AudioHealthService {
               return {
                 name: 'Microphone',
                 status: 'ok',
-                message: 'Microphone accessible (backend navigateur — Tauri non configuré)',
+                message:
+                  'Microphone accessible (backend navigateur — Tauri non configuré)',
                 latencyMs: Math.round(performance.now() - start),
                 environment: 'browser',
               };
@@ -164,7 +165,9 @@ class AudioHealthService {
           };
         }
 
-        logDeviceIssue('microphone', 'Test microphone échoué', { error: result.errorMessage });
+        logDeviceIssue('microphone', 'Test microphone échoué', {
+          error: result.errorMessage,
+        });
         return {
           name: 'Microphone',
           status: 'error',
@@ -656,7 +659,9 @@ class AudioHealthService {
     } finally {
       // Fermer le contexte de test dans tous les cas — évite la fuite de ressource audio
       if (ctx && ctx.state !== 'closed') {
-        await ctx.close().catch(() => { /* ignore close error */ });
+        await ctx.close().catch(() => {
+          /* ignore close error */
+        });
       }
     }
 

@@ -18,7 +18,7 @@ describe('SurfaceTruthBadge A11y — PARTIAL variant contrast hardening', () => 
   it('PARTIAL colorClass uses solid bg-amber-900 with text-amber-100', () => {
     const src = readFileSync(
       resolve(process.cwd(), 'src/components/system/SurfaceTruthBadge.tsx'),
-      'utf-8',
+      'utf-8'
     );
 
     // Locate the PARTIAL meta entry and its colorClass on the following lines.
@@ -27,7 +27,9 @@ describe('SurfaceTruthBadge A11y — PARTIAL variant contrast hardening', () => 
     const partial = partialBlock![0];
 
     // Hardened tokens must be present.
-    expect(partial).toMatch(/colorClass:\s*'bg-amber-900\s+text-amber-100\s+border\s+border-amber-700\/50'/);
+    expect(partial).toMatch(
+      /colorClass:\s*'bg-amber-900\s+text-amber-100\s+border\s+border-amber-700\/50'/
+    );
 
     // Failed legacy tokens must not reappear in the colorClass declaration.
     const colorClassLine = partial.match(/colorClass:\s*'[^']*'/)?.[0] ?? '';

@@ -50,8 +50,8 @@ describe('KB Quebec nature domains', () => {
     expect(kb.especes_reperes.amanites_blanche_ou_verdatre.statut_runtime).toContain(
       'Ne jamais valider'
     );
-    expect(kb.heuristiques_runtime_pour_titane.quand_rester_au_niveau_du_groupe).toContain(
-      'petit champignon brun ou blanc'
-    );
+    expect(
+      kb.heuristiques_runtime_pour_titane.quand_rester_au_niveau_du_groupe
+    ).toContain('petit champignon brun ou blanc');
   });
 });

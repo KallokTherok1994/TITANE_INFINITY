@@ -13,21 +13,27 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: <div className="p-4 text-titanium-text-primary">Contenu de la carte par défaut</div>,
+    children: (
+      <div className="p-4 text-titanium-text-primary">Contenu de la carte par défaut</div>
+    ),
   },
 };
 
 export const Hoverable: Story = {
   args: {
     hoverable: true,
-    children: <div className="p-4 text-titanium-text-primary">Carte interactive (hover me)</div>,
+    children: (
+      <div className="p-4 text-titanium-text-primary">Carte interactive (hover me)</div>
+    ),
   },
 };
 
 export const Elevated: Story = {
   args: {
     elevated: true,
-    children: <div className="p-4 text-titanium-text-primary">Carte élevée avec ombre forte</div>,
+    children: (
+      <div className="p-4 text-titanium-text-primary">Carte élevée avec ombre forte</div>
+    ),
   },
 };
 

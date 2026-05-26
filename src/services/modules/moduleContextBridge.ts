@@ -68,8 +68,14 @@ export function buildModuleContextInjection(options: {
 
   // Sort: active route module first, then freshest
   const sorted = [...allSnapshots].sort((a, b) => {
-    const aActive = activeRoute && a.route ? activeRoute.startsWith(a.route.split('?')[0] ?? '') : false;
-    const bActive = activeRoute && b.route ? activeRoute.startsWith(b.route.split('?')[0] ?? '') : false;
+    const aActive =
+      activeRoute && a.route
+        ? activeRoute.startsWith(a.route.split('?')[0] ?? '')
+        : false;
+    const bActive =
+      activeRoute && b.route
+        ? activeRoute.startsWith(b.route.split('?')[0] ?? '')
+        : false;
     if (aActive && !bActive) return -1;
     if (!aActive && bActive) return 1;
     return a.freshnessMs - b.freshnessMs;

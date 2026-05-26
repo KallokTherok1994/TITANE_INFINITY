@@ -11,6 +11,13 @@ RUST_MIN_STACK = { value = "67108864", force = false }
 [target.'cfg(all())']
 # rustflags = ["-Dwarnings"]  # Temporarily disabled for development
 
+# DEV BUILD OVERRIDE: Allow duplicate symbols for CRT stub + libcmt coexistence
+# The custom crt_stub.o and MSVC's libcmt.lib both define __guard_dispatch_icall_fptr.
+# /FORCE:MULTIPLE resolves this for dev builds. Production MSI builds need the CRT
+# stub rebuilt without the CFG guard symbol.
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=/FORCE:MULTIPLE"]
+
 # Alternative: Configuration au niveau workspace
 # À ajouter dans Cargo.toml:
 # [workspace.lints.rust]

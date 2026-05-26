@@ -16,28 +16,68 @@ const PRODUCT_MODEL = 'gemma2:2b';
 const REQUIRED_SOURCES = [
   { id: 'root-agents', path: 'AGENTS.md', kind: 'instructions' },
   { id: 'copilot-kernel', path: '.github/copilot-instructions.md', kind: 'instructions' },
-  { id: 'frontend-instructions', path: '.github/instructions/frontend.instructions.md', kind: 'instructions' },
-  { id: 'ollama-boundary-agent', path: '.github/agents/ollama-dev-chat-boundary.agent.md', kind: 'instructions' },
-  { id: 'ollama-dev-prompt', path: '.github/prompts/ollama-dev-session.prompt.md', kind: 'instructions' },
+  {
+    id: 'frontend-instructions',
+    path: '.github/instructions/frontend.instructions.md',
+    kind: 'instructions',
+  },
+  {
+    id: 'ollama-boundary-agent',
+    path: '.github/agents/ollama-dev-chat-boundary.agent.md',
+    kind: 'instructions',
+  },
+  {
+    id: 'ollama-dev-prompt',
+    path: '.github/prompts/ollama-dev-session.prompt.md',
+    kind: 'instructions',
+  },
   { id: 'runtime-map', path: 'OLLAMA_RUNTIME_MAP.md', kind: 'cartography' },
   { id: 'architecture', path: 'ARCHITECTURE.md', kind: 'cartography' },
   { id: 'ui-surface-map', path: 'UI_SURFACE_MAP.md', kind: 'cartography' },
-  { id: 'cartography-complete', path: 'docs/CARTOGRAPHY_COMPLETE.md', kind: 'cartography' },
+  {
+    id: 'cartography-complete',
+    path: 'docs/CARTOGRAPHY_COMPLETE.md',
+    kind: 'cartography',
+  },
   { id: 'ipc-catalog', path: 'docs/IPC_CATALOG.md', kind: 'cartography' },
   { id: 'dev-runbook', path: 'docs/dev/OLLAMA_DEV_VSCODE_RUNBOOK.md', kind: 'runbook' },
   { id: 'dev-policy', path: 'docs/dev/OLLAMA_DEV_MODEL_POLICY.md', kind: 'runbook' },
   { id: 'local-profile', path: 'docs/dev/OLLAMA_DEV_LOCAL_PROFILE.md', kind: 'runbook' },
   { id: 'mcp-config', path: '.vscode/mcp.json', kind: 'config' },
   { id: 'mcp-wrapper', path: 'scripts/mcp/start-ollama-dev-mcp.sh', kind: 'config' },
-  { id: 'dev-stack-gate', path: 'scripts/verify/verify-ollama-dev-stack.sh', kind: 'gate' },
+  {
+    id: 'dev-stack-gate',
+    path: 'scripts/verify/verify-ollama-dev-stack.sh',
+    kind: 'gate',
+  },
   { id: 'dev-live-gate', path: 'scripts/verify/verify-ollama-dev-live.sh', kind: 'gate' },
-  { id: 'dev-performance-gate', path: 'scripts/verify/verify-ollama-dev-performance.sh', kind: 'gate' },
-  { id: 'dev-global-awareness-gate', path: 'scripts/verify/verify-ollama-dev-global-awareness.sh', kind: 'gate' },
+  {
+    id: 'dev-performance-gate',
+    path: 'scripts/verify/verify-ollama-dev-performance.sh',
+    kind: 'gate',
+  },
+  {
+    id: 'dev-global-awareness-gate',
+    path: 'scripts/verify/verify-ollama-dev-global-awareness.sh',
+    kind: 'gate',
+  },
   { id: 'total-dev-page', path: 'src/pages/TotalDevPage.tsx', kind: 'frontend' },
   { id: 'total-dev-style', path: 'src/pages/TotalDevPage.css', kind: 'frontend' },
-  { id: 'total-dev-backend', path: 'src-tauri/src/commands/total_dev_commands.rs', kind: 'backend' },
-  { id: 'total-dev-capability', path: 'src-tauri/capabilities/total_dev.json', kind: 'backend' },
-  { id: 'total-dev-e2e-desktop', path: 'e2e/desktop/total-dev.wdio.test.js', kind: 'e2e' },
+  {
+    id: 'total-dev-backend',
+    path: 'src-tauri/src/commands/total_dev_commands.rs',
+    kind: 'backend',
+  },
+  {
+    id: 'total-dev-capability',
+    path: 'src-tauri/capabilities/total_dev.json',
+    kind: 'backend',
+  },
+  {
+    id: 'total-dev-e2e-desktop',
+    path: 'e2e/desktop/total-dev.wdio.test.js',
+    kind: 'e2e',
+  },
   { id: 'total-dev-e2e-browser', path: 'e2e/total-dev-smoke.spec.ts', kind: 'e2e' },
   { id: 'package-scripts', path: 'package.json', kind: 'config' },
   { id: 'memory-state', path: 'memory/memory_core_state.json', kind: 'memory' },
@@ -45,15 +85,48 @@ const REQUIRED_SOURCES = [
 
 const INVENTORY_ROOTS = [
   { id: 'frontend', path: 'src', exts: ['.ts', '.tsx', '.css', '.json'], maxFiles: 220 },
-  { id: 'backend-tauri', path: 'src-tauri', exts: ['.rs', '.json', '.toml'], maxFiles: 220 },
-  { id: 'tests', path: 'tests', exts: ['.ts', '.tsx', '.js', '.cjs', '.mjs'], maxFiles: 160 },
+  {
+    id: 'backend-tauri',
+    path: 'src-tauri',
+    exts: ['.rs', '.json', '.toml'],
+    maxFiles: 220,
+  },
+  {
+    id: 'tests',
+    path: 'tests',
+    exts: ['.ts', '.tsx', '.js', '.cjs', '.mjs'],
+    maxFiles: 160,
+  },
   { id: 'e2e', path: 'e2e', exts: ['.ts', '.js', '.cjs'], maxFiles: 160 },
   { id: 'scripts', path: 'scripts', exts: ['.sh', '.js', '.mjs', '.cjs'], maxFiles: 220 },
   { id: 'docs', path: 'docs', exts: ['.md', '.json'], maxFiles: 220 },
-  { id: 'github', path: '.github', exts: ['.md', '.yml', '.yaml', '.json'], maxFiles: 180 },
-  { id: 'memory', path: 'memory', exts: ['.json', '.md'], maxFiles: 80, metadataOnly: true },
-  { id: 'logs', path: 'logs', exts: ['.log', '.jsonl', '.json'], maxFiles: 80, metadataOnly: true },
-  { id: 'proof-reports', path: 'reports', exts: ['.md', '.json', '.jsonl', '.log'], maxFiles: 120, metadataOnly: true },
+  {
+    id: 'github',
+    path: '.github',
+    exts: ['.md', '.yml', '.yaml', '.json'],
+    maxFiles: 180,
+  },
+  {
+    id: 'memory',
+    path: 'memory',
+    exts: ['.json', '.md'],
+    maxFiles: 80,
+    metadataOnly: true,
+  },
+  {
+    id: 'logs',
+    path: 'logs',
+    exts: ['.log', '.jsonl', '.json'],
+    maxFiles: 80,
+    metadataOnly: true,
+  },
+  {
+    id: 'proof-reports',
+    path: 'reports',
+    exts: ['.md', '.json', '.jsonl', '.log'],
+    maxFiles: 120,
+    metadataOnly: true,
+  },
 ];
 
 const PROTECTED_PRODUCT_DEFAULTS = [
@@ -126,7 +199,9 @@ function scanRoot(rootSpec) {
 
   function walk(dir) {
     if (!fs.existsSync(dir)) return;
-    const entries = fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+    const entries = fs
+      .readdirSync(dir, { withFileTypes: true })
+      .sort((a, b) => a.name.localeCompare(b.name));
     for (const entry of entries) {
       const absolute = path.join(dir, entry.name);
       const relative = rel(absolute);
@@ -172,16 +247,14 @@ function findProofArtifacts() {
     'reports/frontend-runtime-prebuild/latest.json',
   ];
 
-  return candidates
-    .filter(exists)
-    .map(pathName => {
-      const stat = fs.statSync(path.join(ROOT, pathName));
-      return {
-        path: pathName,
-        bytes: stat.size,
-        sha256: hashFile(pathName),
-      };
-    });
+  return candidates.filter(exists).map(pathName => {
+    const stat = fs.statSync(path.join(ROOT, pathName));
+    return {
+      path: pathName,
+      bytes: stat.size,
+      sha256: hashFile(pathName),
+    };
+  });
 }
 
 function productBoundary() {
@@ -198,14 +271,18 @@ function productBoundary() {
   });
 
   const mcpConfig = exists('.vscode/mcp.json') ? readText('.vscode/mcp.json') : '';
-  const totalDevPage = exists('src/pages/TotalDevPage.tsx') ? readText('src/pages/TotalDevPage.tsx') : '';
+  const totalDevPage = exists('src/pages/TotalDevPage.tsx')
+    ? readText('src/pages/TotalDevPage.tsx')
+    : '';
   return {
     product_model: PRODUCT_MODEL,
     dev_model: DEV_MODEL,
     protected_product_defaults: protectedFiles,
     mcp_declares_dev_model: mcpConfig.includes(DEV_MODEL),
     total_dev_declares_dev_model: totalDevPage.includes(DEV_MODEL),
-    product_default_dev_model_contamination: protectedFiles.some(file => file.contains_dev_model),
+    product_default_dev_model_contamination: protectedFiles.some(
+      file => file.contains_dev_model
+    ),
   };
 }
 
@@ -216,7 +293,9 @@ function buildManifest() {
     ...sources.map(source => source.path),
     ...inventory.flatMap(root => root.files.map(file => file.path)),
   ];
-  const sensitiveIndexedPaths = indexedPaths.filter(pathName => SENSITIVE_PATH_RE.test(pathName));
+  const sensitiveIndexedPaths = indexedPaths.filter(pathName =>
+    SENSITIVE_PATH_RE.test(pathName)
+  );
 
   return {
     schema_version: 1,
@@ -233,7 +312,8 @@ function buildManifest() {
       product_boundary_gate: 'pnpm run verify:ollama:boundary',
       visible_ui_surface: '/total-dev',
       certification_ipc: 'total_dev_run_certification_profile',
-      no_secret_policy: 'Manifest indexes metadata/hashes only and excludes .env/key/pem/secret paths.',
+      no_secret_policy:
+        'Manifest indexes metadata/hashes only and excludes .env/key/pem/secret paths.',
     },
     sources,
     inventory,
@@ -241,7 +321,9 @@ function buildManifest() {
     product_boundary: productBoundary(),
     safety: {
       sensitive_indexed_paths: sensitiveIndexedPaths,
-      env_files_indexed: sensitiveIndexedPaths.filter(pathName => /(^|\/)\.env($|[./])/i.test(pathName)),
+      env_files_indexed: sensitiveIndexedPaths.filter(pathName =>
+        /(^|\/)\.env($|[./])/i.test(pathName)
+      ),
       raw_memory_dump_included: false,
       raw_log_dump_included: false,
     },
@@ -270,7 +352,9 @@ function writeMarkdown(manifest) {
     '',
     '## Canonical Sources',
     '',
-    ...manifest.sources.map(source => `- ${source.exists ? 'PASS' : 'FAIL'} ${source.kind}: ${source.path}`),
+    ...manifest.sources.map(
+      source => `- ${source.exists ? 'PASS' : 'FAIL'} ${source.kind}: ${source.path}`
+    ),
   ];
   fs.writeFileSync(MD_OUT, `${lines.join('\n')}\n`);
 }
@@ -281,7 +365,9 @@ function validateManifest(manifest) {
     if (!source.exists) errors.push(`required_source_missing:${source.path}`);
   }
   if (manifest.safety.sensitive_indexed_paths.length > 0) {
-    errors.push(`sensitive_paths_indexed:${manifest.safety.sensitive_indexed_paths.join(',')}`);
+    errors.push(
+      `sensitive_paths_indexed:${manifest.safety.sensitive_indexed_paths.join(',')}`
+    );
   }
   if (manifest.product_boundary.product_default_dev_model_contamination) {
     errors.push('product_defaults_contain_dev_model');

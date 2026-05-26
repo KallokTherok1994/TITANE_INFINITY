@@ -51,15 +51,15 @@ test.describe('v34.0.8 performance Web Vitals (Phase Q)', () => {
 
           // largest-contentful-paint via PerformanceObserver buffer
           const lcp = performance.getEntriesByType(
-            'largest-contentful-paint' as PerformanceEntryType,
+            'largest-contentful-paint' as PerformanceEntryType
           );
           if (lcp && lcp.length > 0) {
             out.LCP = Math.round(lcp[lcp.length - 1].startTime);
           }
 
-          const nav = performance.getEntriesByType(
-            'navigation',
-          )[0] as PerformanceNavigationTiming | undefined;
+          const nav = performance.getEntriesByType('navigation')[0] as
+            | PerformanceNavigationTiming
+            | undefined;
           if (nav) {
             out.domInteractive = Math.round(nav.domInteractive);
             out.domContentLoaded = Math.round(nav.domContentLoadedEventEnd);
@@ -84,21 +84,25 @@ test.describe('v34.0.8 performance Web Vitals (Phase Q)', () => {
             hardCaps: { FCP: HARD_FCP_MS, LCP: HARD_LCP_MS },
           },
           null,
-          2,
+          2
         ),
-        'utf-8',
+        'utf-8'
       );
 
       console.log(
-        `[perf:${route.name}] FCP=${metrics.FCP} LCP=${metrics.LCP} domInt=${metrics.domInteractive}`,
+        `[perf:${route.name}] FCP=${metrics.FCP} LCP=${metrics.LCP} domInt=${metrics.domInteractive}`
       );
 
       // Hard cap: only assert when value was captured (avoid flake on null)
       if (typeof metrics.FCP === 'number') {
-        expect(metrics.FCP, `FCP hard cap on ${route.name}`).toBeLessThanOrEqual(HARD_FCP_MS);
+        expect(metrics.FCP, `FCP hard cap on ${route.name}`).toBeLessThanOrEqual(
+          HARD_FCP_MS
+        );
       }
       if (typeof metrics.LCP === 'number') {
-        expect(metrics.LCP, `LCP hard cap on ${route.name}`).toBeLessThanOrEqual(HARD_LCP_MS);
+        expect(metrics.LCP, `LCP hard cap on ${route.name}`).toBeLessThanOrEqual(
+          HARD_LCP_MS
+        );
       }
     });
   }

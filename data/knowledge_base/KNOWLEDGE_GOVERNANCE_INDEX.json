@@ -209,7 +209,9 @@
       "requires_web_validation": false,
       "risk_level": "medium",
       "allowed_use": ["photo_recognition_guidance", "education", "habitat_reasoning"],
-      "not_allowed_use": ["definitive_species_certification_from_single_low_quality_photo"],
+      "not_allowed_use": [
+        "definitive_species_certification_from_single_low_quality_photo"
+      ],
       "validation_status": "verified",
       "notes": "Synthese publique fondee sur les chiffres officiels de la faune vertebree du Quebec, les guides jeunesse MFFP et les emblemes officiels pour prioriser les especes les plus plausibles en analyse photo."
     },
@@ -419,11 +421,7 @@
       "freshness": "time_sensitive",
       "requires_web_validation": true,
       "risk_level": "medium",
-      "allowed_use": [
-        "destination_orientation",
-        "landscape_curation",
-        "travel_context"
-      ],
+      "allowed_use": ["destination_orientation", "landscape_curation", "travel_context"],
       "not_allowed_use": [
         "real_time_conditions_claims",
         "invent_accessibility_or_service_details"

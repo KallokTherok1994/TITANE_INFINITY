@@ -354,7 +354,10 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
       'assign_agent',
       'refresh_project_health',
     ],
-    limits: ['local-registry-can-be-empty', 'health-rollup-may-stay-partial-without-agent-data'],
+    limits: [
+      'local-registry-can-be-empty',
+      'health-rollup-may-stay-partial-without-agent-data',
+    ],
     memoryKeys: ['titane_multiproject_registry', 'multiproject_rollup_cache'],
   },
   '/cloud': {

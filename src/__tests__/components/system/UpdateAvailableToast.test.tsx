@@ -69,6 +69,8 @@ describe('UpdateAvailableToast', () => {
     // The `info` variant is the one we trigger
     // sonner mock returns vi.fn for info
     // We assert it was called once across the 3 events.
-    expect((toast as unknown as { info: ReturnType<typeof vi.fn> }).info).toHaveBeenCalledTimes(1);
+    expect(
+      (toast as unknown as { info: ReturnType<typeof vi.fn> }).info
+    ).toHaveBeenCalledTimes(1);
   });
 });

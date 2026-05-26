@@ -152,7 +152,9 @@ export const AIProvidersTester: React.FC = () => {
             <Zap className="h-6 w-6 text-titanium-text-primary" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-titanium-text-primary">Test des Providers IA</h2>
+            <h2 className="text-2xl font-bold text-titanium-text-primary">
+              Test des Providers IA
+            </h2>
             <p className="text-sm text-titanium-text-tertiary">
               Validation et métriques de performance
             </p>
@@ -185,7 +187,9 @@ export const AIProvidersTester: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{config.icon}</span>
                   <div>
-                    <h3 className="font-bold text-titanium-text-primary">{config.name}</h3>
+                    <h3 className="font-bold text-titanium-text-primary">
+                      {config.name}
+                    </h3>
                     <div className="flex items-center gap-2 text-sm text-titanium-text-tertiary">
                       {getStatusIcon(test.status)}
                       <span>
@@ -213,7 +217,9 @@ export const AIProvidersTester: React.FC = () => {
                 {test.latency !== undefined && (
                   <div className="flex items-center justify-between rounded-lg bg-titanium-bg-base/50 p-3">
                     <span className="text-sm text-titanium-text-tertiary">Latence</span>
-                    <span className="font-bold text-titanium-text-primary">{test.latency}ms</span>
+                    <span className="font-bold text-titanium-text-primary">
+                      {test.latency}ms
+                    </span>
                   </div>
                 )}
 
@@ -223,7 +229,9 @@ export const AIProvidersTester: React.FC = () => {
                     <div className="mb-1 text-xs font-bold uppercase text-titanium-text-tertiary">
                       Réponse
                     </div>
-                    <div className="text-sm text-titanium-text-secondary">{test.response}</div>
+                    <div className="text-sm text-titanium-text-secondary">
+                      {test.response}
+                    </div>
                   </div>
                 )}
 

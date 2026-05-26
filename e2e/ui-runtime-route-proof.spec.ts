@@ -67,7 +67,10 @@ async function waitForAnySelector(
   return false;
 }
 
-async function waitForVisible(locator: ReturnType<import('@playwright/test').Page['getByTestId']>, timeout = 3500) {
+async function waitForVisible(
+  locator: ReturnType<import('@playwright/test').Page['getByTestId']>,
+  timeout = 3500
+) {
   try {
     await locator.first().waitFor({ state: 'visible', timeout });
     return true;
@@ -79,7 +82,13 @@ async function waitForVisible(locator: ReturnType<import('@playwright/test').Pag
 test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
   test.setTimeout(120000);
 
-  for (const { route, testId, badgeExpected, priority, browserGuardExpected } of BASE_ROUTES) {
+  for (const {
+    route,
+    testId,
+    badgeExpected,
+    priority,
+    browserGuardExpected,
+  } of BASE_ROUTES) {
     test(`[P${priority}] Route ${route} — rootTestId=${testId}, badge=${badgeExpected}`, async ({
       page,
     }) => {
@@ -118,14 +127,24 @@ test.describe('UI Runtime Route Proof — v48 (Browser Lane)', () => {
       // Truth badge check
       if (badgeExpected) {
         if (browserGuardExpected) {
-          const guardHeading = page.getByRole('heading', { name: /erreur dans devpage/i });
-          const guardStatus = page.getByRole('status').filter({ hasText: /TITANE runtime/i });
+          const guardHeading = page.getByRole('heading', {
+            name: /erreur dans devpage/i,
+          });
+          const guardStatus = page
+            .getByRole('status')
+            .filter({ hasText: /TITANE runtime/i });
 
-          await expect(guardHeading.or(guardStatus).first()).toBeVisible({ timeout: BADGE_TIMEOUT });
+          await expect(guardHeading.or(guardStatus).first()).toBeVisible({
+            timeout: BADGE_TIMEOUT,
+          });
           return;
         }
 
-        const badgeFound = await waitForAnySelector(page, [BADGE_SELECTOR], BADGE_TIMEOUT);
+        const badgeFound = await waitForAnySelector(
+          page,
+          [BADGE_SELECTOR],
+          BADGE_TIMEOUT
+        );
 
         if (!badgeFound) {
           console.warn(

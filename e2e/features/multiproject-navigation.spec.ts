@@ -10,7 +10,9 @@ test.describe('Feature: MultiProject navigation truth', () => {
     return;
   }
 
-  test('opens /multiproject from the More menu and lands on the canonical surface', async ({ page }) => {
+  test('opens /multiproject from the More menu and lands on the canonical surface', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     await expect(page.getByTestId('nav-top-main')).toBeVisible({ timeout: 15000 });
@@ -24,7 +26,9 @@ test.describe('Feature: MultiProject navigation truth', () => {
     await projectsItem.click({ force: true });
 
     await expect(page).toHaveURL(/\/multiproject(\?|$)/, { timeout: 15000 });
-    await expect(page.getByTestId('multiproject-dashboard')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId('multiproject-dashboard')).toBeVisible({
+      timeout: 15000,
+    });
     await expect(moreButton).toHaveAttribute('aria-current', 'page');
   });
 });

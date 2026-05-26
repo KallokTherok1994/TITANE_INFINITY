@@ -198,12 +198,31 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     });
 
     // ═══ HELPERS - FICHIERS ═══
-    function detectAnalyzedFileCategory(name: string, mime: string): AnalyzedFile['category'] {
+    function detectAnalyzedFileCategory(
+      name: string,
+      mime: string
+    ): AnalyzedFile['category'] {
       const ext = name.slice(name.lastIndexOf('.')).toLowerCase();
-      if (['.pdf', '.doc', '.docx', '.txt', '.md', '.log'].includes(ext)) return 'document';
-      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'].includes(ext)) return 'image';
+      if (['.pdf', '.doc', '.docx', '.txt', '.md', '.log'].includes(ext))
+        return 'document';
+      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'].includes(ext))
+        return 'image';
       if (['.json', '.yaml', '.yml', '.csv', '.xml'].includes(ext)) return 'data';
-      if (['.ts', '.tsx', '.js', '.jsx', '.py', '.rs', '.go', '.java', '.cpp', '.c'].includes(ext)) return 'code';
+      if (
+        [
+          '.ts',
+          '.tsx',
+          '.js',
+          '.jsx',
+          '.py',
+          '.rs',
+          '.go',
+          '.java',
+          '.cpp',
+          '.c',
+        ].includes(ext)
+      )
+        return 'code';
       if (mime.startsWith('image/')) return 'image';
       return 'document';
     }
@@ -224,10 +243,15 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
             for (const file of filesArray) {
               // Utilise resolveImportedFileContent pour PDF/DOCX (parsing Tauri)
               // et détection binaire intégrée — fallback metadata si non parsable
-              const content = await resolveImportedFileContent(file).catch((err: unknown) => {
-                logger.debug('File content resolution failed', { error: String(err), file: file.name });
-                return null;
-              });
+              const content = await resolveImportedFileContent(file).catch(
+                (err: unknown) => {
+                  logger.debug('File content resolution failed', {
+                    error: String(err),
+                    file: file.name,
+                  });
+                  return null;
+                }
+              );
 
               const analyzed: AnalyzedFile = {
                 id: `${Date.now()}-${Math.random()}`,
@@ -294,7 +318,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         } else if (code === 'NotFoundError') {
           error('Aucun écran à capturer trouvé');
         } else if (code === 'NotSecureError') {
-          error('La capture d\'écran nécessite une connexion HTTPS');
+          error("La capture d'écran nécessite une connexion HTTPS");
         } else {
           logger.error('[ChatToolbar] Screen capture error:', err);
         }
@@ -336,7 +360,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       }
       const hasCamera = await APISupport.hasCamera();
       if (!hasCamera) {
-        error('Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.');
+        error(
+          'Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.'
+        );
         return;
       }
 
@@ -361,7 +387,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       } catch (err) {
         const code = err instanceof Error ? err.name : 'Unknown';
         if (code === 'NotAllowedError') {
-          error('Permission caméra refusée. Autorisez l\'accès dans les paramètres du navigateur.');
+          error(
+            "Permission caméra refusée. Autorisez l'accès dans les paramètres du navigateur."
+          );
         } else if (code === 'NotFoundError') {
           error('Aucune caméra trouvée ou caméra non accessible.');
         } else {
@@ -442,7 +470,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       }
       const hasMic = await APISupport.hasMicrophone();
       if (!hasMic) {
-        error('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+        error(
+          'Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.'
+        );
         return;
       }
 
@@ -467,19 +497,31 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           stream?.getTracks().forEach(track => track.stop());
           stream = null;
           onAudioRecorded?.(audioBlob);
-          isDev && logger.info('[ChatToolbar] Audio recorded:', audioBlob.size, 'bytes', blobType);
+          isDev &&
+            logger.info(
+              '[ChatToolbar] Audio recorded:',
+              audioBlob.size,
+              'bytes',
+              blobType
+            );
         };
 
         mediaRecorder.start();
         setIsRecordingAudio(true);
-        isDev && logger.info('[ChatToolbar] Audio recording started, mimeType:', mimeType || '(default)');
+        isDev &&
+          logger.info(
+            '[ChatToolbar] Audio recording started, mimeType:',
+            mimeType || '(default)'
+          );
       } catch (err) {
         // Libérer le stream si start() a échoué avant onstop
         stream?.getTracks().forEach(track => track.stop());
         setIsRecordingAudio(false);
         const code = err instanceof Error ? err.name : 'Unknown';
         if (code === 'NotAllowedError') {
-          error('Permission microphone refusée. Autorisez l\'accès dans les paramètres du navigateur.');
+          error(
+            "Permission microphone refusée. Autorisez l'accès dans les paramètres du navigateur."
+          );
         } else {
           logger.error('[ChatToolbar] Audio recording error:', err);
           error(`Erreur enregistrement: ${(err as Error).message || 'Erreur inconnue'}`);

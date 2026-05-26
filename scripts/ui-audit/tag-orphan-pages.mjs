@@ -33,8 +33,8 @@ const REPORTS_DIR = join(REPO_ROOT, 'reports');
 export async function listPageFiles(pagesDir = PAGES_DIR) {
   const entries = await readdir(pagesDir, { withFileTypes: true });
   return entries
-    .filter((e) => e.isFile() && e.name.endsWith('.tsx'))
-    .map((e) => join(pagesDir, e.name));
+    .filter(e => e.isFile() && e.name.endsWith('.tsx'))
+    .map(e => join(pagesDir, e.name));
 }
 
 export function extractImports(appSource) {
@@ -48,31 +48,43 @@ export function extractImports(appSource) {
   };
 
   // Pattern 1: static `import X from './pages/X'` / `import { X } from './pages/X'`
-  const staticRe = /import\s+([^'";]+?)\s+from\s+['"]((?:\.\/|@\/)(?:pages|ui\/pages)\/[^'"]+)['"]/g;
+  const staticRe =
+    /import\s+([^'";]+?)\s+from\s+['"]((?:\.\/|@\/)(?:pages|ui\/pages)\/[^'"]+)['"]/g;
   let m;
   while ((m = staticRe.exec(appSource)) !== null) {
     const lhs = m[1].trim();
     const spec = m[2];
     const idents = [];
     if (lhs.startsWith('{')) {
-      lhs.slice(1, -1).split(',').forEach((n) => {
-        const cleaned = n.trim().split(/\s+as\s+/).pop().trim();
-        if (cleaned) idents.push(cleaned);
-      });
+      lhs
+        .slice(1, -1)
+        .split(',')
+        .forEach(n => {
+          const cleaned = n
+            .trim()
+            .split(/\s+as\s+/)
+            .pop()
+            .trim();
+          if (cleaned) idents.push(cleaned);
+        });
     } else if (lhs.startsWith('* as ')) {
       idents.push(lhs.replace('* as ', '').trim());
     } else {
-      const parts = lhs.split(',').map((s) => s.trim());
+      const parts = lhs.split(',').map(s => s.trim());
       idents.push(parts[0]);
       if (parts[1] && parts[1].startsWith('{')) {
-        parts[1].slice(1, -1).split(',').forEach((n) => idents.push(n.trim()));
+        parts[1]
+          .slice(1, -1)
+          .split(',')
+          .forEach(n => idents.push(n.trim()));
       }
     }
     for (const id of idents) addEntry(spec, id);
   }
 
   // Pattern 2a: `const X = <anyFn>(() => import('./pages/X')...)` covers lazy / lazyWithTimeout / lazyWithRetry / React.lazy.
-  const lazyAssignRe = /const\s+(\w+)\s*=\s*(?:[\w$.]+\s*\(\s*)+\(\)\s*=>\s*import\(\s*['"]((?:\.\/|@\/)(?:pages|ui\/pages)\/[^'"]+)['"]/g;
+  const lazyAssignRe =
+    /const\s+(\w+)\s*=\s*(?:[\w$.]+\s*\(\s*)+\(\)\s*=>\s*import\(\s*['"]((?:\.\/|@\/)(?:pages|ui\/pages)\/[^'"]+)['"]/g;
   while ((m = lazyAssignRe.exec(appSource)) !== null) {
     addEntry(m[2], m[1].trim());
   }
@@ -100,7 +112,10 @@ export function classifyIdentifiers(appSource, identifiers) {
   return result;
 }
 
-export async function buildAuditReport({ pagesDir = PAGES_DIR, appTsxPath = APP_TSX } = {}) {
+export async function buildAuditReport({
+  pagesDir = PAGES_DIR,
+  appTsxPath = APP_TSX,
+} = {}) {
   const [pageFiles, appSource] = await Promise.all([
     listPageFiles(pagesDir),
     readFile(appTsxPath, 'utf8'),
@@ -109,7 +124,7 @@ export async function buildAuditReport({ pagesDir = PAGES_DIR, appTsxPath = APP_
   const allIdentifiers = Array.from(imports.values()).flat();
   const { live, aliasOnly } = classifyIdentifiers(appSource, allIdentifiers);
 
-  const pages = pageFiles.map((file) => {
+  const pages = pageFiles.map(file => {
     const filename = basename(file);
     const idents = imports.get(filename) || null;
     const baseName = filename.replace(/\.tsx$/, '');
@@ -117,7 +132,7 @@ export async function buildAuditReport({ pagesDir = PAGES_DIR, appTsxPath = APP_
     if (idents !== null) {
       const candidates = idents.length > 0 ? idents : [baseName];
       const jsxRe = new RegExp(`<${baseName}(?:\\s|/|>)`);
-      if (candidates.some((id) => live.has(id)) || jsxRe.test(appSource)) {
+      if (candidates.some(id => live.has(id)) || jsxRe.test(appSource)) {
         category = 'LIVE';
       } else {
         category = 'ALIAS';
@@ -168,7 +183,7 @@ async function renderMarkdown(report) {
   lines.push(`| **TOTAL** | **${report.totals.total}** |`);
   lines.push('');
   for (const cat of ['ORPHAN_DEAD', 'ALIAS', 'LIVE']) {
-    const rows = report.pages.filter((p) => p.category === cat);
+    const rows = report.pages.filter(p => p.category === cat);
     if (rows.length === 0) continue;
     lines.push(`## ${cat} (${rows.length})`);
     lines.push('');
@@ -193,7 +208,9 @@ async function main() {
 
   console.log(`[ui-audit] Wrote ${relative(REPO_ROOT, jsonPath)}`);
   console.log(`[ui-audit] Wrote ${relative(REPO_ROOT, mdPath)}`);
-  console.log(`[ui-audit] LIVE=${report.totals.LIVE} ALIAS=${report.totals.ALIAS} ORPHAN_DEAD=${report.totals.ORPHAN_DEAD}`);
+  console.log(
+    `[ui-audit] LIVE=${report.totals.LIVE} ALIAS=${report.totals.ALIAS} ORPHAN_DEAD=${report.totals.ORPHAN_DEAD}`
+  );
 
   if (apply) {
     let tagged = 0;
@@ -202,15 +219,19 @@ async function main() {
       const abs = join(REPO_ROOT, page.file);
       if (await tagOrphanFile(abs)) tagged += 1;
     }
-    console.log(`[ui-audit] Tagged ${tagged} ORPHAN_DEAD file(s) with @deprecated header.`);
+    console.log(
+      `[ui-audit] Tagged ${tagged} ORPHAN_DEAD file(s) with @deprecated header.`
+    );
   } else {
-    console.log('[ui-audit] Dry-run (no files mutated). Use --apply to tag ORPHAN_DEAD pages.');
+    console.log(
+      '[ui-audit] Dry-run (no files mutated). Use --apply to tag ORPHAN_DEAD pages.'
+    );
   }
 }
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
-  main().catch((err) => {
+  main().catch(err => {
     console.error('[ui-audit] FAIL:', err);
     process.exit(1);
   });

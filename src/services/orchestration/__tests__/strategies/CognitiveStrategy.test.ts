@@ -6,6 +6,59 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+const cognitiveOmegaMock = vi.hoisted(() => ({
+  storeTextMemory: vi.fn(async () => 'semantic-memory-id'),
+  enrichContext: vi.fn(async () => ({
+    memories: '\n[MEMOIRES PERTINENTES]\n1. Fallback cognitive (pertinence: 80%)\n',
+    goals: '',
+    facts: '',
+    combined: '',
+    metadata: { memoryCount: 1, goalCount: 0, factCount: 0 },
+  })),
+  saveInteraction: vi.fn(async () => undefined),
+  createGoal: vi.fn(async () => undefined),
+  getGoalProgress: vi.fn(async () => 0.5),
+  checkConsistency: vi.fn(async () => ({
+    violations: [],
+    consistencyScore: 0.95,
+  })),
+  getStats: vi.fn(() => ({
+    totalInteractions: 0,
+    totalMemoriesCreated: 0,
+    totalViolationsDetected: 0,
+    totalCorrectionsApplied: 0,
+    avgConsistencyScore: 0.95,
+    avgQualityScore: 0.9,
+  })),
+}));
+
+const memoryIntegrationMock = vi.hoisted(() => ({
+  saveStructuredEntry: vi.fn(async () => undefined),
+  saveInteraction: vi.fn(async () => undefined),
+}));
+
+const tauriClientMock = vi.hoisted(() => ({
+  persistentMemoryRead: vi.fn(async () => ({
+    entries: [],
+    totalCount: 0,
+    queryTime: 0,
+    relevanceScores: {},
+  })),
+}));
+
+vi.mock('@/services/cognitive/cognitiveOmegaIntegration', () => ({
+  cognitiveOmega: cognitiveOmegaMock,
+}));
+
+vi.mock('@/services/ai/memoryIntegration', () => ({
+  memoryIntegration: memoryIntegrationMock,
+}));
+
+vi.mock('@/lib/tauriClient', () => ({
+  tauriClient: tauriClientMock,
+}));
+
 import { CognitiveStrategy } from '../../strategies/CognitiveStrategy';
 import { memoryIntegration } from '@/services/ai/memoryIntegration';
 import { tauriClient } from '@/lib/tauriClient';
@@ -14,6 +67,39 @@ describe('CognitiveStrategy', () => {
   let strategy: CognitiveStrategy;
 
   beforeEach(() => {
+    memoryIntegrationMock.saveStructuredEntry.mockReset().mockResolvedValue(undefined);
+    memoryIntegrationMock.saveInteraction.mockReset().mockResolvedValue(undefined);
+    cognitiveOmegaMock.storeTextMemory
+      .mockReset()
+      .mockResolvedValue('semantic-memory-id');
+    cognitiveOmegaMock.enrichContext.mockReset().mockResolvedValue({
+      memories: '\n[MEMOIRES PERTINENTES]\n1. Fallback cognitive (pertinence: 80%)\n',
+      goals: '',
+      facts: '',
+      combined: '',
+      metadata: { memoryCount: 1, goalCount: 0, factCount: 0 },
+    });
+    cognitiveOmegaMock.saveInteraction.mockReset().mockResolvedValue(undefined);
+    cognitiveOmegaMock.createGoal.mockReset().mockResolvedValue(undefined);
+    cognitiveOmegaMock.getGoalProgress.mockReset().mockResolvedValue(0.5);
+    cognitiveOmegaMock.checkConsistency.mockReset().mockResolvedValue({
+      violations: [],
+      consistencyScore: 0.95,
+    });
+    cognitiveOmegaMock.getStats.mockReset().mockReturnValue({
+      totalInteractions: 0,
+      totalMemoriesCreated: 0,
+      totalViolationsDetected: 0,
+      totalCorrectionsApplied: 0,
+      avgConsistencyScore: 0.95,
+      avgQualityScore: 0.9,
+    });
+    tauriClientMock.persistentMemoryRead.mockReset().mockResolvedValue({
+      entries: [],
+      totalCount: 0,
+      queryTime: 0,
+      relevanceScores: {},
+    });
     strategy = new CognitiveStrategy();
   });
 

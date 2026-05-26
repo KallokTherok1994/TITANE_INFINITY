@@ -124,7 +124,9 @@ const SingularityMonitor = memo(() => {
           <div className="flex items-center gap-3">
             <Atom className="w-7 h-7 text-cyan-400" />
             <div>
-              <h1 className="text-2xl font-bold text-titanium-text-primary">Singularity Monitor</h1>
+              <h1 className="text-2xl font-bold text-titanium-text-primary">
+                Singularity Monitor
+              </h1>
               <p className="text-sm text-titanium-text-tertiary">
                 État avancé — Convergence &amp; Connexions
               </p>

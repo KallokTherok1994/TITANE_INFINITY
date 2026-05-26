@@ -16,7 +16,11 @@ function makeFetch(handlers: Record<string, (body: unknown) => unknown>) {
     const body = init?.body ? JSON.parse(init.body as string) : undefined;
     const handler = handlers[path];
     if (!handler) {
-      return { ok: false, status: 404, json: async () => ({ ok: false, error: 'not found' }) };
+      return {
+        ok: false,
+        status: 404,
+        json: async () => ({ ok: false, error: 'not found' }),
+      };
     }
     const result = handler(body);
     return { ok: true, status: 200, json: async () => result };
@@ -34,7 +38,8 @@ describe('RemoteTransport', () => {
     }
     // Reset localStorage guard flag — best effort (proxy may forbid delete)
     try {
-      delete (window.localStorage as Storage & { __titane_guard__?: boolean }).__titane_guard__;
+      delete (window.localStorage as Storage & { __titane_guard__?: boolean })
+        .__titane_guard__;
     } catch {
       /* ignore — guard flag will be reset by __resetRemoteTransportForTests__ */
     }
@@ -53,7 +58,9 @@ describe('RemoteTransport', () => {
     const out = await t.invoke<{ pong: number }>('health_check');
     expect(out.pong).toBe(1);
     // Two calls: token + invoke
-    expect((fetchImpl as unknown as { mock: { calls: unknown[] } }).mock.calls.length).toBe(2);
+    expect(
+      (fetchImpl as unknown as { mock: { calls: unknown[] } }).mock.calls.length
+    ).toBe(2);
   });
 
   it('reuses the JWT for subsequent invokes within the lifetime window', async () => {

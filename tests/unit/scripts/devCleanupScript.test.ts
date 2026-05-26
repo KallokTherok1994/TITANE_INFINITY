@@ -18,9 +18,14 @@ describe('dev cleanup script', () => {
   });
 
   it('cleans generic Vite leftovers instead of only matching `vite dev`', () => {
-    expect(cleanupScript).toContain('VITE_PIDS=$(pgrep -f "vite" || true)');
-    expect(cleanupScript).toContain('REMAINING_VITE_PIDS=$(pgrep -f "vite" || true)');
-    expect(cleanupScript).toContain('REMAINING_VITE=$(pgrep -f "vite" || true)');
+    expect(cleanupScript).toContain('get_pids_by_pattern() {');
+    expect(cleanupScript).toContain('get_process_lines_by_pattern() {');
+    expect(cleanupScript).toContain('VITE_PIDS=$(get_pids_by_pattern "vite")');
+    expect(cleanupScript).toContain('REMAINING_VITE_PIDS=$(get_pids_by_pattern "vite")');
+    expect(cleanupScript).toContain(
+      'REMAINING_VITE=$(get_process_lines_by_pattern "vite")'
+    );
+    expect(cleanupScript).toContain('Get-CimInstance Win32_Process');
     expect(cleanupScript).toContain('Force kill des processus Vite restants');
     expect(cleanupScript).not.toContain('pgrep -f "vite.*dev"');
   });

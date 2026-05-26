@@ -56,7 +56,10 @@ export const OAuthProfileCard: React.FC<OAuthProfileCardProps> = ({ className = 
           {profile.name}
         </p>
         {profile.email && (
-          <p className="text-xs text-titanium-text-primary/60 truncate" data-testid="oauth-profile-email">
+          <p
+            className="text-xs text-titanium-text-primary/60 truncate"
+            data-testid="oauth-profile-email"
+          >
             {profile.email}
           </p>
         )}

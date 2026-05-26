@@ -93,7 +93,8 @@ vi.mock('@/lib/logger', () => ({
 
 // Stub every other import ConversationSection pulls in
 vi.mock('@/design-system', () => ({
-  TSectionHeader: ({ children }: { children?: React.ReactNode }) => React.createElement('div', null, children),
+  TSectionHeader: ({ children }: { children?: React.ReactNode }) =>
+    React.createElement('div', null, children),
 }));
 
 vi.mock('@/features/chat/ThinkingPanel', () => ({
@@ -125,7 +126,8 @@ vi.mock('@/components/chat/ChatToolbar', () => ({
 }));
 
 vi.mock('@/components/chat/MarkdownContent', () => ({
-  MarkdownContent: ({ content }: { content: string }) => React.createElement('div', null, content),
+  MarkdownContent: ({ content }: { content: string }) =>
+    React.createElement('div', null, content),
 }));
 
 vi.mock('@/components/conversation/ModeBuilder', () => ({

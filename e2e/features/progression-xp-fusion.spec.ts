@@ -86,9 +86,7 @@ test.describe('Progression/XP canonical fusion', () => {
     await expect(page.getByTestId('progression-section')).toBeVisible({
       timeout: 15000,
     });
-    await expect(page.getByTestId('progression-chat-message-count')).toContainText(
-      '1'
-    );
+    await expect(page.getByTestId('progression-chat-message-count')).toContainText('1');
 
     await page.goto('/experience');
     await expect(page.getByTestId('page-experience')).toBeVisible({
@@ -96,12 +94,8 @@ test.describe('Progression/XP canonical fusion', () => {
     });
     await expect(page.getByTestId('experience-stats-advanced')).toBeVisible();
     await expect(page.getByTestId('experience-history-list')).toBeVisible();
-    await expect(page.getByTestId('experience-chat-event-count')).toContainText(
-      '1 gain'
-    );
-    await expect(page.getByTestId('experience-chat-xp-total')).toContainText(
-      '+15 XP'
-    );
+    await expect(page.getByTestId('experience-chat-event-count')).toContainText('1 gain');
+    await expect(page.getByTestId('experience-chat-xp-total')).toContainText('+15 XP');
 
     const legacyStores = await page.evaluate(() => ({
       progression: window.localStorage.getItem('titane_progression_state'),
