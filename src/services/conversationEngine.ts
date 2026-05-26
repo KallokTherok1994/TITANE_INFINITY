@@ -15,6 +15,7 @@ import { ALLOWED_COMMANDS } from '@/lib/security';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { memoryService } from '@/services/api/memory';
 import { getUnifiedMemory } from '@/services/memory/UnifiedMemoryService';
+import TokenCounterService from '@/services/chat/tokenCounter';
 import { getRelevantPromptContext as getDefaultKbPromptContext } from '@/services/api/defaultKnowledgeBase';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import {
@@ -80,6 +81,8 @@ import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('ConversationEngine');
 const MIN_CANONICAL_CHAT_OUTPUT_TOKENS = 32768;
+const _tokenCounter = new TokenCounterService();
+const TOKEN_WARNING_THRESHOLD = 10_000; // ~35 000 chars
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -1446,6 +1449,15 @@ export async function processMessage(
   logger.info('[conversationEngine] 🚀 Envoi du message via secureInvoke');
 
   const provider = options?.providerPreference ?? 'auto';
+
+  // B1: Token overflow guard — warn if user message is exceptionally long
+  const estimatedTokens = _tokenCounter.countMessageTokens({ role: 'user', content: userMessage, timestamp: Date.now() });
+  if (estimatedTokens > TOKEN_WARNING_THRESHOLD) {
+    logger.warn('[conversationEngine] ⚠️ Message très long — risque de context overflow', {
+      estimatedTokens,
+      chars: userMessage.length,
+    });
+  }
 
   // OMEGA_AUTO_ORCHESTRATION_CHAIN: auto mode classification (Lock #1)
   const modeClassification = classifyMode({

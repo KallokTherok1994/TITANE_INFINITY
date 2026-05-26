@@ -63,8 +63,12 @@ function writeQueue(items: TwinChatReviewItem[]): TwinChatReviewItem[] {
   }
 
   const sorted = sortQueue(items).slice(0, MAX_REVIEW_QUEUE_SIZE);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
-  emitQueueChanged();
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sorted));
+    emitQueueChanged();
+  } catch {
+    // localStorage quota exceeded or unavailable — in-memory only, no event emitted
+  }
   return sorted;
 }
 
