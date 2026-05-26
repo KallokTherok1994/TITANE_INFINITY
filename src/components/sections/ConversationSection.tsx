@@ -206,6 +206,7 @@ const CONVERSATION_SUGGESTIONS = [
 ];
 
 const LOADING_INDICATOR_GRACE_MS = 1200;
+const CHAT_DRAFT_SAVE_DELAY_MS = 500;
 const COMPACT_CONVERSATION_VIEWPORT_HEIGHT = 980;
 const SCROLL_TO_BOTTOM_THRESHOLD_PX = 96;
 const SCROLL_TO_BOTTOM_VISIBILITY_OFFSET_PX = 180;
@@ -1796,6 +1797,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputValueRef = useRef('');
     const sendingRef = useRef(false);
+    const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastViewportScaleRef = useRef(1);
     const lastDevicePixelRatioRef = useRef(1);
     const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -1806,6 +1808,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         inputValueRef.current = nextValue;
         return nextValue;
       });
+    }, []);
+
+    const clearDraftSaveTimer = useCallback(() => {
+      if (draftSaveTimerRef.current) {
+        clearTimeout(draftSaveTimerRef.current);
+        draftSaveTimerRef.current = null;
+      }
     }, []);
 
     // ─── SLASH DETECTION : "/" seul ouvre le sélecteur d'outils ─────────────
@@ -2603,20 +2612,35 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     // ─── Draft persistence ───────────────────────────────────────────────────
     const draftKey = `titane_chat_draft_${conversationId || 'default'}`;
 
+    const clearConversationInput = useCallback(() => {
+      clearDraftSaveTimer();
+      inputValueRef.current = '';
+      if (conversationInputRef.current) {
+        conversationInputRef.current.value = '';
+        conversationInputRef.current.style.height = '';
+      }
+      localStorage.removeItem(draftKey);
+      updateInputValue('');
+    }, [clearDraftSaveTimer, draftKey, updateInputValue]);
+
     useEffect(() => {
       const saved = localStorage.getItem(draftKey);
-      if (saved && !inputValue) setInputValue(saved);
+      if (saved && !inputValueRef.current) updateInputValue(saved);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conversationId]);
 
     useEffect(() => {
+      clearDraftSaveTimer();
       if (inputValue) {
-        const t = setTimeout(() => localStorage.setItem(draftKey, inputValue), 500);
-        return () => clearTimeout(t);
-      } else {
-        localStorage.removeItem(draftKey);
+        draftSaveTimerRef.current = setTimeout(() => {
+          localStorage.setItem(draftKey, inputValue);
+          draftSaveTimerRef.current = null;
+        }, CHAT_DRAFT_SAVE_DELAY_MS);
+        return clearDraftSaveTimer;
       }
-    }, [inputValue, draftKey]);
+      localStorage.removeItem(draftKey);
+      return undefined;
+    }, [inputValue, draftKey, clearDraftSaveTimer]);
 
     // ═══ MORE HANDLERS ═══
     const handleSaveCustomMode = useCallback((mode: CustomMode) => {
@@ -2654,7 +2678,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       }
 
       const messageText = sanitized;
-      updateInputValue('');
+      clearConversationInput();
 
       // ─── Détection "Enregistre dans mes préférences : <valeur>" ──────────
       const PREF_SAVE_RE = /^enregistre dans mes pr[eé]f[eé]rences\s*:\s*(.+)$/i;
@@ -2937,7 +2961,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       thinking,
       errorToast,
       toastSuccess,
-      updateInputValue,
+      clearConversationInput,
     ]);
 
     const handleDownloadGeneratedFile = useCallback(

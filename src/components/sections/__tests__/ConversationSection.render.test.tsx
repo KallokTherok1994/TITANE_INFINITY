@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const conversationRenderFixtures = vi.hoisted(() => ({
   assistantContent: [
@@ -16,6 +16,13 @@ const conversationRenderFixtures = vi.hoisted(() => ({
     '## Bloc terminal',
     'OMEGA-CONVERSATION-TERMINAL-MARKER',
   ].join('\n'),
+  sendMessage: vi.fn(async () => ({
+    assistant_message: 'Réponse test',
+    meta: {
+      provider_used: 'Ollama (OMEGA+Singularity)',
+      reason_code: 'OK',
+    },
+  })),
 }));
 
 vi.mock('@/hooks/useToast', () => ({
@@ -55,7 +62,7 @@ vi.mock('@hooks/useConversationEngine', () => ({
     error: null,
     currentMode: 'default',
     setMode: vi.fn(),
-    sendMessage: vi.fn(),
+    sendMessage: conversationRenderFixtures.sendMessage,
     appendLocalExchange: vi.fn(),
     clearMessages: vi.fn(),
     deleteMessage: vi.fn(),
@@ -157,10 +164,29 @@ vi.mock('@/hooks/useLTMContext', () => ({
 }));
 
 vi.mock('@/features/chat/artifactIntent', () => ({
-  buildArtifactActionContract: vi.fn(() => null),
+  buildArtifactActionContract: vi.fn(() => ({
+    intent: 'ANSWER_ONLY',
+    artifact_kind: 'unknown',
+    target_format: 'unknown',
+    open_editor: false,
+    auto_save: false,
+    professional_grade: 'WORKING_DRAFT',
+    reason: 'No file intent detected',
+  })),
   buildProfessionalDocumentManifest: vi.fn(() => null),
-  resolveArtifactRoute: vi.fn(() => null),
-  validateNoFakeArtifactResponse: vi.fn(() => true),
+  resolveArtifactRoute: vi.fn(() => ({
+    status: 'ROUTED',
+    contract: {
+      intent: 'ANSWER_ONLY',
+      artifact_kind: 'unknown',
+      target_format: 'unknown',
+      open_editor: false,
+      auto_save: false,
+      professional_grade: 'WORKING_DRAFT',
+      reason: 'No file intent detected',
+    },
+  })),
+  validateNoFakeArtifactResponse: vi.fn(() => ({ ok: true, violations: [] })),
 }));
 
 vi.mock('@/services/tts/messageSpeechController', () => ({
@@ -209,6 +235,15 @@ describe('ConversationSection rendering truth', () => {
     }
   });
 
+  beforeEach(() => {
+    conversationRenderFixtures.sendMessage.mockClear();
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('renders the full terminal block for a long assistant response on the canonical surface', () => {
     renderConversationSection();
 
@@ -238,5 +273,37 @@ describe('ConversationSection rendering truth', () => {
     expect(toggle).toHaveAttribute('role', 'switch');
     expect(toggle).toHaveAttribute('aria-checked', 'false');
     expect(toggle).not.toHaveAttribute('aria-pressed');
+  });
+
+  it('clears the canonical chat input and draft after a message is accepted for send', async () => {
+    renderConversationSection();
+
+    const input = screen.getByTestId('chat-input') as HTMLTextAreaElement;
+    const sendButton = screen.getByTestId('chat-send');
+
+    fireEvent.change(input, { target: { value: 'Allo, Titane' } });
+    fireEvent.click(sendButton);
+
+    await waitFor(() => {
+      expect(conversationRenderFixtures.sendMessage).toHaveBeenCalledWith('Allo, Titane');
+    });
+    expect(input.value).toBe('');
+    expect(localStorage.getItem('titane_chat_draft_conv-render-1')).toBeNull();
+  });
+
+  it('does not let a pending draft debounce restore a sent message', async () => {
+    vi.useFakeTimers();
+    renderConversationSection();
+
+    const input = screen.getByTestId('chat-input') as HTMLTextAreaElement;
+    const sendButton = screen.getByTestId('chat-send');
+
+    fireEvent.change(input, { target: { value: 'Allo, Titane' } });
+    fireEvent.click(sendButton);
+    await vi.advanceTimersByTimeAsync(600);
+
+    expect(conversationRenderFixtures.sendMessage).toHaveBeenCalledWith('Allo, Titane');
+    expect(input.value).toBe('');
+    expect(localStorage.getItem('titane_chat_draft_conv-render-1')).toBeNull();
   });
 });

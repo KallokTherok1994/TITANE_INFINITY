@@ -164,7 +164,22 @@
             { "command": "tts_speak_parler" },
             { "command": "tts_stop" },
             { "command": "tts_is_speaking" },
-            { "command": "tts_get_status" }
+            { "command": "tts_get_status" },
+            { "command": "ai_generate_local" },
+            { "command": "ai_scan_local_models" },
+            { "command": "ai_set_local_model" },
+            { "command": "ai_status" },
+            { "command": "conversation_reset" },
+            { "command": "force_reset_voice" },
+            { "command": "parse_document" },
+            { "command": "twin_apply_evolution" },
+            { "command": "twin_get_evolution_profile" },
+            { "command": "twin_get_fusion_index" },
+            { "command": "twin_get_identity" },
+            { "command": "twin_get_state" },
+            { "command": "twin_recalculate_fusion" },
+            { "command": "twin_submit_observation" },
+            { "command": "twin_validate_sync" }
           ],
           "deny": []
         }
