@@ -1,23 +1,40 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
   "productName": "Titan-Stable",
-  "version": "35.1.9",
+  "version": "35.1.10",
   "identifier": "com.titane.infinity.stable",
   "build": {
     "beforeDevCommand": "",
     "beforeBuildCommand": "bash -lc 'if [[ \"${TITANE_SKIP_FRONTEND_BUILD:-0}\" == \"1\" ]]; then echo \"[tauri.stable] frontend deja prepare — skip beforeBuildCommand\"; exit 0; fi; corepack pnpm exec vite build'",
     "frontendDist": "../dist",
-    "features": ["custom-protocol"]
+    "features": [
+      "custom-protocol"
+    ]
   },
   "bundle": {
     "active": true,
-    "targets": ["msi", "nsis", "appimage", "deb"],
+    "targets": [
+      "msi",
+      "nsis",
+      "appimage",
+      "deb"
+    ],
     "linux": {
       "deb": {
-        "depends": ["libayatana-appindicator3-1", "libwebkit2gtk-4.1-0", "libgtk-3-0"],
-        "conflicts": ["titane-infinity"],
-        "replaces": ["titane-infinity"],
-        "provides": ["titane-infinity"],
+        "depends": [
+          "libayatana-appindicator3-1",
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0"
+        ],
+        "conflicts": [
+          "titane-infinity"
+        ],
+        "replaces": [
+          "titane-infinity"
+        ],
+        "provides": [
+          "titane-infinity"
+        ],
         "postInstallScript": "../scripts/install/stable-postinst.sh"
       }
     },
@@ -31,14 +48,14 @@
     "resources": [],
     "copyright": "© 2025 TITANE∞",
     "category": "Productivity",
-    "shortDescription": "TITANE∞ v35.1.9 - Cognitive Operating System (Stable Runtime)",
-    "longDescription": "TITANE∞ Stable Runtime v35.1.9 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
+    "shortDescription": "TITANE∞ v35.1.10 - Cognitive Operating System (Stable Runtime)",
+    "longDescription": "TITANE∞ Stable Runtime v35.1.10 - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "Titan-Stable v35.1.9 — TITANE∞ Cognitive OS",
+        "title": "Titan-Stable v35.1.10 - TITANE∞ Cognitive OS",
         "url": "/",
         "width": 1400,
         "height": 900,
@@ -57,13 +74,20 @@
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
+        "scope": [
+          "$APPDATA/**",
+          "$RESOURCE/**",
+          "$APPCONFIG/**",
+          "$APPLOCALDATA/**"
+        ]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",

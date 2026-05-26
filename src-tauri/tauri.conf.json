@@ -1,5 +1,5 @@
 {
-  "version": "35.1.9",
+  "version": "35.1.10",
   "identifier": "com.titane.infinity",
   "bundle": {
     "icon": [
@@ -39,13 +39,20 @@
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
+        "scope": [
+          "$APPDATA/**",
+          "$RESOURCE/**",
+          "$APPCONFIG/**",
+          "$APPLOCALDATA/**"
+        ]
       },
       "capabilities": [
         {
           "identifier": "main-capability",
           "description": "Capability for the main window - OMEGA v2 compliant",
-          "windows": ["main"],
+          "windows": [
+            "main"
+          ],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -1487,6 +1494,8 @@
   },
   "build": {
     "frontendDist": "../dist",
-    "features": ["custom-protocol"]
+    "features": [
+      "custom-protocol"
+    ]
   }
 }
