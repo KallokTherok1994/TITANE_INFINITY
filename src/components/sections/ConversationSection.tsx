@@ -2278,6 +2278,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       };
     }, [latestAssistantMessage, latestAssistantMetadata]);
 
+    const latestAssistantRuntimeRef = useRef(latestAssistantRuntime);
+    useEffect(() => {
+      latestAssistantRuntimeRef.current = latestAssistantRuntime;
+    }, [latestAssistantRuntime]);
+
     const latestUserMessage = useMemo(() => {
       for (let i = messages.length - 1; i >= 0; i -= 1) {
         const message = messages[i] as ConversationMessageItem;
@@ -2786,18 +2791,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       if (isConversationTransparencyPrompt(messageText)) {
         await appendLocalExchange(
           messageText,
-          buildConversationTransparencyReply(latestAssistantRuntime),
+          buildConversationTransparencyReply(latestAssistantRuntimeRef.current),
           {
             intention: 'runtime_transparency_answer',
-            tags: latestAssistantRuntime?.tags ?? [],
-            providerMeta: latestAssistantRuntime?.providerMeta,
+            tags: latestAssistantRuntimeRef.current?.tags ?? [],
+            providerMeta: latestAssistantRuntimeRef.current?.providerMeta,
             providerUsed:
-              latestAssistantRuntime?.providerMeta?.provider_used ??
-              latestAssistantRuntime?.providerUsed,
+              latestAssistantRuntimeRef.current?.providerMeta?.provider_used ??
+              latestAssistantRuntimeRef.current?.providerUsed,
             requestedProvider: selectedProvider,
-            modelRequested: latestAssistantRuntime?.modelRequested,
-            modelUsed: latestAssistantRuntime?.modelUsed,
-            fallbackUsed: latestAssistantRuntime?.fallbackUsed,
+            modelRequested: latestAssistantRuntimeRef.current?.modelRequested,
+            modelUsed: latestAssistantRuntimeRef.current?.modelUsed,
+            fallbackUsed: latestAssistantRuntimeRef.current?.fallbackUsed,
           }
         );
         toastSuccess('Resume de transparence runtime ajoute dans la conversation.');
@@ -2946,7 +2951,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       } catch (err) {
         pageLogger.error('Send message error', err);
         setSendTraceState('errored');
-        setSendTraceMeta(err instanceof Error ? err.message : String(err));
+        const errMsg = err instanceof Error ? err.message : String(err);
+        setSendTraceMeta(errMsg);
+        errorToast(errMsg || "Erreur lors de l'envoi du message.");
         thinking.stopThinking();
       } finally {
         sendingRef.current = false;
@@ -2956,7 +2963,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       isLoading,
       sendMessage,
       appendLocalExchange,
-      latestAssistantRuntime,
       audioEnabled,
       thinking,
       errorToast,

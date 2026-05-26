@@ -438,6 +438,30 @@ function readTimeRuntimeContext(): ChatContextEnvelope['timeContext'] | undefine
   };
 }
 
+export function readTimeRuntimeContextWithFallback(): NonNullable<ChatContextEnvelope['timeContext']> {
+  const stored = readTimeRuntimeContext();
+  if (stored) return stored;
+
+  const now = new Date();
+  const hour = now.getHours();
+  const segment: string =
+    hour < 6 ? 'night' : hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+
+  return {
+    currentDateTime: now.toISOString(),
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    currentSegment: segment,
+    isWorkHours: hour >= 9 && hour < 18,
+    eventsToday: 0,
+    eventsThisWeek: 0,
+    todayFocusMinutes: 0,
+    currentEnergy: 0,
+    activeTab: undefined,
+    runtimeSource: 'degraded',
+    updatedAt: Date.now(),
+  };
+}
+
 function readModeStoredMessages(mode: ConversationMode): ChatLikeMessage[] {
   if (!isBrowser()) return [];
 
@@ -685,7 +709,7 @@ export function buildChatContextEnvelope(
   }));
 
   const purged = Math.max(0, merged.length - selected.length);
-  const timeContext = readTimeRuntimeContext();
+  const timeContext = readTimeRuntimeContextWithFallback();
   const temporalMemorySummary = buildTemporalMemorySummary({
     timeContext,
     recentMessages: selected,
