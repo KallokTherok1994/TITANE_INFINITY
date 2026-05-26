@@ -9,6 +9,7 @@ import type {
 const STORAGE_KEY = 'titane_twin_chat_review_queue_v1';
 const STORAGE_EVENT = 'titane:twin-chat-review-queue-changed';
 const REVIEW_ITEM_TTL_DAYS = 30;
+const FAILED_ITEM_TTL_HOURS = 48;
 const MAX_REVIEW_QUEUE_SIZE = 200;
 
 function canPersist(): boolean {
@@ -50,7 +51,12 @@ function readQueue(): TwinChatReviewItem[] {
     const parsed = JSON.parse(raw) as TwinChatReviewItem[];
     if (!Array.isArray(parsed)) return [];
     const cutoff = Date.now() - REVIEW_ITEM_TTL_DAYS * 24 * 60 * 60 * 1000;
-    const fresh = parsed.filter(item => new Date(item.recordedAt).getTime() >= cutoff);
+    const failedCutoff = Date.now() - FAILED_ITEM_TTL_HOURS * 60 * 60 * 1000;
+    const fresh = parsed.filter(item => {
+      const recordedMs = new Date(item.recordedAt).getTime();
+      if (item.writeStatus === 'failed') return recordedMs >= failedCutoff;
+      return recordedMs >= cutoff;
+    });
     return sortQueue(fresh);
   } catch {
     return [];
@@ -166,6 +172,10 @@ export async function approveTwinChatReviewItem(
     throw new Error('Cette review twin_chat ne peut pas etre validee');
   }
 
+  if (target.writeStatus !== 'pending') {
+    throw new Error('Cette review twin_chat a déjà été traitée');
+  }
+
   const reviewedAt = new Date().toISOString();
 
   try {
@@ -221,6 +231,10 @@ export function rejectTwinChatReviewItem(reviewId: string): TwinChatReviewItem {
 
   if (!target) {
     throw new Error('Review twin_chat introuvable');
+  }
+
+  if (target.writeStatus !== 'pending') {
+    throw new Error('Cette review twin_chat a déjà été traitée');
   }
 
   const updated = {

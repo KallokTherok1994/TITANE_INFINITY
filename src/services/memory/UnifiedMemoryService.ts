@@ -322,15 +322,15 @@ export class UnifiedMemoryService {
     });
 
     // Update access counts and timestamps
-    filtered.forEach(entry => {
+    for (const entry of filtered) {
       entry.accessCount++;
       entry.lastAccessed = Date.now();
 
       // Auto-promote MTM entries with high access count
       if (this.mtm.includes(entry) && entry.accessCount >= 10) {
-        this.promote(entry.id, 'LTM');
+        await this.promote(entry.id, 'LTM');
       }
-    });
+    }
 
     // Sort by relevance (importance * recency boost)
     const now = Date.now();

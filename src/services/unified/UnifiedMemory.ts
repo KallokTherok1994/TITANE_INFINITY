@@ -412,8 +412,11 @@ function persistUnifiedMemoryConfig(config: UnifiedMemoryConfig): void {
   if (!storage) {
     return;
   }
-
-  storage.setItem(UNIFIED_MEMORY_CONFIG_STORAGE_KEY, JSON.stringify(config));
+  try {
+    storage.setItem(UNIFIED_MEMORY_CONFIG_STORAGE_KEY, JSON.stringify(config));
+  } catch {
+    // localStorage quota exceeded or unavailable — config not persisted
+  }
 }
 
 /**
