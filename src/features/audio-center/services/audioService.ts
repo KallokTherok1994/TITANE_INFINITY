@@ -986,7 +986,7 @@ class AudioService {
       throw new Error('Aucune lecture audio en cours');
     }
 
-    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined') {
+    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.pause();
       this.isPaused = true;
       return;
@@ -1006,7 +1006,7 @@ class AudioService {
       throw new Error('Aucune lecture audio en cours');
     }
 
-    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined') {
+    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.resume();
       this.isPaused = false;
       return;

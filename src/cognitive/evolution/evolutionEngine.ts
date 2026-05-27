@@ -202,7 +202,7 @@ class EvolutionEngine {
       const backendState = await secureInvoke<EvolutionState>('evolution_get_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        logger.warn('[EvolutionEngine] État chargé depuis backend:', this.state.version);
+        logger.warn(`[EvolutionEngine] État chargé depuis backend: ${this.state.version}`);
       }
     } catch {
       try {
@@ -213,7 +213,7 @@ class EvolutionEngine {
           logger.warn('[EvolutionEngine] État chargé depuis localStorage');
         }
       } catch (e) {
-        logger.warn('[EvolutionEngine] Erreur chargement:', e);
+        logger.warn('[EvolutionEngine] Erreur chargement:', { error: String(e) });
       }
     }
 
@@ -382,7 +382,7 @@ class EvolutionEngine {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     } catch (e) {
-      logger.warn('[EvolutionEngine] Erreur sauvegarde:', e);
+      logger.warn('[EvolutionEngine] Erreur sauvegarde:', { error: String(e) });
     }
 
     try {

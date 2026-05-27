@@ -186,13 +186,9 @@ class MemoryEngineClass {
       this.state.lastConsolidation = Date.now();
       this.initialized = true;
 
-      logger.warn(
-        '[MemoryEngine] Initialized from persistent memory with',
-        this.state.stats.totalMemories,
-        'memories'
-      );
+      logger.warn(`[MemoryEngine] Initialized from persistent memory with ${this.state.stats.totalMemories} memories`);
     } catch (error) {
-      logger.warn('[MemoryEngine] Init error, using defaults:', error);
+      logger.warn('[MemoryEngine] Init error, using defaults:', { error: String(error) });
       this.state = this.getDefaultState();
       this.initialized = true;
     }
@@ -522,7 +518,7 @@ class MemoryEngineClass {
         value: JSON.stringify(this.state),
       });
     } catch (error) {
-      logger.warn('[MemoryEngine] Persist error:', error);
+      logger.warn('[MemoryEngine] Persist error:', { error: String(error) });
       // Fallback localStorage
       try {
         localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify(this.state));
@@ -569,7 +565,7 @@ class MemoryEngineClass {
         return imported.memories.length;
       }
     } catch (error) {
-      logger.error('[MemoryEngine] Import error:', error);
+      logger.error('[MemoryEngine] Import error:', { error: String(error) });
       return 0;
     }
   }

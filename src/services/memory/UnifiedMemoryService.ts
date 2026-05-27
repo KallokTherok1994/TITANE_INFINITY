@@ -88,7 +88,7 @@ export function resolveUnifiedMemoryNamespace(
 }
 
 export function resolveUnifiedMemoryPaths(
-  cwd: string = process.cwd(),
+  cwd: string = typeof process !== 'undefined' && typeof process.cwd === 'function' ? process.cwd() : './',
   namespace: UnifiedMemoryNamespace = resolveUnifiedMemoryNamespace()
 ): Record<'STM' | 'MTM' | 'LTM', string> {
   const baseDir =

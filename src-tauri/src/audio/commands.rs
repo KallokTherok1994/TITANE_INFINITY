@@ -49,29 +49,48 @@ fn get_active_tts_pid() -> Option<u32> {
 }
 
 fn signal_active_tts(signal: &str) -> CommandResult<()> {
-    let pid =
-        get_active_tts_pid().ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
-    let status = Command::new("kill")
-        .args([signal, &pid.to_string()])
-        .status()
-        .map_err(|e| format!("Impossible d'envoyer {} au processus TTS: {}", signal, e))?;
+    #[cfg(target_os = "windows")]
+    {
+        let _ = signal;
+        return Ok(());
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        let pid = get_active_tts_pid()
+            .ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
+        let status = Command::new("kill")
+            .args([signal, &pid.to_string()])
+            .status()
+            .map_err(|e| format!("Impossible d'envoyer {} au processus TTS: {}", signal, e))?;
 
-    if status.success() {
-        Ok(())
-    } else {
-        Err(format!(
-            "Le signal {} a échoué pour le processus TTS {}",
-            signal, pid
-        ))
+        if status.success() {
+            Ok(())
+        } else {
+            Err(format!(
+                "Le signal {} a échoué pour le processus TTS {}",
+                signal, pid
+            ))
+        }
     }
 }
 
 fn command_exists(binary: &str) -> bool {
-    Command::new("which")
-        .arg(binary)
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    #[cfg(target_os = "windows")]
+    {
+        return Command::new("where.exe")
+            .arg(binary)
+            .output()
+            .map(|output| output.status.success())
+            .unwrap_or(false);
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        Command::new("which")
+            .arg(binary)
+            .output()
+            .map(|output| output.status.success())
+            .unwrap_or(false)
+    }
 }
 
 fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()> {
@@ -122,6 +141,16 @@ fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> Command
 
     #[cfg(not(target_os = "android"))]
     {
+        #[cfg(target_os = "windows")]
+        {
+            let _ = output_path;
+            let _ = output_device_id;
+            return Err(
+                "AUDIO_WINDOWS_UNSUPPORTED: lecture audio via système non disponible sur Windows — utiliser WebView2 Audio API".to_string(),
+            );
+        }
+
+        #[cfg(not(target_os = "windows"))]
         if let Some(device_id) = output_device_id {
             if command_exists("pw-play") {
                 let mut command = Command::new("pw-play");
@@ -221,7 +250,11 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
     #[cfg(not(target_os = "android"))]
     {
-        let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+        let home = if cfg!(target_os = "windows") {
+            std::env::var("USERPROFILE").unwrap_or_else(|_| String::new())
+        } else {
+            std::env::var("HOME").unwrap_or_else(|_| "/home".to_string())
+        };
 
         IS_SPEAKING.store(true, Ordering::Relaxed);
         IS_TTS_PAUSED.store(false, Ordering::Relaxed);
@@ -390,6 +423,15 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
 
     #[cfg(not(target_os = "android"))]
     {
+        #[cfg(target_os = "windows")]
+        {
+            let _ = text;
+            let _ = settings;
+            return Err(
+                "TTS_WINDOWS_UNSUPPORTED: espeak non disponible sur Windows — utiliser Web Speech API".to_string(),
+            );
+        }
+
         let speed = (settings.rate * 175.0).clamp(80.0, 450.0) as u32;
         let pitch = (settings.pitch * 50.0).clamp(0.0, 99.0) as u32;
         let voice = if settings.language.starts_with("fr") {
@@ -466,12 +508,15 @@ pub async fn tts_stop() -> CommandResult<()> {
     set_active_tts_pid(None);
     IS_TTS_PAUSED.store(false, Ordering::Relaxed);
     IS_SPEAKING.store(false, Ordering::Relaxed);
-    // Kill any running aplay or espeak/espeak-ng processes
-    let _ = Command::new("pkill").arg("-9").arg("aplay").output();
-    let _ = Command::new("pkill").arg("-9").arg("paplay").output();
-    let _ = Command::new("pkill").arg("-9").arg("pw-play").output();
-    let _ = Command::new("pkill").arg("-9").arg("espeak").output();
-    let _ = Command::new("pkill").arg("-9").arg("espeak-ng").output();
+    #[cfg(not(target_os = "windows"))]
+    {
+        // Kill any running aplay or espeak/espeak-ng processes (POSIX only)
+        let _ = Command::new("pkill").arg("-9").arg("aplay").output();
+        let _ = Command::new("pkill").arg("-9").arg("paplay").output();
+        let _ = Command::new("pkill").arg("-9").arg("pw-play").output();
+        let _ = Command::new("pkill").arg("-9").arg("espeak").output();
+        let _ = Command::new("pkill").arg("-9").arg("espeak-ng").output();
+    }
     Ok(())
 }
 
@@ -540,14 +585,23 @@ else { '[]' }
 
     // Strip UTF-8 BOM (EF BB BF) that New-Object UTF8Encoding may still emit on some PS versions
     let raw = &output.stdout;
-    let slice = if raw.starts_with(&[0xEF, 0xBB, 0xBF]) { &raw[3..] } else { raw.as_slice() };
+    let slice = if raw.starts_with(&[0xEF, 0xBB, 0xBF]) {
+        &raw[3..]
+    } else {
+        raw.as_slice()
+    };
     let stdout = String::from_utf8_lossy(slice).trim().to_string();
     if stdout.is_empty() || stdout == "[]" || stdout == "null" {
         return Ok(vec![]);
     }
 
-    let json_val: serde_json::Value = serde_json::from_str(&stdout)
-        .map_err(|e| format!("JSON parse: {} — raw: {}", e, &stdout[..stdout.len().min(300)]))?;
+    let json_val: serde_json::Value = serde_json::from_str(&stdout).map_err(|e| {
+        format!(
+            "JSON parse: {} — raw: {}",
+            e,
+            &stdout[..stdout.len().min(300)]
+        )
+    })?;
 
     let arr = if json_val.is_array() {
         json_val.as_array().cloned().unwrap_or_default()
@@ -562,7 +616,11 @@ else { '[]' }
             let name = item["name"].as_str()?.to_string();
             let id = item["id"].as_str().unwrap_or("").to_string();
             Some(AudioDevice {
-                id: if id.is_empty() { format!("win_{}", i) } else { id },
+                id: if id.is_empty() {
+                    format!("win_{}", i)
+                } else {
+                    id
+                },
                 name,
                 device_type: direction.to_string(),
                 is_default: i == 0,
@@ -892,40 +950,46 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
     // persisted to config by the caller regardless of this command's outcome.
     #[cfg(target_os = "windows")]
     {
-        log::info!("[Audio] set_audio_output_device: Windows — OS routing deferred to browser (id={})", device_id);
-        return Ok(());
-    }
-
-    // Try PipeWire via wpctl (wireplumber) if available
-    if Command::new("wpctl")
-        .args(["set-default", &device_id])
-        .output()
-        .map(|o| o.status.success())
-        .unwrap_or(false)
-    {
-        return Ok(());
-    }
-
-    // Try PulseAudio/PipeWire-pulse pactl compat
-    if Command::new("pactl")
-        .args(["set-default-sink", &device_id])
-        .output()
-        .map(|o| o.status.success())
-        .unwrap_or(false)
-    {
-        return Ok(());
-    }
-
-    // PipeWire present but no pactl/wpctl: accept gracefully (device stays as-is)
-    if Command::new("pw-cli").arg("--version").output().is_ok() {
-        log::warn!(
-            "[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}",
+        log::info!(
+            "[Audio] set_audio_output_device: Windows — OS routing deferred to browser (id={})",
             device_id
         );
         return Ok(());
     }
 
-    Err("Device switching not supported on this system".to_string())
+    #[cfg(not(target_os = "windows"))]
+    {
+        // Try PipeWire via wpctl (wireplumber) if available
+        if Command::new("wpctl")
+            .args(["set-default", &device_id])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
+            return Ok(());
+        }
+
+        // Try PulseAudio/PipeWire-pulse pactl compat
+        if Command::new("pactl")
+            .args(["set-default-sink", &device_id])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
+            return Ok(());
+        }
+
+        // PipeWire present but no pactl/wpctl: accept gracefully (device stays as-is)
+        if Command::new("pw-cli").arg("--version").output().is_ok() {
+            log::warn!(
+                "[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}",
+                device_id
+            );
+            return Ok(());
+        }
+
+        Err("Device switching not supported on this system".to_string())
+    }
 }
 
 #[tauri::command]
@@ -934,40 +998,46 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
     // the Web Audio API (getUserMedia constraint). Accept silently — device ID is persisted by caller.
     #[cfg(target_os = "windows")]
     {
-        log::info!("[Audio] set_audio_input_device: Windows — OS routing deferred to browser (id={})", device_id);
-        return Ok(());
-    }
-
-    // Try PipeWire via wpctl (wireplumber) if available
-    if Command::new("wpctl")
-        .args(["set-default", &device_id])
-        .output()
-        .map(|o| o.status.success())
-        .unwrap_or(false)
-    {
-        return Ok(());
-    }
-
-    // Try PulseAudio/PipeWire-pulse pactl compat
-    if Command::new("pactl")
-        .args(["set-default-source", &device_id])
-        .output()
-        .map(|o| o.status.success())
-        .unwrap_or(false)
-    {
-        return Ok(());
-    }
-
-    // PipeWire present but no pactl/wpctl: accept gracefully
-    if Command::new("pw-cli").arg("--version").output().is_ok() {
-        log::warn!(
-            "[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}",
+        log::info!(
+            "[Audio] set_audio_input_device: Windows — OS routing deferred to browser (id={})",
             device_id
         );
         return Ok(());
     }
 
-    Err("Device switching not supported on this system".to_string())
+    #[cfg(not(target_os = "windows"))]
+    {
+        // Try PipeWire via wpctl (wireplumber) if available
+        if Command::new("wpctl")
+            .args(["set-default", &device_id])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
+            return Ok(());
+        }
+
+        // Try PulseAudio/PipeWire-pulse pactl compat
+        if Command::new("pactl")
+            .args(["set-default-source", &device_id])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
+            return Ok(());
+        }
+
+        // PipeWire present but no pactl/wpctl: accept gracefully
+        if Command::new("pw-cli").arg("--version").output().is_ok() {
+            log::warn!(
+                "[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}",
+                device_id
+            );
+            return Ok(());
+        }
+
+        Err("Device switching not supported on this system".to_string())
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1191,8 +1261,16 @@ if ($d) { 'found' } else { 'none' }
 #[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
-    let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
-    let whisper_bin = format!("{}/.local/bin/whisper", home);
+    let home = if cfg!(target_os = "windows") {
+        std::env::var("USERPROFILE").unwrap_or_else(|_| String::new())
+    } else {
+        std::env::var("HOME").unwrap_or_else(|_| "/home".to_string())
+    };
+    let whisper_bin = if cfg!(target_os = "windows") {
+        format!("{}\\AppData\\Local\\whisper\\whisper.exe", home)
+    } else {
+        format!("{}/.local/bin/whisper", home)
+    };
 
     // Check if Whisper is available
     if !std::path::Path::new(&whisper_bin).exists() {
@@ -1268,8 +1346,16 @@ pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
 
 /// Fallback to Vosk if Whisper is not available
 async fn transcribe_with_vosk(audio_data: Vec<u8>) -> CommandResult<String> {
-    let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
-    let model_path = format!("{}/.local/share/vosk/vosk-model-small-fr-0.22", home);
+    let home = if cfg!(target_os = "windows") {
+        std::env::var("USERPROFILE").unwrap_or_else(|_| String::new())
+    } else {
+        std::env::var("HOME").unwrap_or_else(|_| "/home".to_string())
+    };
+    let model_path = if cfg!(target_os = "windows") {
+        format!("{}\\AppData\\Local\\vosk\\vosk-model-small-fr-0.22", home)
+    } else {
+        format!("{}/.local/share/vosk/vosk-model-small-fr-0.22", home)
+    };
 
     if !std::path::Path::new(&model_path).exists() {
         return Err("Ni Whisper ni Vosk installés. Installez openai-whisper via pip.".into());
@@ -1317,7 +1403,8 @@ except Exception as e:
         temp_audio.to_string_lossy()
     );
 
-    let output = Command::new("python3")
+    let python_bin = if cfg!(target_os = "windows") { "python" } else { "python3" };
+    let output = Command::new(python_bin)
         .arg("-c")
         .arg(&script)
         .output()

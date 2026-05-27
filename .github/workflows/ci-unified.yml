@@ -271,12 +271,15 @@ jobs:
     name: 🪟 Rust Backend Check (Windows)
     runs-on: windows-latest
     needs: lint-and-typecheck
-    continue-on-error: true # Windows checkout fails on long _archive/ paths (pre-existing infra limitation)
     timeout-minutes: 30
     permissions:
       contents: read
 
     steps:
+      - name: 🗝️ Enable Git longpaths (Windows MAX_PATH workaround)
+        run: git config --global core.longpaths true
+        shell: pwsh
+
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 

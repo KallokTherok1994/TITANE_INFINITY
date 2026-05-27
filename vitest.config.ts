@@ -2,7 +2,6 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 // This file is only consumed by Vitest; keep test-time aliasing deterministic.
 const isVitest = true;
 
@@ -80,7 +79,6 @@ export const sharedTestConfig = defineConfig({
         plugins: [],
       },
     }),
-    tsconfigPaths(), // Auto-sync avec tsconfig.json paths
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════

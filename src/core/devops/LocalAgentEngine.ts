@@ -90,7 +90,7 @@ class LocalAgentEngine {
 
     // Analyser projet actuel
     try {
-      const projectRoot = process.cwd();
+      const projectRoot = typeof process !== 'undefined' && typeof process.cwd === 'function' ? process.cwd() : './';
       this.currentProject = await this.analyzeProject(projectRoot);
       logger.info(
         '[LocalAgentEngine] Current project analyzed:',
