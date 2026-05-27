@@ -75,6 +75,7 @@ import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
+import { audioTranscriptionService } from '@/services/audioTranscriptionService';
 import type { Citation, ResearchOptions, ResearchReport } from '@/types/research';
 import { useLTMContext } from '@/hooks/useLTMContext';
 import {
@@ -1702,7 +1703,7 @@ const getInitialSelectedProvider = (): ConversationProviderPreference => {
 export const ConversationSection: React.FC<ConversationSectionProps> = memo(
   ({ showSectionHeader = true, fullscreen = false }) => {
     // ═══ HOOKS ═══
-    const { success: toastSuccess, error: errorToast } = useToast();
+    const { success: toastSuccess, error: errorToast, info: toastInfo } = useToast();
     const syncChatModeStore = useChatModeStore(state => state.changeMode);
     const currentChatStoreModeId = useChatModeStore(state => state.currentModeId);
     const resolvedChatStoreModeId: ModernChatModeId = validateModeId(
@@ -1781,6 +1782,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showExportMenu, setShowExportMenu] = useState(false);
     const [showAudioSettings, setShowAudioSettings] = useState(false);
+    const [pendingImageAttachment, setPendingImageAttachment] = useState<{
+      data: string;
+      type: 'screenshot' | 'image';
+      label: string;
+    } | null>(null);
+    const [isTranscribingBlob, setIsTranscribingBlob] = useState(false);
     const exportMenuRef = useRef<HTMLDivElement>(null);
     const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
     const [showToolSelector, setShowToolSelector] = useState(false);
@@ -2686,7 +2693,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         return;
       }
 
-      const messageText = sanitized;
+      // ─── Image attachment context ─────────────────────────────────────────
+      const imageCtx = pendingImageAttachment;
+      if (imageCtx) setPendingImageAttachment(null);
+
+      const messageText = imageCtx
+        ? `${sanitized}\n\n[${imageCtx.label} — données base64 disponibles : ${imageCtx.data.length} caractères]`
+        : sanitized;
       clearConversationInput();
 
       // ─── Détection "Enregistre dans mes préférences : <valeur>" ──────────
@@ -2972,6 +2985,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       errorToast,
       toastSuccess,
       clearConversationInput,
+      pendingImageAttachment,
     ]);
 
     const handleDownloadGeneratedFile = useCallback(
@@ -3187,16 +3201,21 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const handleScreenCapture = useCallback(
       (imageData: string) => {
-        sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
+        setPendingImageAttachment({ data: imageData, type: 'screenshot', label: 'Capture écran' });
+        toastInfo('📸 Capture prête — complète ton message puis envoie.');
+        conversationInputRef.current?.focus();
       },
-      [sendMessage]
+      [toastInfo]
     );
 
     const handleImageAnalysis = useCallback(
       (imageData: string, prompt?: string) => {
-        sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
+        setPendingImageAttachment({ data: imageData, type: 'image', label: 'Image' });
+        if (prompt) updateInputValue(prompt);
+        toastInfo('👁️ Image prête — complète ton message puis envoie.');
+        conversationInputRef.current?.focus();
       },
-      [sendMessage]
+      [toastInfo, updateInputValue]
     );
 
     const handleDictationResult = useCallback(
@@ -3207,18 +3226,36 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     );
 
     const handleAudioRecorded = useCallback(
-      (audioBlob: Blob) => {
-        const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
-        sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
+      async (audioBlob: Blob) => {
+        setIsTranscribingBlob(true);
+        toastInfo('🎤 Transcription en cours…');
+        try {
+          const result = await audioTranscriptionService.transcribeBlob(audioBlob);
+          if (result.error) {
+            errorToast(`Transcription échouée : ${result.error}`);
+          } else if (result.text?.trim()) {
+            updateInputValue(prev => (prev ? `${prev} ${result.text}` : result.text));
+            conversationInputRef.current?.focus();
+            toastSuccess('🎤 Transcription insérée dans le message.');
+          } else {
+            errorToast('Transcription vide — réessaie.');
+          }
+        } catch (e) {
+          pageLogger.warn('handleAudioRecorded transcription error', { error: String(e) });
+          errorToast('Erreur de transcription audio.');
+        } finally {
+          setIsTranscribingBlob(false);
+        }
       },
-      [sendMessage]
+      [toastInfo, toastSuccess, errorToast, updateInputValue]
     );
 
     const handleTranscriptionResult = useCallback(
       (text: string) => {
-        sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
+        if (text.trim()) updateInputValue(prev => (prev ? `${prev} ${text}` : text));
+        conversationInputRef.current?.focus();
       },
-      [sendMessage]
+      [updateInputValue]
     );
 
     const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -3248,9 +3285,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       setAudioEnabled(active);
     }, []);
 
-    const handleToggleCameraLive = useCallback(() => {
-      // camera live toggle — state tracked by ChatToolbar
-    }, []);
+    const handleToggleCameraLive = useCallback((active: boolean) => {
+      toastInfo(active ? '📷 Caméra live activée.' : '📷 Caméra live désactivée.');
+    }, [toastInfo]);
 
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -3852,6 +3889,33 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 disabled={isLoading}
                 data-testid="tool-selector-panel-container"
               />
+              {/* ── Image attachment preview ── */}
+              {pendingImageAttachment && (
+                <div className="conversation-image-attachment-preview" aria-label="Pièce jointe image en attente">
+                  <img
+                    src={pendingImageAttachment.data}
+                    alt={pendingImageAttachment.label}
+                    className="conversation-image-attachment-thumb"
+                  />
+                  <span className="conversation-image-attachment-label">{pendingImageAttachment.label}</span>
+                  <button
+                    className="conversation-image-attachment-remove"
+                    onClick={() => setPendingImageAttachment(null)}
+                    title="Retirer l'image"
+                    aria-label="Retirer la pièce jointe image"
+                    type="button"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              )}
+              {/* ── Audio transcription in-progress indicator ── */}
+              {isTranscribingBlob && (
+                <div className="conversation-transcribing-indicator" aria-live="polite">
+                  <span className="conversation-send-spinner" aria-hidden="true" />
+                  <span>Transcription audio…</span>
+                </div>
+              )}
               <textarea
                 ref={conversationInputRef}
                 className="conversation-input"
