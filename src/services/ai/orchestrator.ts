@@ -1038,13 +1038,6 @@ class AIOrchestrator {
     let lastProviderLatencyMs = 0;
     let finalProviderUsed: string | null = null;
 
-    // 🚨 DEBUG CRITICAL: Log entrée orchestrator (désactivé en production)
-    // console.warn('[aiOrchestrator] 📨 generate() APPELÉ', {
-    //   message: message.substring(0, 100),
-    //   historyLength: history.length,
-    //   preferredProvider: config?.preferredProvider,
-    //   timestamp: new Date().toISOString(),
-    // });
 
     // Ensure engines are loaded
     const { autoHeal, metrics: _metrics } = await ensureEngines();
@@ -1299,13 +1292,6 @@ class AIOrchestrator {
             `\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`
           );
 
-          // 🚨 DEBUG CRITICAL: Log avant tentative provider (désactivé en production)
-          // console.warn(`[aiOrchestrator] 🎯 Tentative provider #${attempts}`, {
-          //   providerName,
-          //   totalProviders: providersToTry.length,
-          //   isAvailable: !!provider,
-          //   timestamp: new Date().toISOString(),
-          // });
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
           // v22Ω: Using centralized timeout config
@@ -1331,13 +1317,6 @@ class AIOrchestrator {
             config
           );
 
-          // 🚨 DEBUG CRITICAL: Log succès provider (désactivé en production)
-          // console.warn(`[aiOrchestrator] ✅ Succès provider`, {
-          //   providerName,
-          //   contentLength: response.content?.length,
-          //   provider: response.provider,
-          //   timestamp: new Date().toISOString(),
-          // });
 
           // ═══ SUCCESS PATH + COGNITIVE KERNEL UPDATE ═══
           // EVOLUTION v21Ω: Use provider-specific timing for accurate stats
@@ -1443,13 +1422,6 @@ class AIOrchestrator {
           lastProviderLatencyMs = providerFailureLatency;
           finalProviderUsed = providerName;
 
-          // 🚨 DEBUG CRITICAL: Log échec provider (désactivé en production)
-          // console.error(`[aiOrchestrator] ❌ Échec provider`, {
-          //   providerName,
-          //   error: lastError.message,
-          //   latency: providerFailureLatency,
-          //   timestamp: new Date().toISOString(),
-          // });
 
           // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
           this.updateProviderStats(

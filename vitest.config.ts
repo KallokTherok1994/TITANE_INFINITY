@@ -23,6 +23,8 @@ const baseAliasEntries = [
   { find: '@types', replacement: resolve(__dirname, './src/types') },
   { find: '@assets', replacement: resolve(__dirname, './src/assets') },
   { find: '@styles', replacement: resolve(__dirname, './src/styles') },
+  { find: '@data', replacement: resolve(__dirname, './data') },
+  { find: '@config', replacement: resolve(__dirname, './config') },
   {
     find: '@tauri-apps/api/tauri',
     replacement: resolve(__dirname, './tests/mocks/tauri.ts'),
