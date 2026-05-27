@@ -12,6 +12,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import { normalizePersistentMemoryReadResponse } from '@/services/memory/persistentMemory.normalize';
 import type {
   MemoryState,
@@ -185,13 +186,13 @@ class MemoryEngineClass {
       this.state.lastConsolidation = Date.now();
       this.initialized = true;
 
-      console.warn(
+      logger.warn(
         '[MemoryEngine] Initialized from persistent memory with',
         this.state.stats.totalMemories,
         'memories'
       );
     } catch (error) {
-      console.warn('[MemoryEngine] Init error, using defaults:', error);
+      logger.warn('[MemoryEngine] Init error, using defaults:', error);
       this.state = this.getDefaultState();
       this.initialized = true;
     }
@@ -264,7 +265,7 @@ class MemoryEngineClass {
         associations: [],
       } as MemoryEntry);
 
-    console.warn(
+    logger.warn(
       `[MemoryEngine] Stored memory in persistent layer: ${memory.id} (${type})`
     );
     return memory;
@@ -414,7 +415,7 @@ class MemoryEngineClass {
     this.updateStats();
     await this.persist();
 
-    console.warn(`[MemoryEngine] Consolidated ${consolidated} memories`);
+    logger.warn(`[MemoryEngine] Consolidated ${consolidated} memories`);
     return consolidated;
   }
 
@@ -436,7 +437,7 @@ class MemoryEngineClass {
       memory.strength = Math.max(0.01, memory.strength - decay);
     }
 
-    console.warn(
+    logger.warn(
       `[MemoryEngine] Applied decay over ${daysSinceConsolidation.toFixed(1)} days`
     );
   }
@@ -455,7 +456,7 @@ class MemoryEngineClass {
 
     const pruned = before - this.state.memories.length;
     if (pruned > 0) {
-      console.warn(`[MemoryEngine] Pruned ${pruned} weak memories`);
+      logger.warn(`[MemoryEngine] Pruned ${pruned} weak memories`);
     }
   }
 
@@ -521,7 +522,7 @@ class MemoryEngineClass {
         value: JSON.stringify(this.state),
       });
     } catch (error) {
-      console.warn('[MemoryEngine] Persist error:', error);
+      logger.warn('[MemoryEngine] Persist error:', error);
       // Fallback localStorage
       try {
         localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify(this.state));
@@ -568,7 +569,7 @@ class MemoryEngineClass {
         return imported.memories.length;
       }
     } catch (error) {
-      console.error('[MemoryEngine] Import error:', error);
+      logger.error('[MemoryEngine] Import error:', error);
       return 0;
     }
   }

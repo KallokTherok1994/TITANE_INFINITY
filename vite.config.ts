@@ -11,7 +11,6 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { fileURLToPath } from 'node:url';
 import { readdir, writeFile, readFile } from 'node:fs/promises';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
 import { visualizer } from 'rollup-plugin-visualizer';

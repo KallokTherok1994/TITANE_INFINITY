@@ -11,6 +11,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -198,7 +199,7 @@ class KnowledgeVaultEngine {
         );
         if (backendState) {
           this.state = { ...createDefaultState(), ...backendState };
-          console.warn(
+          logger.warn(
             '[KnowledgeVault] État chargé depuis backend:',
             this.state.totalDocuments,
             'documents'
@@ -214,10 +215,10 @@ class KnowledgeVaultEngine {
         if (stored) {
           const parsed = JSON.parse(stored);
           this.state = { ...createDefaultState(), ...parsed };
-          console.warn('[KnowledgeVault] État chargé depuis localStorage');
+          logger.warn('[KnowledgeVault] État chargé depuis localStorage');
         }
       } catch (e) {
-        console.warn('[KnowledgeVault] Erreur chargement localStorage:', e);
+        logger.warn('[KnowledgeVault] Erreur chargement localStorage:', e);
       }
     }
 
@@ -296,7 +297,7 @@ class KnowledgeVaultEngine {
     // Notifier
     this.notifyListeners();
 
-    console.warn(`[KnowledgeVault] Document ingéré: ${entry.title} (${category})`);
+    logger.warn(`[KnowledgeVault] Document ingéré: ${entry.title} (${category})`);
 
     // Envoyer au backend Tauri
     try {
@@ -556,7 +557,7 @@ class KnowledgeVaultEngine {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     } catch (e) {
-      console.warn('[KnowledgeVault] Erreur sauvegarde localStorage:', e);
+      logger.warn('[KnowledgeVault] Erreur sauvegarde localStorage:', e);
     }
 
     try {
@@ -662,7 +663,7 @@ class KnowledgeVaultEngine {
 export const knowledgeVault = new KnowledgeVaultEngine();
 
 if (typeof window !== 'undefined') {
-  knowledgeVault.initialize().catch(console.error);
+  knowledgeVault.initialize().catch(e => logger.error('[KnowledgeVault] Init error:', e));
 }
 
 export default knowledgeVault;

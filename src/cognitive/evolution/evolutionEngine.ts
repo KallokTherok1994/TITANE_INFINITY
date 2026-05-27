@@ -11,6 +11,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { logger } from '@/lib/logger';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -201,7 +202,7 @@ class EvolutionEngine {
       const backendState = await secureInvoke<EvolutionState>('evolution_get_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
-        console.warn('[EvolutionEngine] État chargé depuis backend:', this.state.version);
+        logger.warn('[EvolutionEngine] État chargé depuis backend:', this.state.version);
       }
     } catch {
       try {
@@ -209,10 +210,10 @@ class EvolutionEngine {
         if (stored) {
           const parsed = JSON.parse(stored);
           this.state = { ...createDefaultState(), ...parsed };
-          console.warn('[EvolutionEngine] État chargé depuis localStorage');
+          logger.warn('[EvolutionEngine] État chargé depuis localStorage');
         }
       } catch (e) {
-        console.warn('[EvolutionEngine] Erreur chargement:', e);
+        logger.warn('[EvolutionEngine] Erreur chargement:', e);
       }
     }
 
@@ -294,7 +295,7 @@ class EvolutionEngine {
     await this.persist();
     this.notifyListeners();
 
-    console.warn(
+    logger.warn(
       `[EvolutionEngine] Cycle ${cycleNumber} complété - Phase: ${this.state.phase}`
     );
 
@@ -334,8 +335,8 @@ class EvolutionEngine {
         avgMetrics >= threshold.minMetrics
       ) {
         if (this.state.phase !== phase) {
-          console.warn(
-            `[EvolutionEngine] 🎉 Phase upgrade: ${this.state.phase} → ${phase}`
+          logger.warn(
+            `[EvolutionEngine] Phase upgrade: ${this.state.phase} → ${phase}`
           );
           this.state.phase = phase;
         }
@@ -381,7 +382,7 @@ class EvolutionEngine {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     } catch (e) {
-      console.warn('[EvolutionEngine] Erreur sauvegarde:', e);
+      logger.warn('[EvolutionEngine] Erreur sauvegarde:', e);
     }
 
     try {
@@ -469,7 +470,7 @@ class EvolutionEngine {
 export const evolutionEngine = new EvolutionEngine();
 
 if (typeof window !== 'undefined') {
-  evolutionEngine.initialize().catch(console.error);
+  evolutionEngine.initialize().catch(e => logger.error('[EvolutionEngine] Init error:', e));
 }
 
 export default evolutionEngine;
