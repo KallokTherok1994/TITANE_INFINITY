@@ -3,8 +3,16 @@
 //   Serves the remote-mode frontend build (dist/remote/)
 // ═══════════════════════════════════════════════════════════════
 
-use axum::{routing::get_service, Router};
+use axum::{
+    http::StatusCode,
+    routing::{get, get_service},
+    Router,
+};
 use tower_http::services::{ServeDir, ServeFile};
+
+async fn favicon_handler() -> StatusCode {
+    StatusCode::NO_CONTENT
+}
 
 /// Build a router that serves the static remote frontend.
 /// Path: dist/remote/ (relative to the Tauri app bundle or workspace root)
@@ -13,5 +21,7 @@ pub fn static_router(dist_remote_path: &str) -> Router {
     let index_html = format!("{}/index.html", dist_remote_path);
     let serve = ServeDir::new(dist_remote_path).not_found_service(ServeFile::new(index_html));
 
-    Router::new().nest_service("/", get_service(serve))
+    Router::new()
+        .route("/favicon.ico", get(favicon_handler))
+        .nest_service("/", get_service(serve))
 }

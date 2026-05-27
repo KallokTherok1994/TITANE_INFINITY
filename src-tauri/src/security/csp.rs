@@ -11,7 +11,7 @@ pub fn get_csp_headers() -> HashMap<String, String> {
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob:",
             "font-src 'self' data:",
-            "connect-src 'self'",
+            "connect-src 'self' http: https: ws: wss:",
             "frame-ancestors 'none'",
         ]
         .join("; "),
@@ -29,4 +29,19 @@ pub fn get_csp_headers() -> HashMap<String, String> {
     );
 
     headers
+}
+
+#[cfg(test)]
+mod tests {
+    use super::get_csp_headers;
+
+    #[test]
+    fn remote_gateway_csp_allows_user_selected_gateway_urls() {
+        let headers = get_csp_headers();
+        let csp = headers
+            .get("Content-Security-Policy")
+            .expect("CSP header should be present");
+
+        assert!(csp.contains("connect-src 'self' http: https: ws: wss:"));
+    }
 }

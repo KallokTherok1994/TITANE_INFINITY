@@ -91,7 +91,7 @@ describe('conversation_generate — IPC contract shape', () => {
 
     const expectedContent = {
       response: 'Bonjour, comment puis-je vous aider?',
-      conversation_id: 'conv-123',
+      conversationId: 'conv-123',
       meta: {
         mode: 'LOCAL',
         provider_used: 'ollama',
@@ -114,7 +114,7 @@ describe('conversation_generate — IPC contract shape', () => {
       'conversation_generate',
       {
         message: 'Bonjour',
-        conversation_id: 'conv-123',
+        conversationId: 'conv-123',
       }
     );
 
@@ -140,7 +140,7 @@ describe('conversation_generate — IPC contract shape', () => {
     const content = await transport.invoke<{
       response: string;
       meta: Record<string, unknown>;
-    }>('conversation_generate', { message: 'test', conversation_id: 'test-conv' });
+    }>('conversation_generate', { message: 'test', conversationId: 'test-conv' });
 
     expect(typeof content.response).toBe('string');
     expect(typeof content.meta.provider_used).toBe('string');
@@ -193,7 +193,7 @@ describe('RemoteTransport — token refresh on 401', () => {
       'conversation_generate',
       {
         message: 'test',
-        conversation_id: 'c1',
+        conversationId: 'c1',
       }
     );
 
@@ -218,7 +218,7 @@ describe('RemoteTransport — token refresh on 401', () => {
     const transport = initRemoteTransport({ baseUrl: 'http://localhost:7420' });
 
     await expect(
-      transport.invoke('conversation_generate', { message: 'hi', conversation_id: 'c1' })
+      transport.invoke('conversation_generate', { message: 'hi', conversationId: 'c1' })
     ).rejects.toThrow('Session expired');
 
     expect(transport.isAuthenticated()).toBe(false);

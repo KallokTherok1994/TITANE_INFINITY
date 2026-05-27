@@ -11,6 +11,13 @@ interface RemoteAuthScreenProps {
   error: string | null;
 }
 
+function getDefaultGatewayUrl(): string {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+  return window.location.origin;
+}
+
 const styles: Record<string, React.CSSProperties> = {
   screen: {
     display: 'flex',
@@ -88,7 +95,7 @@ export default function RemoteAuthScreen({
   loading,
   error,
 }: RemoteAuthScreenProps) {
-  const [gatewayUrl, setGatewayUrl] = useState('');
+  const [gatewayUrl, setGatewayUrl] = useState(getDefaultGatewayUrl);
   const [secret, setSecret] = useState('');
 
   const handleSubmit = (e: FormEvent) => {
@@ -117,7 +124,7 @@ export default function RemoteAuthScreen({
               data-testid="remote-gateway-url-input"
               style={styles.input}
               type="url"
-              placeholder="https://abc.trycloudflare.com"
+              placeholder="http://127.0.0.1:7420 ou https://abc.trycloudflare.com"
               value={gatewayUrl}
               onChange={e => setGatewayUrl(e.target.value)}
               required

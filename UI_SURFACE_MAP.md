@@ -443,6 +443,16 @@
 
 ## 2026-04-27 : Remote SPA — src/remote/ (Phase 1 Named API Keys)
 
+# [2026-05-27] Remote SPA/Gateway HTTP login fix
+
+- Surface: `src/remote/` (`remote-auth-screen`, `remote-chat-view`) servie par `src-tauri/src/remote_gateway/static_serve.rs` sur `TITANE_REMOTE_PORT=7420`.
+- Correctif runtime: le champ Gateway du login est pre-rempli avec `window.location.origin`, evitant le drift `127.0.0.1` -> `192.168.2.16` quand l utilisateur ne change rien.
+- CSP remote HTTP: `src-tauri/src/security/csp.rs` autorise les URLs de gateway/tunnel saisies par l utilisateur via `connect-src 'self' http: https: ws: wss:` pour la surface remote uniquement. La CSP frontend generale reste bornee a `'self'`.
+- Contrat chat: `useRemoteChat` envoie `conversationId` et `contextEnvelope` (camelCase) vers `conversation_generate`, puis lit `content|response|answer|text` depuis le contenu remote.
+- Favicon: `/favicon.ico` repond `204` cote gateway et `src/remote/index.html` declare une icone inline pour supprimer le 404 console.
+- Preuves: `pnpm run check`, `pnpm exec vitest run tests/contract/remote-chat-contract.test.ts src/security/__tests__/CspManager.spec.ts`, `pnpm run build:remote`, Playwright manual LAN login (`127.0.0.1` -> `192.168.2.16`) sans console error, `e2e/remote-chat-browser.spec.ts` 8/8 PASS, `e2e/remote-gateway.spec.ts` 16/16 PASS.
+- Rollback: `git restore -- src/remote/RemoteAuthScreen.tsx src/remote/useRemoteChat.ts src/remote/index.html src-tauri/src/security/csp.rs src-tauri/src/remote_gateway/static_serve.rs tests/contract/remote-chat-contract.test.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md ARCHITECTURE.md docs/IPC_CATALOG.md registry/ui-events.jsonl scripts/autoheal/autoheal_rules.jsonl`.
+
 # [2026-04-27] Remote SPA standalone : `src/remote/` — build séparé via `vite.config.remote.ts` → `dist/remote/`. Composants : `RemoteApp` (root, gestion transport), `RemoteAuthScreen` (data-testid=remote-auth-screen, remote-api-key-input, remote-gateway-url-input, remote-login-button), `RemoteChatView` (data-testid=remote-chat-view, remote-chat-messages, remote-chat-input, remote-chat-send-button, remote-logout-button). Hook : `useRemoteChat` (auth + conversation + sendMessage via RemoteTransport). Pas de Tauri APIs — transport 100% fetch via `src/lib/remoteTransport.ts`. Pas de routing interne — SPA mono-page. Build : `pnpm run build:remote`.
 
 ## 2026-04-28 : Remote Transport — Accès Internet TITANE v31.2.2

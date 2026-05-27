@@ -22,14 +22,20 @@ export interface RemoteChatState {
   conversationId: string | null;
 }
 
-interface ConversationGenerateResult {
-  ok: boolean;
-  content: {
-    response?: string;
-    answer?: string;
-    text?: string;
-    conversation_id?: string;
-  };
+type CreateConversationContent =
+  | string
+  | {
+      conversationId?: string;
+      conversation_id?: string;
+    };
+
+interface ConversationGenerateContent {
+  content?: string;
+  response?: string;
+  answer?: string;
+  text?: string;
+  conversationId?: string;
+  conversation_id?: string;
   error?: string;
 }
 
@@ -58,12 +64,12 @@ export function useRemoteChat(transport: RemoteTransport | null) {
         // Always authenticate — transportOverride may be a fresh unauthenticated transport
         await t.authenticate(secret);
         // Create a new conversation
-        const result = await t.invoke<{
-          ok: boolean;
-          content: { conversation_id?: string };
-        }>('create_new_conversation', {});
+        const result =
+          await t.invoke<CreateConversationContent>('create_new_conversation', {});
         const convId =
-          (result as ConversationGenerateResult).content?.conversation_id ??
+          (typeof result === 'string'
+            ? result
+            : result.conversationId ?? result.conversation_id) ??
           `remote-${Date.now()}`;
         convIdRef.current = convId;
         setState(s => ({
@@ -115,22 +121,29 @@ export function useRemoteChat(transport: RemoteTransport | null) {
       }));
 
       try {
-        const result = await t.invoke<ConversationGenerateResult>(
+        const conversationId = convIdRef.current ?? `remote-${Date.now()}`;
+        convIdRef.current = conversationId;
+
+        const result = await t.invoke<ConversationGenerateContent>(
           'conversation_generate',
           {
             message: userText,
-            conversation_id: convIdRef.current ?? undefined,
-            context_binding: {},
+            conversationId,
+            contextEnvelope: {},
             stream: false,
           }
         );
 
-        const raw = result as unknown as ConversationGenerateResult;
         const text =
-          raw?.content?.response ??
-          raw?.content?.answer ??
-          raw?.content?.text ??
-          (raw?.error ? `Erreur: ${raw.error}` : 'Pas de réponse');
+          result?.content ??
+          result?.response ??
+          result?.answer ??
+          result?.text ??
+          (result?.error ? `Erreur: ${result.error}` : 'Pas de réponse');
+        const nextConversationId = result?.conversationId ?? result?.conversation_id;
+        if (nextConversationId) {
+          convIdRef.current = nextConversationId;
+        }
 
         const aiMsg: RemoteMessage = {
           id: `a-${Date.now()}`,
@@ -142,6 +155,7 @@ export function useRemoteChat(transport: RemoteTransport | null) {
         setState(s => ({
           ...s,
           loading: false,
+          conversationId: convIdRef.current,
           messages: [...s.messages, aiMsg],
         }));
       } catch (e) {

@@ -223,6 +223,8 @@
 
 > **Remote Gateway** (`src-tauri/src/remote_gateway/`) : serveur axum HTTP/WebSocket démarré dans le même runtime tokio que Tauri. Activé uniquement via `TITANE_REMOTE_ENABLED=1` (désactivé par défaut). Architecture : Ring 0 — axum handlers proxifient les fonctions Ring 2 existantes ; aucun chemin réseau sortant ajouté (Rule 5 One Door préservée). JWT HS256 dérivé du vault SecretsEngine. Rate limit 60 req/min/IP. Audit logging intégré. Port configurable via `TITANE_REMOTE_PORT` (défaut : 7420). Cloudflare Tunnel pour l'accès depuis n'importe quel navigateur internet (`scripts/remote/`). Transport TypeScript unifié (`src/lib/transport.ts`) détecte automatiquement le contexte Tauri vs Remote et route via `secureInvoke` ou `RemoteTransport`.
 
+> 2026-05-27 — Remote Gateway HTTP login/CSP truth: la surface browser remote reste une porte HTTP vers la gateway TITANE, pas une voie Ollama directe. Le header CSP servi par Axum autorise les origins gateway/tunnel saisies par l utilisateur (`http:`, `https:`, `ws:`, `wss:`) afin de permettre `127.0.0.1` -> LAN/Cloudflare, pendant que `src/security/constants.ts` conserve `connect-src 'self'` pour le frontend general. Le contrat `conversation_generate` expose `conversationId` en camelCase via remote HTTP; les payloads snake_case sont traites comme regressions de contrat.
+
 ## 2026-04-24 : Migration documentaire
 
 - Centralisation de tous les fichiers `.md.md` et anciens index dans `docs/99_ARCHIVE/`
