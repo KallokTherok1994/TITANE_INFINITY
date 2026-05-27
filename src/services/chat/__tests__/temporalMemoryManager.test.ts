@@ -90,11 +90,9 @@ describe('temporalMemoryManager', () => {
         updatedAt: Date.now() - 2_000,
       },
       recentMessages: [
-        {
-          role: 'assistant',
-          content: 'Long temporal track '.repeat(80),
-          timestamp: 13,
-        },
+        { role: 'assistant', content: 'Long temporal track A '.repeat(40), timestamp: 11 },
+        { role: 'user',      content: 'Long temporal track B '.repeat(40), timestamp: 12 },
+        { role: 'assistant', content: 'Long temporal track C '.repeat(40), timestamp: 13 },
       ],
       ttlMs: 900_000,
     });

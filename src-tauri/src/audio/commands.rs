@@ -887,6 +887,15 @@ async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
 
 #[tauri::command]
 pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
+    // On Windows, wpctl/pactl/pw-cli don't exist. Device routing is managed by the OS or
+    // the Web Audio API (browser-level). Accept the selection silently — the device ID is
+    // persisted to config by the caller regardless of this command's outcome.
+    #[cfg(target_os = "windows")]
+    {
+        log::info!("[Audio] set_audio_output_device: Windows — OS routing deferred to browser (id={})", device_id);
+        return Ok(());
+    }
+
     // Try PipeWire via wpctl (wireplumber) if available
     if Command::new("wpctl")
         .args(["set-default", &device_id])
@@ -921,6 +930,14 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
 
 #[tauri::command]
 pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
+    // On Windows, wpctl/pactl/pw-cli don't exist. Device routing is managed by the OS or
+    // the Web Audio API (getUserMedia constraint). Accept silently — device ID is persisted by caller.
+    #[cfg(target_os = "windows")]
+    {
+        log::info!("[Audio] set_audio_input_device: Windows — OS routing deferred to browser (id={})", device_id);
+        return Ok(());
+    }
+
     // Try PipeWire via wpctl (wireplumber) if available
     if Command::new("wpctl")
         .args(["set-default", &device_id])

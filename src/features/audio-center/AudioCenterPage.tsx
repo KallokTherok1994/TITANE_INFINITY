@@ -579,7 +579,7 @@ export const AudioCenterPage: React.FC = () => {
               <div className="mt-4 flex flex-wrap gap-4">
                 {[
                   { key: 'noiseSuppression', label: 'Réduction du bruit' },
-                  { key: 'echoCancellation', label: 'Annulation de l&apos;écho' },
+                  { key: 'echoCancellation', label: "Annulation de l'écho" },
                   { key: 'autoGainControl', label: 'Gain automatique' },
                 ].map(({ key, label }) => (
                   <label

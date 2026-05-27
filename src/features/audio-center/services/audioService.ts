@@ -531,11 +531,16 @@ class AudioService {
   }
 
   async setOutputDevice(deviceId: string): Promise<void> {
+    // Check driver before invalidating cache
+    const isWebAudioDevice = (this.deviceCache?.output ?? []).some(
+      d => d.id === deviceId && d.driver === 'webaudio'
+    );
+
     this.config.output.deviceId = deviceId;
     this.saveConfig();
     this.invalidateDeviceCache();
 
-    if (this.isTauri) {
+    if (this.isTauri && !isWebAudioDevice) {
       try {
         // Tauri 2.0 attend camelCase pour les paramètres
         await simpleTauriClient.setAudioOutputDevice({ deviceId });
@@ -562,10 +567,15 @@ class AudioService {
   }
 
   async setInputDevice(deviceId: string): Promise<void> {
+    // Check driver before invalidating cache (invalidateDeviceCache clears it)
+    const isWebAudioDevice = (this.deviceCache?.input ?? []).some(
+      d => d.id === deviceId && d.driver === 'webaudio'
+    );
+
     this.config.input.deviceId = deviceId;
     this.saveConfig();
 
-    if (this.isTauri) {
+    if (this.isTauri && !isWebAudioDevice) {
       try {
         // Tauri 2.0 attend camelCase pour les paramètres
         await simpleTauriClient.setAudioInputDevice({ deviceId });
