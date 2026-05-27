@@ -237,7 +237,26 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           setPermissions({ microphone: 'granted', speaker: 'granted' });
           setLastError(null);
         } else {
-          // Le micro ne fonctionne pas (problème OS/driver)
+          // Tauri backend test failed (stub on Windows or real driver issue).
+          // On Windows, WebView2 supports getUserMedia — use it as a fallback
+          // to get accurate browser-level permission state.
+          if (
+            typeof navigator !== 'undefined' &&
+            navigator.mediaDevices &&
+            typeof navigator.mediaDevices.getUserMedia === 'function'
+          ) {
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              stream.getTracks().forEach(track => track.stop());
+              if (!mountedRef.current) return;
+              setPermissions({ microphone: 'granted', speaker: 'granted' });
+              setLastError(null);
+              return;
+            } catch {
+              // getUserMedia failed — genuine permission or hardware issue
+            }
+          }
+          if (!mountedRef.current) return;
           setPermissions({ microphone: 'unavailable', speaker: 'granted' });
           setLastError(result.errorMessage ?? 'Test microphone échoué');
         }

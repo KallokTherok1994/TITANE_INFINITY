@@ -414,16 +414,18 @@ class AudioService {
       }
     }
 
-    // Fallback: Use Web Audio API if no devices from Tauri
+    // Fallback: Use Web Audio API if Tauri returned no devices, or if device names contain
+    // U+FFFD replacement characters (indicates PowerShell OEM→UTF-8 encoding corruption).
+    const hasGarbledOutputNames = devices.some(d => d.name.includes('�'));
     if (
-      devices.length === 0 &&
+      (devices.length === 0 || hasGarbledOutputNames) &&
       typeof navigator !== 'undefined' &&
       navigator.mediaDevices
     ) {
       try {
         const webDeviceList = await navigator.mediaDevices.enumerateDevices();
         const webDevices = webDeviceList
-          .filter(d => d.kind === 'audiooutput')
+          .filter(d => d.kind === 'audiooutput' && d.label)
           .map((d, index) => ({
             id: d.deviceId || `output-${index}`,
             name: d.label || `Speaker ${index + 1}`,
@@ -432,7 +434,9 @@ class AudioService {
             isActive: index === 0,
             driver: 'webaudio',
           }));
-        devices = webDevices;
+        if (webDevices.length > 0) {
+          devices = webDevices;
+        }
       } catch (error) {
         logger.warn('Failed to enumerate devices:', error);
       }
@@ -475,17 +479,19 @@ class AudioService {
       }
     }
 
-    // Fallback: Use Web Audio API if no devices from Tauri
+    // Fallback: Use Web Audio API if Tauri returned no devices, or if device names contain
+    // U+FFFD replacement characters (indicates PowerShell OEM→UTF-8 encoding corruption).
+    const hasGarbledInputNames = devices.some(d => d.name.includes('�'));
     if (
-      devices.length === 0 &&
+      (devices.length === 0 || hasGarbledInputNames) &&
       typeof navigator !== 'undefined' &&
       navigator.mediaDevices
     ) {
       try {
-        // Request permission first
+        // getUserMedia grants permission and ensures enumerateDevices returns labels
         await navigator.mediaDevices.getUserMedia({ audio: true });
         const allDevices = await navigator.mediaDevices.enumerateDevices();
-        devices = allDevices
+        const webDevices = allDevices
           .filter(d => d.kind === 'audioinput')
           .map((d, index) => ({
             id: d.deviceId || `input-${index}`,
@@ -495,6 +501,9 @@ class AudioService {
             isActive: index === 0,
             driver: 'webaudio',
           }));
+        if (webDevices.length > 0) {
+          devices = webDevices;
+        }
       } catch (error) {
         logger.warn('Failed to enumerate input devices:', error);
       }
