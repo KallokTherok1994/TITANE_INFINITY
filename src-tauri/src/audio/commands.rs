@@ -151,27 +151,29 @@ fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> Command
         }
 
         #[cfg(not(target_os = "windows"))]
-        if let Some(device_id) = output_device_id {
-            if command_exists("pw-play") {
-                let mut command = Command::new("pw-play");
-                command.args(["--target", device_id, output_path]);
-                return run_tracked_command(command, "lecture audio pw-play");
+        {
+            if let Some(device_id) = output_device_id {
+                if command_exists("pw-play") {
+                    let mut command = Command::new("pw-play");
+                    command.args(["--target", device_id, output_path]);
+                    return run_tracked_command(command, "lecture audio pw-play");
+                }
             }
-        }
 
-        if command_exists("paplay") {
-            let mut command = Command::new("paplay");
-            command.arg(output_path);
-            return run_tracked_command(command, "lecture audio paplay");
-        }
+            if command_exists("paplay") {
+                let mut command = Command::new("paplay");
+                command.arg(output_path);
+                return run_tracked_command(command, "lecture audio paplay");
+            }
 
-        if command_exists("aplay") {
-            let mut command = Command::new("aplay");
-            command.arg(output_path);
-            return run_tracked_command(command, "lecture audio aplay");
-        }
+            if command_exists("aplay") {
+                let mut command = Command::new("aplay");
+                command.arg(output_path);
+                return run_tracked_command(command, "lecture audio aplay");
+            }
 
-        Err("Aucun lecteur audio système disponible (pw-play, paplay, aplay)".to_string())
+            Err("Aucun lecteur audio système disponible (pw-play, paplay, aplay)".to_string())
+        }
     }
 }
 
@@ -432,73 +434,76 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
             );
         }
 
-        let speed = (settings.rate * 175.0).clamp(80.0, 450.0) as u32;
-        let pitch = (settings.pitch * 50.0).clamp(0.0, 99.0) as u32;
-        let voice = if settings.language.starts_with("fr") {
-            "fr"
-        } else {
-            "en"
-        };
-
-        // Try espeak-ng first (modern systems), fallback to espeak
-        let espeak_bin = if std::process::Command::new("espeak-ng")
-            .arg("--version")
-            .output()
-            .is_ok()
+        #[cfg(not(target_os = "windows"))]
         {
-            "espeak-ng"
-        } else {
-            "espeak"
-        };
+            let speed = (settings.rate * 175.0).clamp(80.0, 450.0) as u32;
+            let pitch = (settings.pitch * 50.0).clamp(0.0, 99.0) as u32;
+            let voice = if settings.language.starts_with("fr") {
+                "fr"
+            } else {
+                "en"
+            };
 
-        // espeak-ng supports --stdout so we can pipe to pw-play for device targeting
-        if let Some(ref dev_id) = settings.output_device_id {
-            // Generate audio to WAV file using -w flag then play with pw-play --target
-            let output_path = std::env::temp_dir().join("titane_espeak_output.wav");
-            let output_str = output_path.to_string_lossy().to_string();
+            // Try espeak-ng first (modern systems), fallback to espeak
+            let espeak_bin = if std::process::Command::new("espeak-ng")
+                .arg("--version")
+                .output()
+                .is_ok()
+            {
+                "espeak-ng"
+            } else {
+                "espeak"
+            };
 
-            let gen = Command::new(espeak_bin)
-                .args([
-                    "-v",
-                    voice,
-                    "-s",
-                    &speed.to_string(),
-                    "-p",
-                    &pitch.to_string(),
-                    "-w",
-                    &output_str,
-                    "--",
-                ])
-                .arg(text)
-                .output();
+            // espeak-ng supports --stdout so we can pipe to pw-play for device targeting
+            if let Some(ref dev_id) = settings.output_device_id {
+                // Generate audio to WAV file using -w flag then play with pw-play --target
+                let output_path = std::env::temp_dir().join("titane_espeak_output.wav");
+                let output_str = output_path.to_string_lossy().to_string();
 
-            if let Ok(gen_out) = gen {
-                if gen_out.status.success() {
-                    if let Ok(meta) = std::fs::metadata(&output_path) {
-                        if meta.len() > 0 {
-                            play_audio_file(&output_str, Some(dev_id.as_str()))?;
-                            return Ok(());
+                let gen = Command::new(espeak_bin)
+                    .args([
+                        "-v",
+                        voice,
+                        "-s",
+                        &speed.to_string(),
+                        "-p",
+                        &pitch.to_string(),
+                        "-w",
+                        &output_str,
+                        "--",
+                    ])
+                    .arg(text)
+                    .output();
+
+                if let Ok(gen_out) = gen {
+                    if gen_out.status.success() {
+                        if let Ok(meta) = std::fs::metadata(&output_path) {
+                            if meta.len() > 0 {
+                                play_audio_file(&output_str, Some(dev_id.as_str()))?;
+                                return Ok(());
+                            }
                         }
                     }
                 }
+                // fall through to default path if file generation failed
             }
-            // fall through to default path if file generation failed
+
+            // Default: espeak plays directly to system default
+            let mut command = Command::new(espeak_bin);
+            command.args([
+                "-v",
+                voice,
+                "-s",
+                &speed.to_string(),
+                "-p",
+                &pitch.to_string(),
+                text,
+            ]);
+            run_tracked_command(command, "lecture espeak/espeak-ng")?;
+
+            Ok(())
         }
-
-        // Default: espeak plays directly to system default
-        let mut command = Command::new(espeak_bin);
-        command.args([
-            "-v",
-            voice,
-            "-s",
-            &speed.to_string(),
-            "-p",
-            &pitch.to_string(),
-            text,
-        ]);
-        run_tracked_command(command, "lecture espeak/espeak-ng")?;
-
-        Ok(())
     } // end #[cfg(not(target_os = "android"))]
 }
 
