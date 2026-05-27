@@ -574,6 +574,7 @@ class AudioService {
 
     this.config.input.deviceId = deviceId;
     this.saveConfig();
+    this.invalidateDeviceCache();
 
     if (this.isTauri && !isWebAudioDevice) {
       try {
