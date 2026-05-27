@@ -1071,28 +1071,33 @@ export function useConversationEngine(
         return response;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+        const isTimeoutErr = errorMessage.includes('TITANE_REQUEST_TIMEOUT');
+        const isNetworkErr = errorMessage.includes('network');
 
-        // Retry logic avec backoff exponentiel
-        if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
+        // Retry: réseau → jusqu'à MAX_RETRIES; timeout → une seule tentative
+        if ((isNetworkErr && retryCount < MAX_RETRIES) || (isTimeoutErr && retryCount === 0)) {
           const delay = RETRY_DELAY_BASE_MS * Math.pow(2, retryCount);
           logger.warn(
-            `[ConversationEngine] Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
+            `[ConversationEngine] Tentative ${retryCount + 1} échouée (${isTimeoutErr ? 'timeout' : 'réseau'}), retry dans ${delay}ms`
           );
-
           await new Promise(resolve => setTimeout(resolve, delay));
           isProcessingRef.current = false;
           setIsLoading(false);
           return sendMessage(content, retryCount + 1);
         }
 
-        setError(errorMessage);
+        const userFacingDetail = isTimeoutErr
+          ? "Délai dépassé — le modèle n'a pas répondu dans les 55 secondes imparties. Réessaie ou vérifie que le backend Ollama est disponible."
+          : errorMessage;
+
+        setError(userFacingDetail);
         options.onError?.(err as Error);
 
         const fallbackContent = `🤖 **TITANE∞ — Réponse indisponible**
 
 Une anomalie a empêché la génération d'une réponse valide.
 
-**Détail** : ${errorMessage}
+**Détail** : ${userFacingDetail}
 
 Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
 

@@ -68,6 +68,8 @@ import {
   VolumeX,
   Mic,
   Share2,
+  Settings,
+  X,
 } from 'lucide-react';
 import { createLogger } from '@/utils/logger';
 import { confirmAction } from '@/utils/runtimeConfirm';
@@ -104,6 +106,7 @@ import { type ChatTool } from '@/features/chat/chatToolsRegistry';
 import { routeChatToolInvocation } from '@/features/chat/chatToolRouter';
 import { moduleContextRegistry } from '@/services/modules/moduleContextRegistry';
 import { AutoHealErrorBoundary } from '@/components/AutoHealErrorBoundary';
+import { AudioSettings } from '@/components/AudioSettings';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -1777,6 +1780,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
     const [showSearch, setShowSearch] = useState(false);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showExportMenu, setShowExportMenu] = useState(false);
+    const [showAudioSettings, setShowAudioSettings] = useState(false);
     const exportMenuRef = useRef<HTMLDivElement>(null);
     const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
     const [showToolSelector, setShowToolSelector] = useState(false);
@@ -3428,6 +3432,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                   <Mic size={16} />
                 </button>
 
+                {/* Périphériques audio */}
+                <button
+                  className={`conversation-icon-btn ${showAudioSettings ? 'active' : ''}`}
+                  data-testid="btn-audio-settings"
+                  onClick={() => setShowAudioSettings(p => !p)}
+                  title="Paramètres audio & périphériques"
+                  aria-label="Ouvrir les paramètres audio et périphériques"
+                  aria-pressed={showAudioSettings}
+                >
+                  <Settings size={16} aria-hidden="true" />
+                </button>
+
                 {/* Clear Chat */}
                 <button
                   className="conversation-icon-btn"
@@ -3754,7 +3770,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
             {error && (
               <div className="conversation-error" data-testid="chat-error" role="alert">
-                <strong>❌ Erreur:</strong> {error}
+                <strong>❌ Erreur:</strong>{' '}
+                {error.includes('TITANE_REQUEST_TIMEOUT') || error.includes('Délai dépassé')
+                  ? "Délai dépassé — le modèle n'a pas répondu à temps. Réessaie ou vérifie que le backend est disponible."
+                  : error.includes('network')
+                    ? 'Erreur réseau — vérifie ta connexion puis réessaie.'
+                    : error}
               </div>
             )}
 
@@ -3886,6 +3907,51 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           {/* ═══ MODE BUILDER MODAL ═══ */}
           {showModeBuilder && (
             <ModeBuilder onClose={handleCloseModeBuilder} onSave={handleSaveCustomMode} />
+          )}
+
+          {/* ═══ AUDIO SETTINGS MODAL ═══ */}
+          {showAudioSettings && (
+            <div
+              className="conversation-audio-settings-overlay"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Paramètres audio et périphériques"
+              onClick={e => { if (e.target === e.currentTarget) setShowAudioSettings(false); }}
+              style={{
+                position: 'fixed', inset: 0, zIndex: 1000,
+                background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  background: 'var(--titanium-surface, #1a1a2e)',
+                  border: '1px solid var(--titanium-border, rgba(255,255,255,0.08))',
+                  borderRadius: 12, padding: 0, maxWidth: 640, width: '90vw',
+                  maxHeight: '85vh', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+                  boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+                }}
+              >
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '16px 20px', borderBottom: '1px solid var(--titanium-border, rgba(255,255,255,0.08))',
+                }}>
+                  <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--titanium-text, #e2e8f0)' }}>
+                    🎧 Périphériques &amp; Paramètres Audio
+                  </span>
+                  <button
+                    onClick={() => setShowAudioSettings(false)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--titanium-text-secondary, #94a3b8)', padding: 4 }}
+                    aria-label="Fermer"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+                <div style={{ overflowY: 'auto', flex: 1 }}>
+                  <AudioSettings />
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>
