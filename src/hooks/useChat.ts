@@ -518,7 +518,6 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     lastContext: messages.length > 0 ? 'initial-load' : 'init',
   });
 
-  const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
   const [preferredProviderState, setPreferredProviderState] =
     useState<ProviderPreference>(() => {
       // 🔧 MODE AUTO PAR DÉFAUT: Cascade automatique avec Ollama prioritaire
@@ -2229,7 +2228,6 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     [
       applyMessagesSafely,
       currentModeState,
-      debugEntriesRef,
       generate,
       preferredProviderState,
       saveMessage,

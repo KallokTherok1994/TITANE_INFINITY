@@ -2149,7 +2149,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
           }));
         } catch (providerError) {
           if (!cancelled) {
-            pageLogger.warn('Provider readiness check failed', providerError);
+            pageLogger.warn('Provider readiness check failed', { error: String(providerError) });
           }
         }
       })();
