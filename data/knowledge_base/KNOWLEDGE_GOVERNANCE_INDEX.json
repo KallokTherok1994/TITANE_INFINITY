@@ -120,7 +120,7 @@
       "domain": "medical",
       "version": "1.0",
       "source_type": "curated",
-      "source_ref": "data/knowledge_base/default/",
+      "source_ref": null,
       "url": null,
       "last_reviewed": "2026-05-06",
       "confidence": 0.5,
@@ -214,6 +214,111 @@
       ],
       "validation_status": "verified",
       "notes": "Synthese publique fondee sur les chiffres officiels de la faune vertebree du Quebec, les guides jeunesse MFFP et les emblemes officiels pour prioriser les especes les plus plausibles en analyse photo."
+    },
+    {
+      "knowledge_id": "kb-kevin-book-v31",
+      "title": "Là où tout s'éclaircit — Kevin Thibault (Ingestion complète v31)",
+      "domain": "personal_knowledge",
+      "version": "31.0.0",
+      "source_type": "personal",
+      "source_ref": "data/knowledge_base/default/kevin_book_registry_v31.json + kevin_book_v31_detailed.json",
+      "url": null,
+      "last_reviewed": "2026-05-28",
+      "confidence": 0.95,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "low",
+      "allowed_use": [
+        "runtime_retrieval",
+        "twin_integration",
+        "author_identity",
+        "mission_guidance",
+        "protocol_reference",
+        "coaching_education"
+      ],
+      "not_allowed_use": [
+        "replace_therapy_for_trauma",
+        "medical_diagnosis"
+      ],
+      "validation_status": "curated",
+      "notes": "Ingestion complète v31 du manuscrit source — 12 chapitres résumés, protocoles (D.I.S.C.E.R.N., RAIN, 10-10-10), lexique Humain Total, cartographie conceptuelle, jalons biographiques et données TWIN. Source personnelle de Kevin Thibault à confiance élevée. Détails biographiques sensibles en local_encrypted_memory_only."
+    },
+    {
+      "knowledge_id": "kb-kevin-manus-adn-v31",
+      "title": "ADN & Connaissances opérationnelles Manus — Kevin Thibault / Humain TOTAL v3 optimisé",
+      "domain": "personal_knowledge",
+      "version": "31.0.0",
+      "source_type": "personal",
+      "source_ref": "data/knowledge_base/default/kevin_manus_adn_v31_detailed.json",
+      "url": null,
+      "last_reviewed": "2026-05-28",
+      "confidence": 0.9,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "low",
+      "allowed_use": [
+        "runtime_retrieval",
+        "twin_integration",
+        "decision_guidance",
+        "ecosystem_strategy",
+        "content_planning",
+        "social_media_strategy"
+      ],
+      "not_allowed_use": [
+        "replace_therapy_for_trauma",
+        "medical_diagnosis",
+        "automated_publishing_without_human_review"
+      ],
+      "validation_status": "curated",
+      "notes": "Base ADN Manus v3 optimisée — 50 entrées consolidées en 10 domaines stratégiques : règle d'or, décision/arbitrage, gouvernance personnelle, écosystème Humain TOTAL, stratégie éditoriale, voix publique/positionnement, écosystème numérique, apprentissage/méthode, spiritualité symbolique, automatisation gouvernée. Source : manus_adn_connaissances_kevin_humain_total_v3_optimise.json. Ne pas utiliser pour publication sans validation humaine."
+    },
+    {
+      "knowledge_id": "kb-kevin-controlled-vocab-v31",
+      "title": "Vocabulaire contrôlé Humain Total — Kevin Thibault",
+      "domain": "personal_knowledge",
+      "version": "31.0.0",
+      "source_type": "personal",
+      "source_ref": "data/knowledge_base/default/kevin_controlled_vocabulary_v31.json",
+      "url": null,
+      "last_reviewed": "2026-05-28",
+      "confidence": 0.95,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "low",
+      "allowed_use": [
+        "runtime_retrieval",
+        "twin_integration",
+        "terminology_enforcement",
+        "response_consistency"
+      ],
+      "not_allowed_use": [
+        "replace_therapy_for_trauma",
+        "medical_diagnosis"
+      ],
+      "validation_status": "curated",
+      "notes": "Vocabulaire contrôlé — 10 concepts fondamentaux, 5 protocoles complets, 4 blessures/dons, 4 saisons intérieures, 4 archétypes relationnels, 2 types d'énergie, 4 termes de l'écosystème, 4 termes interdits avec alternatives. Assure la cohérence terminologique des réponses TITANE."
+    },
+    {
+      "knowledge_id": "kb-kevin-knowledge-carto-v31",
+      "title": "Cartographie des connaissances intégrées — Kevin Thibault",
+      "domain": "personal_knowledge",
+      "version": "31.0.0",
+      "source_type": "personal",
+      "source_ref": "data/knowledge_base/default/kevin_knowledge_cartography_v31.json",
+      "url": null,
+      "last_reviewed": "2026-05-28",
+      "confidence": 0.9,
+      "freshness": "stable",
+      "requires_web_validation": false,
+      "risk_level": "low",
+      "allowed_use": [
+        "knowledge_audit",
+        "gap_analysis",
+        "evolution_planning"
+      ],
+      "not_allowed_use": [],
+      "validation_status": "curated",
+      "notes": "Cartographie des 10 fichiers de connaissance, couverture par domaine (personnel, technique, base, créatif, business), gaps identifiés et opportunités d'optimisation. Outil de pilotage de l'évolution des connaissances TITANE."
     },
     {
       "knowledge_id": "kb-qc-fonge-001",
