@@ -59,7 +59,7 @@ else
 fi
 
 if grep -q "mergeConfig(sharedTestConfig" "$ROOT_DIR/vitest.unit.config.ts" &&
-  grep -q "src/__tests__/hooks/useMediaQuery.test.tsx" "$ROOT_DIR/vitest.unit.config.ts"; then
+  ! grep -q "src/__tests__/hooks/useMediaQuery.test.tsx" "$ROOT_DIR/vitest.unit.config.ts"; then
   pass "VITEST_UNIT_CONFIG_BOUNDARY"
 else
   fail "VITEST_UNIT_CONFIG_BOUNDARY"

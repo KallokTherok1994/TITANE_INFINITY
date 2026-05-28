@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P1941
-Statut: PASS_QUALIFIED
-Lot: P1939→P1945

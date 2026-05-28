@@ -66,12 +66,6 @@
     "src/_deprecated/**",
     "src/examples/**",
     "src/stories/**",
-    "src/lib/anomalyDetector.ts",
-    "src/lib/metricsCache.ts",
-    "src/lib/predictiveAlerts.ts",
-    "src/lib/serviceMetrics.ts",
-    "src/components/physiological/**",
-    "src/ui/pages/ControlPanel/sections/**"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

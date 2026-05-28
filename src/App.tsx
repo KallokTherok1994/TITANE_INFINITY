@@ -820,10 +820,6 @@ export const AppRouter: React.FC = () => {
       {/* MASQUÉ - Analyse UI */}
       {/* <PresenceOSPanel /> */}
 
-      {/* ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - INTEROCEPTION 🌬️) */}
-      {/* MASQUÉ - Analyse UI */}
-      {/* <PhysiologicalPanel /> */}
-
       {/* ✨ v35.1.8 - Keyboard Shortcuts Help: Planned for future release */}
 
       {/* ✨ v19.5.2 - Toast Notifications System */}
