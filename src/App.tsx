@@ -228,15 +228,6 @@ const OrchestrationIntelligenceCenter = lazy(
 const Sentinel = lazy(() =>
   import('./pages/Sentinel').then(m => ({ default: m.Sentinel }))
 );
-const Watchdog = lazy(() =>
-  import('./pages/Watchdog').then(m => ({ default: m.Watchdog }))
-);
-const SelfHeal = lazy(() =>
-  import('./pages/SelfHeal').then(m => ({ default: m.SelfHeal }))
-);
-const AdaptiveEngine = lazy(() =>
-  import('./pages/AdaptiveEngine').then(m => ({ default: m.AdaptiveEngine }))
-);
 const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
 const ResearchPage = lazy(() =>
   import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
@@ -761,11 +752,11 @@ export const AppRouter: React.FC = () => {
               }
             />
             {/* Engine Routes */}
-            {/* Routes historiques fusionnées vers les surfaces DEV/TITANE actives */}
+            {/* Routes historiques → redirections canoniques DEV/TITANE */}
             <Route path="/sentinel" element={<Sentinel />} />
-            <Route path="/watchdog" element={<Watchdog />} />
-            <Route path="/selfheal" element={<SelfHeal />} />
-            <Route path="/adaptive" element={<AdaptiveEngine />} />
+            <Route path="/watchdog" element={<Navigate to="/dev" replace />} />
+            <Route path="/selfheal" element={<Navigate to="/dev" replace />} />
+            <Route path="/adaptive" element={<Navigate to="/dev" replace />} />
             <Route path="/memory" element={<Memory />} />
             <Route path="/research" element={<ResearchPage />} />
             {/* ✨ Skill OS — Import/manage external skills */}
