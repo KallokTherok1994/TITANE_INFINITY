@@ -27,6 +27,14 @@ const EXEMPT_FROM_UIPAGES = [
   '/performance', // Optimization sub-page, tracked via /optimization
 ];
 
+const EXEMPT_FROM_APP_CANONICAL = [
+  // Routes in registry with deprecated:true — converted to Navigate redirects (AH-0081)
+  // Kept in registry to preserve historical context; no longer canonical App.tsx routes.
+  '/watchdog', // → Navigate to="/dev"
+  '/selfheal', // → Navigate to="/dev"
+  '/adaptive', // → Navigate to="/dev"
+];
+
 const EXEMPT_FROM_MODULECONTEXT = [
   // Routes not requiring moduleRouteContext registry entry
   '/performance',
@@ -229,6 +237,7 @@ function verify() {
 
   // CHECK 2: Registry canonical routes must exist in App.tsx
   for (const route of regCanonical) {
+    if (EXEMPT_FROM_APP_CANONICAL.includes(route)) continue;
     if (!appCanonical.has(route)) {
       errors.push(
         `REGISTRY_ROUTE_NOT_IN_APP: '${route}' in registry but not in App.tsx canonical routes`

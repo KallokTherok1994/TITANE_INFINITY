@@ -1254,11 +1254,11 @@ const SURFACES: UiSurfaceDefinition[] = [
   },
 
   // ══════════════════════════════════════════════════════
-  // /watchdog — Watchdog Monitor
+  // /watchdog — Watchdog Monitor (redirigé → /dev, AH-0081)
   // ══════════════════════════════════════════════════════
   {
     route: '/watchdog',
-    canonical: true,
+    canonical: false,
     navOwner: 'dev',
     pageId: 'watchdog_monitor',
     pageComponent: 'Watchdog',
@@ -1280,19 +1280,19 @@ const SURFACES: UiSurfaceDefinition[] = [
     fallbackPolicy: 'Engine subscription can fallback to empty state',
     staleAfterMs: 15000,
     canClaimSyncedWithoutRuntime: false,
-    visibleInNav: true,
-    deprecated: false,
+    visibleInNav: false,
+    deprecated: true,
     sourceFiles: ['src/pages/Watchdog.tsx'],
     notes:
-      'ACTIVE_PARTIAL: health monitoring and anomaly detection via engine subscription.',
+      'Redirigé vers /dev (AH-0081). Composant conservé pour tests unitaires.',
   },
 
   // ══════════════════════════════════════════════════════
-  // /selfheal — SelfHeal Engine
+  // /selfheal — SelfHeal Engine (redirigé → /dev, AH-0081)
   // ══════════════════════════════════════════════════════
   {
     route: '/selfheal',
-    canonical: true,
+    canonical: false,
     navOwner: 'dev',
     pageId: 'selfheal_engine',
     pageComponent: 'SelfHeal',
@@ -1314,18 +1314,18 @@ const SURFACES: UiSurfaceDefinition[] = [
     fallbackPolicy: 'Engine subscription can fallback to empty state',
     staleAfterMs: 15000,
     canClaimSyncedWithoutRuntime: false,
-    visibleInNav: true,
-    deprecated: false,
+    visibleInNav: false,
+    deprecated: true,
     sourceFiles: ['src/pages/SelfHeal.tsx'],
-    notes: 'ACTIVE_PARTIAL: repair queue and auto-correction via engine subscription.',
+    notes: 'Redirigé vers /dev (AH-0081). Composant conservé pour tests unitaires.',
   },
 
   // ══════════════════════════════════════════════════════
-  // /adaptive — Adaptive Engine
+  // /adaptive — Adaptive Engine (redirigé → /dev, AH-0081)
   // ══════════════════════════════════════════════════════
   {
     route: '/adaptive',
-    canonical: true,
+    canonical: false,
     navOwner: 'dev',
     pageId: 'adaptive_engine',
     pageComponent: 'AdaptiveEngine',
@@ -1351,10 +1351,10 @@ const SURFACES: UiSurfaceDefinition[] = [
     fallbackPolicy: 'Engine subscription can fallback to empty state',
     staleAfterMs: 15000,
     canClaimSyncedWithoutRuntime: false,
-    visibleInNav: true,
-    deprecated: false,
+    visibleInNav: false,
+    deprecated: true,
     sourceFiles: ['src/pages/AdaptiveEngine.tsx'],
-    notes: 'ACTIVE_PARTIAL: adaptive optimization via engine subscription.',
+    notes: 'Redirigé vers /dev (AH-0081). Composant conservé pour tests unitaires.',
   },
 
   // ══════════════════════════════════════════════════════
