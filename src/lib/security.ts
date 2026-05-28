@@ -1474,6 +1474,141 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'oauth_facebook_callback',
   'oauth_facebook_get_profile',
   'oauth_facebook_logout',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CLOUD SYNC — CloudCenter v33+ (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'cloud_auto_heal',
+  'cloud_backup_vault',
+  'cloud_get_devices',
+  'cloud_get_sync_history',
+  'cloud_init',
+  'cloud_list_backups',
+  'cloud_sync_pull',
+  'cloud_sync_push',
+  'cloud_verify_integrity',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SELF-HEAL — SelfHeal interface (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'selfheal_force_evaluation',
+  'selfheal_get_health',
+  'selfheal_get_prediction',
+  'selfheal_get_state',
+
+  // ═══════════════════════════════════════════════════════════════
+  // IDENTITY — Identity management (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'identity_get_active_rules',
+  'identity_get_available_modes',
+  'identity_get_coherence_score',
+  'identity_get_current_mode',
+  'identity_get_current_tone',
+  'identity_get_personality_snapshot',
+
+  // ═══════════════════════════════════════════════════════════════
+  // QA MONITORING — QAMonitoringPage (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'qa_create_monitor',
+  'qa_delete_monitor',
+  'qa_export_metrics_prometheus',
+  'qa_get_hardening_config',
+  'qa_get_logs',
+  'qa_get_performance_report',
+  'qa_get_test_result',
+  'qa_health_check',
+  'qa_list_monitors',
+  'qa_resolve_alert',
+  'qa_run_security_audit',
+  'qa_toggle_monitor',
+  'qa_update_hardening_config',
+
+  // ═══════════════════════════════════════════════════════════════
+  // REALITY / HYPER CENTERS (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'reality_get_state',
+  'reality_init',
+  'reality_render_frame',
+  'hyper_accelerate',
+  'hyper_predict_issues',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ENGINE CORE — Monitoring & Singularity (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'engine_health',
+  'engine_metrics',
+  'engine_modules',
+  'engine_singularity_reset',
+  'engines_devmode_get_suggestions',
+  'get_core_info',
+  'get_engine_health',
+  'get_engines_status',
+  'nexus_get_state',
+  'orchestrator_get_metrics',
+  'one_core_get_engine_status',
+  'one_core_set_mode',
+  'one_core_verify_integrity',
+  'toggle_singularity',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SYSTEM CENTER — SC commands (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'sc_add_log',
+  'sc_clear_logs',
+  'sc_get_env',
+  'sc_hypervision_clear_anomalies',
+  'sc_hypervision_resolve_anomaly',
+  'sc_hypervision_stop',
+  'sc_introspection_auto_fix',
+  'sc_introspection_full_scan',
+  'sc_introspection_generate',
+  'sc_introspection_preview',
+  'sc_introspection_quick_scan',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SYSTEM DIAGNOSTICS & METRICS (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'get_cpu_metrics',
+  'get_dashboard_metrics',
+  'get_event_stream',
+  'get_persistence_status',
+  'get_system_logs',
+  'get_system_metrics',
+  'run_system_diagnostic',
+  'system_recovery',
+
+  // ═══════════════════════════════════════════════════════════════
+  // DEV TOOLS & ANALYTICS (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'analyze_bundle_size',
+  'devtools_analyze',
+  'devtools_debug_last',
+  'devtools_debug_stats',
+  'devtools_knn',
+  'devtools_memory_health',
+  'devtools_memory_search',
+  'devtools_memory_stats',
+  'devtools_status',
+  'introspection_scan',
+  'test_ai_local',
+
+  // ═══════════════════════════════════════════════════════════════
+  // MISCELLANEOUS — Utility commands (AH-0080)
+  // ═══════════════════════════════════════════════════════════════
+  'chat_generate_openai',
+  'clear_all_memory',
+  'clear_memory_cache',
+  'create_module',
+  'fullbody_advance_frame',
+  'generate_mode_prompt',
+  'install_update',
+  'load_ui_theme',
+  'memory_clear',
+  'mesh_get_stats',
+  'mesh_initialize',
+  'reset_ui_theme',
+  'stt_transcribe',
+  'update_ui_token',
 ]);
 
 /**

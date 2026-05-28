@@ -14,6 +14,11 @@ test('Monitoring dashboard visible et selectors présents', async ({ page }) => 
   await expect(monitoringDashboard).toBeVisible();
   await expect(monitoringDashboard).toHaveAttribute('data-readiness', 'partial');
   await expect(page.getByTestId('monitoring-dashboard-status')).toContainText('PARTIAL');
+  await expect(page.getByTestId('surface-truth-badge-partial')).toBeVisible();
+  await expect(page.getByTestId('surface-truth-badge-partial')).toHaveAttribute(
+    'data-pulsing',
+    'true'
+  );
   await expect(page.getByTestId('monitoring-dashboard-sync-state')).toContainText(
     'Sync runtime:'
   );

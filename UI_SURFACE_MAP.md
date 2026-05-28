@@ -1,3 +1,11 @@
+## 2026-05-27 — Monitoring dashboard SurfaceTruthBadge PARTIAL E2E assertion
+
+- **Surface modifiee** : [e2e/agents/monitoring-dashboard.e2e.ts](e2e/agents/monitoring-dashboard.e2e.ts) ajoute assertion `surface-truth-badge-partial` visible et attribut `data-pulsing="true"`.
+- **Motif** : Le test E2E existant assertait `monitoring-dashboard-status` contient 'PARTIAL' mais n asserrait pas le badge SurfaceTruthBadge lui-meme - couverture manquante notee dans plan d audit.
+- **Implementation** : `SurfaceTruthBadge` rend avec `variant="PARTIAL"` quand `liveConnected` est false (state par defaut), appliquant `data-pulsing="true"` puisque PARTIAL n est pas dans `CALM_VARIANTS`.
+- **Tests** : E2E Playwright `monitoring-dashboard.e2e.ts` couvre maintenant a la fois la presence du badge et son etat pulsing.
+- **Rollback** : `git restore -- e2e/agents/monitoring-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md`.
+
 ## 2026-05-16 — Canonical surface truth wrapper and build metadata proof
 
 - **Surfaces modifiees** : [src/components/system/SurfaceRoot.tsx](src/components/system/SurfaceRoot.tsx), [src/App.tsx](src/App.tsx), [src/hooks/useSurfaceTruth.ts](src/hooks/useSurfaceTruth.ts), [vite.config.ts](vite.config.ts), [package.json](package.json), [scripts/verify_instructions.sh](scripts/verify_instructions.sh).

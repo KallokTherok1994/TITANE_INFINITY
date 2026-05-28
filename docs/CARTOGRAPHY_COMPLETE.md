@@ -1,3 +1,11 @@
+## 2026-05-27 — Monitoring dashboard SurfaceTruthBadge PARTIAL E2E assertion
+
+- **Fichier change** : [e2e/agents/monitoring-dashboard.e2e.ts](e2e/agents/monitoring-dashboard.e2e.ts) ajoute assertion `surface-truth-badge-partial` visible et attribut `data-pulsing="true"`.
+- **Motif** : Le test E2E existant assertait `monitoring-dashboard-status` contient 'PARTIAL' mais n asserait pas le badge SurfaceTruthBadge lui-meme - couverture manquante notee dans plan d audit.
+- **Implementation** : `SurfaceTruthBadge` rend avec `variant="PARTIAL"` quand `liveConnected` est false (state par defaut), appliquant `data-pulsing="true"` puisque PARTIAL n est pas dans `CALM_VARIANTS`.
+- **Tests** : E2E Playwright `monitoring-dashboard.e2e.ts` couvre maintenant a la fois la presence du badge et son etat pulsing.
+- **Rollback** : `git restore -- e2e/agents/monitoring-dashboard.e2e.ts UI_SURFACE_MAP.md docs/CARTOGRAPHY_COMPLETE.md`.
+
 ## 2026-05-16 — UI Chat Omnisync v1.1: primitives, bridge, audit completion (delta cartographie)
 
 - Delta Ring 4 minimal: [src/components/system/PageFrame.tsx](src/components/system/PageFrame.tsx) — `PageFrame` + `PageSection` canoniques pour layout pleine-largeur sans zone morte.
