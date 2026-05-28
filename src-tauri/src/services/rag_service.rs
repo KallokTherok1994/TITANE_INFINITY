@@ -55,7 +55,7 @@ pub fn generate_answer(query: &str, passages: &[RetrievedPassage], top_k: usize)
 
     // Sort by score descending
     let mut sorted = passages.to_vec();
-    sorted.sort_by(|a, b| b.score.cmp(&a.score));
+    sorted.sort_by_key(|a| std::cmp::Reverse(a.score));
     sorted.truncate(k);
 
     // No-hallucination guard — empty passages case

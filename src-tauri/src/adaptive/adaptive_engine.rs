@@ -314,7 +314,7 @@ impl AdaptiveOptimizationEngine {
 
         // Trier par priorité
         let mut rules = self.optimization_rules.clone();
-        rules.sort_by(|a, b| b.priority.cmp(&a.priority));
+        rules.sort_by_key(|a| std::cmp::Reverse(a.priority));
 
         for rule in &mut rules {
             if rule.evaluate(latest_sample) {

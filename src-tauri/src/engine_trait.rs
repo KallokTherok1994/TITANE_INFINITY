@@ -152,7 +152,7 @@ impl OrchestratorEngine {
 
         // Get engines sorted by priority
         let mut engines: Vec<_> = registry.engines.iter_mut().collect();
-        engines.sort_by(|a, b| b.1.priority().cmp(&a.1.priority()));
+        engines.sort_by_key(|a| std::cmp::Reverse(a.1.priority()));
 
         for (name, engine) in engines {
             log::info!("🔧 Initializing engine: {}", name);
@@ -182,7 +182,7 @@ impl OrchestratorEngine {
 
         // Update all engines by priority
         let mut engines: Vec<_> = registry.engines.iter_mut().collect();
-        engines.sort_by(|a, b| b.1.priority().cmp(&a.1.priority()));
+        engines.sort_by_key(|a| std::cmp::Reverse(a.1.priority()));
 
         for (name, engine) in engines {
             if let Err(e) = engine.update() {

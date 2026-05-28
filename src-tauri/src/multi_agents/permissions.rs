@@ -288,7 +288,7 @@ impl AgentPermissionManager {
     /// Lister tous les agents
     pub fn list_agents(&self) -> Vec<&AgentConfig> {
         let mut agents: Vec<_> = self.agents.values().collect();
-        agents.sort_by(|a, b| b.priority.cmp(&a.priority));
+        agents.sort_by_key(|a| std::cmp::Reverse(a.priority));
         agents
     }
 

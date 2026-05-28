@@ -657,7 +657,7 @@ impl AnthologyEngine {
             .iter()
             .map(|(k, v)| (k.clone(), *v))
             .collect();
-        fields.sort_by(|a, b| b.1.cmp(&a.1));
+        fields.sort_by_key(|a| std::cmp::Reverse(a.1));
         fields.into_iter().take(n).collect()
     }
 

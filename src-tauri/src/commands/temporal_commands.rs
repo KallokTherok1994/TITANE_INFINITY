@@ -448,7 +448,7 @@ pub async fn temporal_memory_recall(
         traces.retain(|t| t.current_strength() >= min);
     }
 
-    traces.sort_by(|a, b| b.timestamp_ms.cmp(&a.timestamp_ms));
+    traces.sort_by_key(|a| std::cmp::Reverse(a.timestamp_ms));
     traces.truncate(limit);
     Ok(traces)
 }

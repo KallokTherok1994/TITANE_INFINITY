@@ -52,7 +52,7 @@ fn signal_active_tts(signal: &str) -> CommandResult<()> {
     #[cfg(target_os = "windows")]
     {
         let _ = signal;
-        return Ok(());
+        Ok(())
     }
     #[cfg(not(target_os = "windows"))]
     {
@@ -77,11 +77,11 @@ fn signal_active_tts(signal: &str) -> CommandResult<()> {
 fn command_exists(binary: &str) -> bool {
     #[cfg(target_os = "windows")]
     {
-        return Command::new("where.exe")
+        Command::new("where.exe")
             .arg(binary)
             .output()
             .map(|output| output.status.success())
-            .unwrap_or(false);
+            .unwrap_or(false)
     }
     #[cfg(not(target_os = "windows"))]
     {
@@ -145,9 +145,9 @@ fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> Command
         {
             let _ = output_path;
             let _ = output_device_id;
-            return Err(
+            Err(
                 "AUDIO_WINDOWS_UNSUPPORTED: lecture audio via système non disponible sur Windows — utiliser WebView2 Audio API".to_string(),
-            );
+            )
         }
 
         #[cfg(not(target_os = "windows"))]
@@ -429,9 +429,9 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
         {
             let _ = text;
             let _ = settings;
-            return Err(
+            Err(
                 "TTS_WINDOWS_UNSUPPORTED: espeak non disponible sur Windows — utiliser Web Speech API".to_string(),
-            );
+            )
         }
 
         #[cfg(not(target_os = "windows"))]
@@ -959,7 +959,7 @@ pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
             "[Audio] set_audio_output_device: Windows — OS routing deferred to browser (id={})",
             device_id
         );
-        return Ok(());
+        Ok(())
     }
 
     #[cfg(not(target_os = "windows"))]
@@ -1007,7 +1007,7 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
             "[Audio] set_audio_input_device: Windows — OS routing deferred to browser (id={})",
             device_id
         );
-        return Ok(());
+        Ok(())
     }
 
     #[cfg(not(target_os = "windows"))]
@@ -1087,7 +1087,7 @@ if ($d) { 'found' } else { 'none' }
                     .trim()
                     .starts_with("found");
                 log::info!("[Audio] Windows test_microphone via WMI: found={}", found);
-                return Ok(MicrophoneTestResult {
+                Ok(MicrophoneTestResult {
                     success: found,
                     peak_level: if found { 0.5 } else { 0.0 },
                     noise_floor: 0.0,
@@ -1097,17 +1097,17 @@ if ($d) { 'found' } else { 'none' }
                     } else {
                         Some("Aucun périphérique audio détecté sur ce système Windows".to_string())
                     },
-                });
+                })
             }
             Err(e) => {
                 log::warn!("[Audio] Windows test_microphone: PowerShell error: {}", e);
-                return Ok(MicrophoneTestResult {
+                Ok(MicrophoneTestResult {
                     success: false,
                     peak_level: 0.0,
                     noise_floor: 0.0,
                     signal_to_noise: 0.0,
                     error_message: Some(format!("Erreur vérification périphérique: {}", e)),
-                });
+                })
             }
         }
     }

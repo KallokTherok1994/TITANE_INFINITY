@@ -122,9 +122,11 @@ impl OmegaKernelBridge {
                     let mut stats_guard = stats.write().await;
                     stats_guard.successful_requests += 1;
                     stats_guard.total_duration_ms += duration_ms;
-                    if stats_guard.successful_requests > 0 {
-                        stats_guard.avg_duration_ms =
-                            stats_guard.total_duration_ms / stats_guard.successful_requests;
+                    if let Some(avg) = stats_guard
+                        .total_duration_ms
+                        .checked_div(stats_guard.successful_requests)
+                    {
+                        stats_guard.avg_duration_ms = avg;
                     }
                 }
 

@@ -314,20 +314,19 @@ impl SafetyChecker {
             if let Some(tone) = identity.get("tone").and_then(|t| t.as_str()) {
                 let text_lower = text.to_lowercase();
                 match tone {
-                    "friendly" => {
-                        if text_lower.contains("error") || text_lower.contains("wrong") {
-                            // Friendly tone should soften errors
-                            score -= 0.1;
-                            details.push("Consider softer phrasing for friendly tone".to_string());
-                        }
+                    "friendly"
+                        if text_lower.contains("error") || text_lower.contains("wrong") =>
+                    {
+                        score -= 0.1;
+                        details.push("Consider softer phrasing for friendly tone".to_string());
                     }
-                    "professional" => {
-                        if text_lower.contains("lol") || text_lower.contains("haha") {
-                            score -= 0.2;
-                            details.push(
-                                "Informal language doesn't match professional tone".to_string(),
-                            );
-                        }
+                    "professional"
+                        if text_lower.contains("lol") || text_lower.contains("haha") =>
+                    {
+                        score -= 0.2;
+                        details.push(
+                            "Informal language doesn't match professional tone".to_string(),
+                        );
                     }
                     _ => {}
                 }
@@ -531,13 +530,12 @@ impl GuardrailsEngine {
         for check in checks {
             if !check.passed {
                 match check.check_type {
-                    GuardrailType::LengthLimits => {
-                        // Truncate if too long
-                        if modified.len() > self.config.max_response_length * 4 {
-                            let limit = self.config.max_response_length * 4;
-                            modified = modified.chars().take(limit).collect();
-                            modified.push_str("...");
-                        }
+                    GuardrailType::LengthLimits
+                        if modified.len() > self.config.max_response_length * 4 =>
+                    {
+                        let limit = self.config.max_response_length * 4;
+                        modified = modified.chars().take(limit).collect();
+                        modified.push_str("...");
                     }
                     GuardrailType::PrivacyProtection => {
                         // Redact potential PII

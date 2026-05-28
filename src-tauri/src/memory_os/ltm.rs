@@ -307,7 +307,7 @@ impl LongTermMemory {
             .cloned()
             .collect();
 
-        results.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+        results.sort_by_key(|a| std::cmp::Reverse(a.timestamp));
         results.truncate(limit);
         results
     }
@@ -316,7 +316,7 @@ impl LongTermMemory {
     pub async fn list(&self, limit: Option<usize>) -> Vec<LTMMetadata> {
         let index = self.index.read().await;
         let mut results: Vec<_> = index.values().cloned().collect();
-        results.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+        results.sort_by_key(|a| std::cmp::Reverse(a.timestamp));
 
         if let Some(limit) = limit {
             results.truncate(limit);
@@ -402,7 +402,7 @@ impl LongTermMemory {
         }
 
         let mut top_tags: Vec<_> = tag_counts.into_iter().collect();
-        top_tags.sort_by(|a, b| b.1.cmp(&a.1));
+        top_tags.sort_by_key(|a| std::cmp::Reverse(a.1));
         top_tags.truncate(5);
 
         TierSnapshot {

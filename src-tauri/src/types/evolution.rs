@@ -115,7 +115,7 @@ impl EvolutionReport {
     /// Get prioritized recommendations
     pub fn prioritized_recommendations(&self) -> Vec<Recommendation> {
         let mut recs = self.recommendations.clone();
-        recs.sort_by(|a, b| b.priority.cmp(&a.priority));
+        recs.sort_by_key(|a| std::cmp::Reverse(a.priority));
         recs
     }
 }

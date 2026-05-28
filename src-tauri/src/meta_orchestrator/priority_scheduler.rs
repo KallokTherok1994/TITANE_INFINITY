@@ -89,7 +89,7 @@ impl PriorityScheduler {
         queue.push(task);
 
         // Trier par priorité (plus haute d'abord)
-        queue.sort_by(|a, b| b.priority.cmp(&a.priority));
+        queue.sort_by_key(|a| std::cmp::Reverse(a.priority));
 
         let mut stats = self.stats.write().await;
         stats.total_enqueued += 1;
@@ -224,7 +224,7 @@ impl PriorityScheduler {
         }
 
         // Re-trier après le boost
-        queue.sort_by(|a, b| b.priority.cmp(&a.priority));
+        queue.sort_by_key(|a| std::cmp::Reverse(a.priority));
     }
 
     /// Récupère la queue actuelle

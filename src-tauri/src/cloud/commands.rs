@@ -452,7 +452,7 @@ pub async fn cloud_list_backups() -> Result<Vec<BackupInfo>, String> {
         }
     }
 
-    backups.sort_by(|a, b| b.created_timestamp.cmp(&a.created_timestamp));
+    backups.sort_by_key(|a| std::cmp::Reverse(a.created_timestamp));
     Ok(backups)
 }
 

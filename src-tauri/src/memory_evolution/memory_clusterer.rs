@@ -171,7 +171,7 @@ impl MemoryClusterer {
         }
 
         // Limiter le nombre de clusters
-        clusters.sort_by(|a, b| b.members.len().cmp(&a.members.len()));
+        clusters.sort_by_key(|a| std::cmp::Reverse(a.members.len()));
         clusters.truncate(self.config.max_clusters);
 
         Ok(clusters)
@@ -194,7 +194,7 @@ impl MemoryClusterer {
 
         // Trier par nombre d'items
         let mut sorted: Vec<_> = keyword_to_items.into_iter().collect();
-        sorted.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
+        sorted.sort_by_key(|a| std::cmp::Reverse(a.1.len()));
 
         let mut clusters = Vec::new();
         let mut assigned: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -340,7 +340,7 @@ impl MemoryClusterer {
         }
 
         let mut sorted: Vec<_> = word_count.into_iter().collect();
-        sorted.sort_by(|a, b| b.1.cmp(&a.1));
+        sorted.sort_by_key(|a| std::cmp::Reverse(a.1));
 
         sorted.into_iter().take(5).map(|(w, _)| w).collect()
     }

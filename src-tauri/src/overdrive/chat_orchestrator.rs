@@ -1873,12 +1873,8 @@ pub async fn chat_stream_message(
 
     let should_use_ollama = match request.provider.as_str() {
         "ollama" => true,
-        "auto" => {
-            if is_ollama_auto_enabled() {
-                is_provider_available("ollama", state.inner(), true, None).await
-            } else {
-                false
-            }
+        "auto" if is_ollama_auto_enabled() => {
+            is_provider_available("ollama", state.inner(), true, None).await
         }
         "local" => false,
         _ => false,

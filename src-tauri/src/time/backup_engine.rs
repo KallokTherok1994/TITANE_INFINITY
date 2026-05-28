@@ -231,7 +231,7 @@ impl BackupEngine {
             .collect();
 
         // Trier par timestamp décroissant
-        typed_snapshots.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+        typed_snapshots.sort_by_key(|a| std::cmp::Reverse(a.timestamp));
 
         // Supprimer excédent
         if typed_snapshots.len() > max_count {

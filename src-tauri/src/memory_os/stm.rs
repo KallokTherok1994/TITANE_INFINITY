@@ -241,7 +241,7 @@ impl ShortTermMemory {
         }
 
         let mut top_tags: Vec<_> = tag_counts.into_iter().collect();
-        top_tags.sort_by(|a, b| b.1.cmp(&a.1));
+        top_tags.sort_by_key(|a| std::cmp::Reverse(a.1));
         top_tags.truncate(5);
 
         TierSnapshot {

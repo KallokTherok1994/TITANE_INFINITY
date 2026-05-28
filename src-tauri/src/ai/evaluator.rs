@@ -213,15 +213,11 @@ impl Evaluator {
     /// Vérifications patterns spécifiques providers
     fn check_provider_patterns(&self, res: &AiResponse, warnings: &mut Vec<String>) {
         match res.provider.as_str() {
-            "titane_engine" => {
-                if res.output.contains("mode fallback") {
-                    warnings.push("Réponse générée par fallback TITANE Engine".to_string());
-                }
+            "titane_engine" if res.output.contains("mode fallback") => {
+                warnings.push("Réponse générée par fallback TITANE Engine".to_string());
             }
-            "local" => {
-                if res.latency_ms > 10_000 {
-                    warnings.push(format!("Latence locale élevée: {}ms", res.latency_ms));
-                }
+            "local" if res.latency_ms > 10_000 => {
+                warnings.push(format!("Latence locale élevée: {}ms", res.latency_ms));
             }
             _ => {}
         }

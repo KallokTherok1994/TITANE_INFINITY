@@ -385,7 +385,7 @@ impl CognitiveCompressionEngine {
                 occurrences: count,
             })
             .collect();
-        themes.sort_by(|a, b| b.occurrences.cmp(&a.occurrences));
+        themes.sort_by_key(|a| std::cmp::Reverse(a.occurrences));
         themes.truncate(5);
 
         // Extraire les points clés (premiers et derniers messages)

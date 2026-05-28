@@ -30,11 +30,12 @@ fn model_context_window(model: &str) -> u32 {
         32_768 // llama3.2 supports up to 128K; 32K is the pragmatic default
     } else if lower.starts_with("llama3.1") {
         16_384
-    } else if lower.starts_with("mistral") || lower.starts_with("mixtral") {
-        32_768
-    } else if lower.starts_with("qwen2.5") || lower.starts_with("qwen3") {
-        32_768
-    } else if lower.starts_with("deepseek") {
+    } else if lower.starts_with("mistral")
+        || lower.starts_with("mixtral")
+        || lower.starts_with("qwen2.5")
+        || lower.starts_with("qwen3")
+        || lower.starts_with("deepseek")
+    {
         32_768
     } else if lower.starts_with("phi4") {
         16_384

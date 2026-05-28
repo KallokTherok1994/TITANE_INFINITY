@@ -316,10 +316,8 @@ impl SecureSecretsEngine {
                     return Err(SecretsError::InvalidKey("Claude key too short".into()));
                 }
             }
-            "gemini" => {
-                if key.len() < 30 {
-                    return Err(SecretsError::InvalidKey("Gemini key too short".into()));
-                }
+            "gemini" if key.len() < 30 => {
+                return Err(SecretsError::InvalidKey("Gemini key too short".into()));
             }
             _ => {}
         }

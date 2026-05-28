@@ -174,7 +174,7 @@ impl PredictionModel {
     /// Retourne les séquences les plus fréquentes
     pub fn get_top_sequences(&self, count: usize) -> Vec<&EventSequence> {
         let mut sequences: Vec<_> = self.sequences.values().collect();
-        sequences.sort_by(|a, b| b.frequency.cmp(&a.frequency));
+        sequences.sort_by_key(|a| std::cmp::Reverse(a.frequency));
         sequences.truncate(count);
         sequences
     }

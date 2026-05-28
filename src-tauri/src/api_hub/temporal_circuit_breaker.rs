@@ -111,11 +111,9 @@ impl TemporalCircuitBreaker {
         let failure_threshold = self.get_failure_threshold().await;
 
         match state.current_state {
-            CircuitState::Closed => {
-                if state.failure_count >= failure_threshold {
-                    state.current_state = CircuitState::Open;
-                    state.last_state_change = Instant::now();
-                }
+            CircuitState::Closed if state.failure_count >= failure_threshold => {
+                state.current_state = CircuitState::Open;
+                state.last_state_change = Instant::now();
             }
             CircuitState::HalfOpen => {
                 // Un seul échec en HalfOpen rouvre le circuit

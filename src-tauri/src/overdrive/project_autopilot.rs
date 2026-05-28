@@ -153,7 +153,7 @@ pub fn project_list(state: State<ProjectAutoPilotState>) -> Result<Vec<Project>,
     let mut list: Vec<Project> = projects.values().cloned().collect();
 
     // Trier par last_opened (plus récents en premier)
-    list.sort_by(|a, b| b.last_opened.cmp(&a.last_opened));
+    list.sort_by_key(|a| std::cmp::Reverse(a.last_opened));
 
     Ok(list)
 }

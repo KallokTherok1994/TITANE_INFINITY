@@ -165,7 +165,7 @@ impl SnapshotIndex {
     pub fn add(&mut self, metadata: SnapshotMetadata) {
         self.snapshots.push(metadata);
         // Trier par timestamp décroissant
-        self.snapshots.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+        self.snapshots.sort_by_key(|a| std::cmp::Reverse(a.timestamp));
     }
 
     /// Supprimer snapshot

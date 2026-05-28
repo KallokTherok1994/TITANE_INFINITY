@@ -382,7 +382,7 @@ impl RoutineEngine {
         }
 
         // Trier par priorité
-        triggered.sort_by(|a, b| b.priority.cmp(&a.priority));
+        triggered.sort_by_key(|a| std::cmp::Reverse(a.priority));
         triggered
     }
 

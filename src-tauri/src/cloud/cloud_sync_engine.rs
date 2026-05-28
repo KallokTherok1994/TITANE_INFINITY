@@ -587,7 +587,7 @@ impl CloudSyncEngine {
                 all_entries.push(entry.clone());
             }
         }
-        all_entries.sort_by(|a, b| a.timestamp.cmp(&b.timestamp));
+        all_entries.sort_by_key(|a| a.timestamp);
         merged.changelog = all_entries;
 
         Ok(merged)

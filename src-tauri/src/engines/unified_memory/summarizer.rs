@@ -140,7 +140,7 @@ fn summarize_key_messages(entries: &[MemoryEntry]) -> (String, usize) {
     }
 
     // Deduplicate by ID
-    key_entries.sort_by(|a, b| a.timestamp.cmp(&b.timestamp));
+    key_entries.sort_by_key(|a| a.timestamp);
     key_entries.dedup_by(|a, b| a.id == b.id);
 
     // Format summary

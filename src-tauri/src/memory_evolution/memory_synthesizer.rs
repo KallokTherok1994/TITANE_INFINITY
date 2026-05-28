@@ -249,7 +249,7 @@ impl MemorySynthesizer {
 
         // Garder les top concepts
         let mut sorted: Vec<_> = concepts.into_iter().collect();
-        sorted.sort_by(|a, b| b.1.cmp(&a.1));
+        sorted.sort_by_key(|a| std::cmp::Reverse(a.1));
 
         sorted.into_iter().take(5).map(|(word, _)| word).collect()
     }

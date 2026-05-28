@@ -235,7 +235,7 @@ impl ExpFusionEngine {
                 knowledge_count,
             });
         }
-        out.sort_by(|a, b| b.total_exp.cmp(&a.total_exp));
+        out.sort_by_key(|a| std::cmp::Reverse(a.total_exp));
         out
     }
 
@@ -258,7 +258,7 @@ impl ExpFusionEngine {
                 last_updated: proj.last_updated.clone(),
             });
         }
-        out.sort_by(|a, b| b.total_exp.cmp(&a.total_exp));
+        out.sort_by_key(|a| std::cmp::Reverse(a.total_exp));
         out
     }
 

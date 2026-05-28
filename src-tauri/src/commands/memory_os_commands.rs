@@ -121,7 +121,7 @@ pub async fn memory_prune() -> Result<u32, TitaneError> {
     let initial_count = nodes.len();
 
     if nodes.len() > 1000 {
-        nodes.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+        nodes.sort_by_key(|a| std::cmp::Reverse(a.created_at));
         nodes.truncate(1000);
     }
 

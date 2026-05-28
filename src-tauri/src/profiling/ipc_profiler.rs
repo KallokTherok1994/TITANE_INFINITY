@@ -135,7 +135,7 @@ impl IPCProfiler {
         }
 
         // Sort by total duration (most expensive commands first)
-        metrics.sort_by(|a, b| b.total_duration_ms.cmp(&a.total_duration_ms));
+        metrics.sort_by_key(|a| std::cmp::Reverse(a.total_duration_ms));
         metrics
     }
 
@@ -155,7 +155,7 @@ impl IPCProfiler {
 
         // Find slowest commands (by p95)
         let mut sorted_by_p95 = metrics.clone();
-        sorted_by_p95.sort_by(|a, b| b.p95_duration_ms.cmp(&a.p95_duration_ms));
+        sorted_by_p95.sort_by_key(|a| std::cmp::Reverse(a.p95_duration_ms));
         let slowest_commands = sorted_by_p95
             .into_iter()
             .take(10)

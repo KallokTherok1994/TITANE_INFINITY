@@ -262,7 +262,7 @@ impl ConversationDiagnostics {
             .iter()
             .map(|(k, v)| (k.clone(), *v))
             .collect();
-        intents.sort_by(|a, b| b.1.cmp(&a.1));
+        intents.sort_by_key(|a| std::cmp::Reverse(a.1));
         intents.truncate(limit);
         intents
     }

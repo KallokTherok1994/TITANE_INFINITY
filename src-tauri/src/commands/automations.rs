@@ -17,6 +17,9 @@ use crate::core::tapi_error::TAPIError;
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Identifiants d'automations (synchronisé avec TypeScript)
+// Allow: variants keep the "Auto" prefix intentionally — it's part of the stable serialized API
+// synced with TypeScript (snake_case: auto_backup, auto_cleanup, etc.) and cannot be renamed.
+#[allow(clippy::enum_variant_names)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AutomationId {
@@ -846,10 +849,10 @@ pub fn automation_execute(
             .or_insert(0) += 1;
 
         // Recalculer moyenne
-        if stats.total_executions > 0 {
-            stats.average_duration_ms =
-                ((stats.average_duration_ms * (stats.total_executions - 1)) + duration_ms)
-                    / stats.total_executions;
+        if let Some(avg) = ((stats.average_duration_ms * (stats.total_executions - 1)) + duration_ms)
+            .checked_div(stats.total_executions)
+        {
+            stats.average_duration_ms = avg;
         }
     }
 

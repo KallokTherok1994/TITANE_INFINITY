@@ -105,7 +105,7 @@ impl BootOrchestrator {
         log::info!("╚══════════════════════════════════════════════════════════════╝");
 
         // Trier engines par priorité (Critical → High → Medium → Low)
-        self.engines.sort_by(|a, b| b.priority.cmp(&a.priority));
+        self.engines.sort_by_key(|a| std::cmp::Reverse(a.priority));
 
         // Clone engine names pour éviter borrow issues
         let engine_names: Vec<(String, BootPriority)> = self

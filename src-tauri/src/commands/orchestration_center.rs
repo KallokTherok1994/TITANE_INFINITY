@@ -768,7 +768,7 @@ pub async fn orchestration_get_timeline(
         .cloned()
         .collect();
 
-    filtered.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
+    filtered.sort_by_key(|a| std::cmp::Reverse(a.timestamp));
 
     if let Some(l) = limit {
         filtered.truncate(l as usize);

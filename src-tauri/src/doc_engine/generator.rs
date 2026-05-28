@@ -28,7 +28,7 @@ impl DocumentGenerator {
         let template = self.templates.get_template(&config.doc_type)?;
 
         // 2. Génération du contenu structuré
-        let content = self.generate_content(&config, &template, params)?;
+        let content = self.generate_content(&config, template, params)?;
 
         // 3. Application du style et formatage
         let formatted_content = self.formatter.format(content, &config)?;

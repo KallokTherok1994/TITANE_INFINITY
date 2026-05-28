@@ -251,24 +251,24 @@ impl VisionEngine {
         let (width, height) = gray.dimensions();
 
         let mut edge_density = vec![0.0f32; 4]; // 4 quadrants
-        let mut edge_counts = vec![0u32; 4];
+        let mut edge_counts = [0u32; 4];
 
         for y in 1..(height - 1) {
             for x in 1..(width - 1) {
                 // Sobel operators
-                let gx = gray.get_pixel(x + 1, y - 1)[0] as i32 * -1
+                let gx = -(gray.get_pixel(x + 1, y - 1)[0] as i32)
                     + gray.get_pixel(x + 1, y)[0] as i32 * -2
-                    + gray.get_pixel(x + 1, y + 1)[0] as i32 * -1
-                    + gray.get_pixel(x - 1, y - 1)[0] as i32 * 1
+                    - (gray.get_pixel(x + 1, y + 1)[0] as i32)
+                    + gray.get_pixel(x - 1, y - 1)[0] as i32
                     + gray.get_pixel(x - 1, y)[0] as i32 * 2
-                    + gray.get_pixel(x - 1, y + 1)[0] as i32 * 1;
+                    + gray.get_pixel(x - 1, y + 1)[0] as i32;
 
-                let gy = gray.get_pixel(x - 1, y + 1)[0] as i32 * -1
+                let gy = -(gray.get_pixel(x - 1, y + 1)[0] as i32)
                     + gray.get_pixel(x, y + 1)[0] as i32 * -2
-                    + gray.get_pixel(x + 1, y + 1)[0] as i32 * -1
-                    + gray.get_pixel(x - 1, y - 1)[0] as i32 * 1
+                    - (gray.get_pixel(x + 1, y + 1)[0] as i32)
+                    + gray.get_pixel(x - 1, y - 1)[0] as i32
                     + gray.get_pixel(x, y - 1)[0] as i32 * 2
-                    + gray.get_pixel(x + 1, y - 1)[0] as i32 * 1;
+                    + gray.get_pixel(x + 1, y - 1)[0] as i32;
 
                 let magnitude = ((gx * gx + gy * gy) as f32).sqrt();
 

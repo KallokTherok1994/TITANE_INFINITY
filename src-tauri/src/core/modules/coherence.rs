@@ -339,27 +339,9 @@ impl CoherenceEngine {
     fn detect_module_contradictions(&self, module_name: &str, state: &SingularityState) -> u64 {
         // Simple heuristic: check for health mismatches
         match module_name {
-            "memory" => {
-                if state.memory.health() == EngineHealth::Failing {
-                    1
-                } else {
-                    0
-                }
-            }
-            "harmonia" => {
-                if state.harmonia.health() == EngineHealth::Failing {
-                    1
-                } else {
-                    0
-                }
-            }
-            "system_health" => {
-                if state.system_health.health() == EngineHealth::Failing {
-                    1
-                } else {
-                    0
-                }
-            }
+            "memory" if state.memory.health() == EngineHealth::Failing => 1,
+            "harmonia" if state.harmonia.health() == EngineHealth::Failing => 1,
+            "system_health" if state.system_health.health() == EngineHealth::Failing => 1,
             _ => 0,
         }
     }
