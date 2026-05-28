@@ -1,5 +1,31 @@
 # Changelog
 
+## [35.1.10] — 2026-05-28 (Repo Audit, Dev Config Fix, Governance)
+
+### Fixed
+
+- **`package.json`**: `"dev"` script now uses `--config runtime/dev/tauri.conf.json` — fixes black screen in dev mode (devUrl + beforeDevCommand were absent from prod config) (AH-0090)
+- **`src/services/knowledge_governance/KnowledgeGovernanceContract.ts`**: Added `'personal_knowledge'` to KNOWLEDGE_DOMAINS enum — fixes silent ZodError crashing governance registry on every chat query (AH-0089)
+- **`data/knowledge_base/KNOWLEDGE_GOVERNANCE_INDEX.json`**: `kb-med-001.source_ref` changed to `null` — directory path produced empty category key leaving 34 medical files ungoverned (AH-0089)
+- **`src-tauri/tauri.conf.json`**: Restored `windows[]` array removed by `generate-tauri-config.mjs` — eliminates "Main window not found in config" fallback warning on every launch
+
+### Changed
+
+- **`.gitignore`**: Added `artifacts/`, `memory/*.json`, `.codex_*_files.txt`, `.copilot_*_files.txt` — build outputs and AI IDE caches excluded from tracking
+- **`README.md`**: Version badge updated v35.1.6 → v35.1.10, audit date updated to 2026-05-28
+- **`tsconfig.json`**: Added missing aliases `@app`, `@pages`, `@ui`, `@assets`, `@styles` — parity with vite.config.ts
+- **`vite.config.remote.ts`**: Added all 14 path aliases from vite.config.ts (previously only `@`)
+- **`playwright.config.ts`**: Added `process.platform === 'linux'` guard for `ldconfig` browser detection — no-op on Windows (try/catch already handles it safely)
+
+### Audit (v35.1.10 — 2026-05-28)
+
+| Gate | Résultat |
+| ---- | -------- |
+| `prebuild-frontend-runtime-certifier --fast` | PASS=8 BLOCKED=0 |
+| `detect_recurrence.sh` | PASS entries=2209 |
+| DEV config | `runtime/dev/tauri.conf.json` (devUrl + beforeDevCommand) |
+| PROD install | `C:\Program Files\titane-infinity\titane-infinity.exe` v35.1.10 |
+
 ## [35.1.9] — 2026-05-22 (Chat + Ollama Fine-Tuning)
 
 ### Changed

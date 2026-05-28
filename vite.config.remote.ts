@@ -34,6 +34,21 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@app': resolve(__dirname, 'src/app'),
+      '@pages': resolve(__dirname, 'src/pages'),
+      '@features': resolve(__dirname, 'src/features'),
+      '@components': resolve(__dirname, 'src/components'),
+      '@ui': resolve(__dirname, 'src/ui'),
+      '@hooks': resolve(__dirname, 'src/hooks'),
+      '@services': resolve(__dirname, 'src/services'),
+      '@stores': resolve(__dirname, 'src/stores'),
+      '@themes': resolve(__dirname, 'src/themes'),
+      '@utils': resolve(__dirname, 'src/utils'),
+      '@types': resolve(__dirname, 'src/types'),
+      '@assets': resolve(__dirname, 'src/assets'),
+      '@styles': resolve(__dirname, 'src/styles'),
+      '@data': resolve(__dirname, 'data'),
+      '@config': resolve(__dirname, 'config'),
     },
   },
 });

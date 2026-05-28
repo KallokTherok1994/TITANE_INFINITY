@@ -1,14 +1,14 @@
 # TITANE∞ — Cognitive Operating System
 
 [![CI Unified](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml/badge.svg?branch=MAIN)](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci-unified.yml)
-[![Version v35.1.6](https://img.shields.io/badge/version-v35.1.6-brightgreen?logo=github)](CHANGELOG.md)
+[![Version v35.1.10](https://img.shields.io/badge/version-v35.1.10-brightgreen?logo=github)](CHANGELOG.md)
 [![License Proprietary](https://img.shields.io/badge/license-Proprietary-lightgrey)](LICENSE.md)
 
 TITANE∞ est un **OS cognitif** sous forme d'application desktop native (Tauri v2 + React 19), conçu comme un assistant IA personnel gouverné, auto-réparateur et évolutif. Il orchestre plusieurs moteurs cognitifs (mémoire triple STM/MTM/LTM, pipeline OMEGA, orchestration multi-providers) derrière une interface desktop soignée, en architecture 4-Ring, avec un backend Rust sécurisé et un frontend React/TypeScript certifié.
 
 ---
 
-## Audit Status (v35.1.6 — 2026-05-16)
+## Audit Status (v35.1.10 — 2026-05-28)
 
 | Gate                           | Résultat                           |
 | ------------------------------ | ---------------------------------- |

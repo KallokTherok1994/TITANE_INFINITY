@@ -19,19 +19,24 @@
     /* Path aliases */
     "paths": {
       "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@features/*": ["./src/features/*"],
       "@components/*": ["./src/components/*"],
-      "@types/*": ["./src/types/*"],
-      "@utils/*": ["./src/utils/*"],
+      "@ui/*": ["./src/ui/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@a11y/*": ["./src/a11y/*"],
-      "@apps/*": ["./src/apps/*"],
-      "@themes/*": ["./src/themes/*"],
       "@services/*": ["./src/services/*"],
       "@stores/*": ["./src/stores/*"],
-      "@features/*": ["./src/features/*"],
-      "@cognitive/*": ["./src/cognitive/*"],
+      "@themes/*": ["./src/themes/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@types/*": ["./src/types/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@styles/*": ["./src/styles/*"],
       "@data/*": ["./data/*"],
-      "@config/*": ["./config/*"]
+      "@config/*": ["./config/*"],
+      "@a11y/*": ["./src/a11y/*"],
+      "@apps/*": ["./src/apps/*"],
+      "@cognitive/*": ["./src/cognitive/*"]
     },
 
     /* Linting - Enhanced Strict (Progressive) */

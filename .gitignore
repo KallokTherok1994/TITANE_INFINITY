@@ -184,6 +184,14 @@ runtime/dev/proofs/
 runtime/*.ok
 runtime/memory/
 memory/memory_core_state.json
+memory/*.json
+
+# AI IDE cache files (machine-specific, auto-generated — never commit)
+.codex_*_files.txt
+.copilot_*_files.txt
+
+# Build/audit artifact directories (generated outputs — never commit)
+artifacts/
 deployment/latest/release/
 deployment/latest/certification/master_runs/
 deployment/latest/builds/target-run-*/

@@ -13,12 +13,15 @@ import { execSync } from 'node:child_process';
 const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
 
 // ✅ FIX: Conditional browser detection
-// Enable Firefox/WebKit only if system dependencies are available
+// On Linux: check system deps via ldconfig. On Windows/macOS: chromium only.
 function getBrowsersAvailable() {
   const browsers = ['chromium']; // Always available
 
+  if (process.platform !== 'linux') {
+    return browsers;
+  }
+
   try {
-    // Check if Firefox libs are available (libavif16)
     execSync('ldconfig -p | grep -i libavif', { stdio: 'pipe' });
     browsers.push('firefox');
   } catch {
@@ -26,7 +29,6 @@ function getBrowsersAvailable() {
   }
 
   try {
-    // Check if WebKit libs are available (libavif16)
     execSync('ldconfig -p | grep -i libavif', { stdio: 'pipe' });
     browsers.push('webkit');
   } catch {
