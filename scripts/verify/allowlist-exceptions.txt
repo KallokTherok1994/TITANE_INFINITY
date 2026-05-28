@@ -1,2 +1,16 @@
 # Commands intentionally registered but not frontend-whitelisted.
 # Keep this list minimal and documented.
+#
+# AH-0080 (2026-05-27) — 2 intentional exclusions:
+#
+# command
+#   Reason: Generic stub name — never invoked in frontend code.
+#           Adding it to ALLOWED_COMMANDS would allow any caller to invoke
+#           an unspecified "command" handler, which is a footgun.
+#
+# execute_shell_command
+#   Reason: Even as a Rust stub (returns degraded JSON), whitelisting a
+#           "shell command" IPC by name creates a dangerous precedent.
+#           devSudo uses this internally but the IPC gate blocks it by design.
+#           Frontend callers that hit this path receive a Security throw,
+#           which surfaces the error explicitly rather than silently degrading.

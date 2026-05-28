@@ -10,9 +10,10 @@
 #   - WARN  si le nombre est ≤ seuil (dette technique pré-existante connue)
 #   - PASS  si toutes les commandes sont dans la whitelist
 #
-# Seuil WARN_THRESHOLD : 99 commandes manquantes connues au 2026-05-18.
-# Pour réduire la dette : ajouter les commandes dans security.ts ALLOWED_COMMANDS
-# et diminuer le seuil ici (vers 0 à terme).
+# Seuil WARN_THRESHOLD : 2 commandes intentionnellement exclues (AH-0080).
+#   - 'command'               : jamais invoqué en pratique (nom trop générique)
+#   - 'execute_shell_command' : stub sécurité — exclu volontairement (risque nom)
+# Voir scripts/verify/allowlist-exceptions.txt pour la documentation complète.
 # ═══════════════════════════════════════════════════════════════════════════
 
 set -euo pipefail
@@ -20,7 +21,7 @@ set -euo pipefail
 TAURI_COMMANDS_FILE="src/lib/tauriCommands.ts"
 SECURITY_FILE="src/lib/security.ts"
 # Seuil de dette technique connue — ne pas augmenter sans justification
-WARN_THRESHOLD=99
+WARN_THRESHOLD=2
 
 # Vérification fichiers présents
 if [[ ! -f "$TAURI_COMMANDS_FILE" ]]; then
