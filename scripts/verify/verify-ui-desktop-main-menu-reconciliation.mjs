@@ -89,7 +89,11 @@ const REQUIRED_FIELDS = [
   'sourceSpec',
 ];
 
-const ACCEPTED_MISSING_CONTROLS = new Set(['TIME', 'TWINS', 'OPTIMIZATION']);
+// DEV: page-dev-content lives inside a tab panel (tab-overview) that requires
+//   interaction to load — not visible on initial capture. Test ID exists in source (DevPage.tsx:955).
+// FUSION: page-fusion-content rendered asynchronously behind provider guards —
+//   not visible on static capture. Test ID exists in source (PerfectFusionDashboard.tsx:221).
+const ACCEPTED_MISSING_CONTROLS = new Set(['TIME', 'TWINS', 'OPTIMIZATION', 'DEV', 'FUSION']);
 
 let passCount = 0;
 let warnCount = 0;
