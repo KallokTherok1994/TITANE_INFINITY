@@ -696,8 +696,7 @@ export default defineConfig(({ command }) => ({
 
   // ✨ v27.1 Sprint: Global esbuild transform (source code + production optimization)
   esbuild: {
-    // ⚠️ DIAGNOSTIC: drop console DÉSACTIVÉ temporairement pour debug PROD crash
-    drop: [], // process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    drop: process.env.NODE_ENV === 'production' ? (['console', 'debugger'] as const) : [],
     legalComments: 'none', // Remove comments in production
     // 🎯 Production minification settings
     minifyIdentifiers: process.env.NODE_ENV === 'production',

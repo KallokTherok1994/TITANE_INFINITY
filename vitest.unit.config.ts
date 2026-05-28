@@ -2,29 +2,28 @@ import { mergeConfig } from 'vitest/config';
 import sharedTestConfig from './vitest.config';
 
 /**
- * TITANE∞ v27.0.0 - Configuration des tests unitaires (Production-Safe)
- * Phase 4: 100% Pass Rate Certification
+ * TITANE∞ — Unit test subset config (used by pnpm test:coverage:unit only)
  *
- * PRODUCTION MODE: Exclut les tests défaillants + non implémentés
- * Gardes uniquement les tests PASSÉS (140/449 vitest)
- * Fokus sur Playwright E2E (71 passed) + Cargo (722 passed)
+ * ⚠️ KNOWN DEBT (frozen at v27.0.0): This config excludes ~286 tests to maintain
+ * 100% pass rate on a curated 3-test subset. The main test gate (vitest.config.ts)
+ * runs the full suite (9500+ tests). This file is NOT the CI gate.
+ *
+ * TODO: Re-evaluate excluded tests against v35.1.10 — many may now pass.
+ * Until then, use `pnpm run test` (vitest.config.ts) for authoritative results.
  */
 export default mergeConfig(sharedTestConfig, {
   test: {
     name: 'unit-core',
-    // PRODUCTION MODE: Inclure UNIQUEMENT les tests qui passent
-    // Tests défaillants (286) exclus intentionnellement pour 100% pass rate
+    // Only 3 tests included — see debt note above
     include: [
       // E2E Workflows (0 failures)
       'src/__tests__/e2e/**/*.{test,spec}.{ts,tsx}',
-      // Tests qui passent (à confirmer)
       'src/__tests__/hooks/useMediaQuery.test.tsx',
       'src/__tests__/panels/ChatPanel.test.tsx',
       'src/__tests__/components/ui/Toast.test.tsx',
     ],
     exclude: [
-      // ⚠️ PRODUCTION MODE: Exclusions intentionnelles pour 100% pass
-      // Hooked tests avec 0 implémentations/dépendances
+      // Excluded at v27.0.0 — not re-evaluated against current implementations
       'src/__tests__/hooks/useLocalStorage.test.tsx',
       'src/__tests__/hooks/useOmegaPipeline.test.tsx',
       'src/__tests__/hooks/useChat.test.tsx',
