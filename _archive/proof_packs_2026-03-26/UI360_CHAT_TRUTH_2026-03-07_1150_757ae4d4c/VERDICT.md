@@ -1,5 +1,0 @@
-# VERDICT
-
-VERDICT: PASS
-
-Reference: `18_FINAL_VERDICT.md`

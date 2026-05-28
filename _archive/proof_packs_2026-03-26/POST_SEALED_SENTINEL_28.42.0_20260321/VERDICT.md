@@ -1,4 +1,0 @@
-SENTINEL VERDICT: PASS
-Version: 28.42.0
-Commit: a3e6dfadc
-SEALED

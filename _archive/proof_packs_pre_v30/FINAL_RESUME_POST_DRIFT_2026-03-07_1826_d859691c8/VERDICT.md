@@ -1,5 +1,0 @@
-# VERDICT
-
-`BLOCKED`
-
-Reference: `10_FINAL_VERDICT.md`.

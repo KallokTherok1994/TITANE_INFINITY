@@ -1,3 +1,0 @@
-registry/ui-events.jsonl
-scripts/autoheal/autoheal_rules.jsonl
-src/pages/TitanePage-local.css

@@ -192,6 +192,20 @@ memory/*.json
 
 # Build/audit artifact directories (generated outputs — never commit)
 artifacts/
+
+# Historical archive + generated/runtime directories (grand nettoyage 2026-05-28)
+# These contain old reports, logs, build outputs and runtime state — not source code
+_archive/
+actions-runner/
+dashboard/
+dist_stub/
+legacy/
+registry/
+release/
+runs/
+sbom/
+titane_local_training/
+tts-service/
 deployment/latest/release/
 deployment/latest/certification/master_runs/
 deployment/latest/builds/target-run-*/

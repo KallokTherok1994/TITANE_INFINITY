@@ -1,4 +1,0 @@
-# ROOT CAUSE
-
-NONE
-

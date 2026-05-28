@@ -1,9 +1,0 @@
-# TITANE∞ Release v31.2.14 — Checksums (2026-04-27)
-# Commit: e08a91aa0 (MAIN)
-# Gates: Vitest 415/415 PASS | Playwright 127/127 PASS | Cargo 4157/4157 PASS
-# Build: pnpm exec tauri build EXIT:0
-# AppImage: 95005176 bytes | DEB: 22313716 bytes | Binary: 48309768 bytes
-
-03f1022fdd09c2346b489216887f6e337dd9f78320d32d3310eeded902a25e56  Titan-Stable_31.2.14_amd64.AppImage
-7ecdafc98ac87d8eaa8038c2c217067c1767777442676f7a26869754d1307719  Titan-Stable_31.2.14_amd64.deb
-be37fa9ae4148c6e1f5b2e706b0a04f9d2d19266f36844ce7390ca52b1552209  titane-infinity

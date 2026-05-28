@@ -1,1 +1,0 @@
-See [12_ROLLBACK.md](12_ROLLBACK.md).

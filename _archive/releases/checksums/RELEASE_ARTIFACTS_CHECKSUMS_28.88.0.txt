@@ -1,4 +1,0 @@
-SHA256 v28.88.0
-f0e8c4954657b665f4254885e2884d8bed9fce242ae39647c2e8fdc1fa5acae8  TITANE-Infinity_28.88.0_amd64.AppImage
-647125daa4b5b1043cbcb71ac6aff6c4ccbc70124c1c47237e4cda8fc839f2e5  TITANE-Infinity_28.88.0_amd64.deb
-bb02968046f127bc4d30d811f03bfdc9dacb79c6ac9dc926539eb656a7b1e15c  TITANE-Infinity-28.88.0-1.x86_64.rpm

@@ -1,3 +1,0 @@
-baseline_commit=757ae4d4c
-head_commit=757ae4d4c
-PROVEN_DRIFT=FALSE

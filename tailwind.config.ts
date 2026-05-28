@@ -111,15 +111,6 @@ const config: Config = {
           'accent-bg-strong': 'var(--bg-active)',
         },
 
-        // Legacy color support (will be deprecated in v27.0.0)
-        titane: {
-          500: 'var(--color-titane-500)',
-          600: 'var(--color-titane-600)',
-          700: 'var(--color-titane-700)',
-          800: 'var(--color-titane-800)',
-          900: 'var(--color-titane-900)',
-        },
-
         violet: {
           300: 'var(--color-violet-300)',
           400: 'var(--color-violet-400)',

@@ -1,7 +1,0 @@
-VERDICT_UNIQUE: BLOCKED
-
-# Addendum reruns bornes (2026-03-16)
-VERDICT_UNIQUE_FINAL: FAIL
-
-# Addendum post-fix x3 (2026-03-16)
-VERDICT_UNIQUE_FINAL: PASS

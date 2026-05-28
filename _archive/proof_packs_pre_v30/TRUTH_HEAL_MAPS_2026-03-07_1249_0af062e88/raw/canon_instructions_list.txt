@@ -1,5 +1,0 @@
-.github/instructions/docs-registry.instructions.md
-.github/instructions/frontend.instructions.md
-.github/instructions/tauri.instructions.md
-.github/instructions/tests-e2e.instructions.md
-.github/instructions/titane.instructions.md

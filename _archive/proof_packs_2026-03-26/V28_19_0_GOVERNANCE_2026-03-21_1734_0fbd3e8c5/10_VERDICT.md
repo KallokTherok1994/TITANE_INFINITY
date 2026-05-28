@@ -1,5 +1,0 @@
-# Verdict v28.19.0
-
-VERDICT: STABLE → SEALED
-GitSHA: 0fbd3e8c5
-Date: 2026-03-21_1734
