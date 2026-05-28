@@ -16,24 +16,6 @@
     "targets": "all"
   },
   "app": {
-    "windows": [
-      {
-        "label": "main",
-        "title": "TITANE Infinity",
-        "url": "/",
-        "width": 1400,
-        "height": 900,
-        "minWidth": 1200,
-        "minHeight": 800,
-        "resizable": true,
-        "fullscreen": false,
-        "decorations": true,
-        "transparent": false,
-        "center": true,
-        "visible": true,
-        "devtools": false
-      }
-    ],
     "security": {
       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https://graph.facebook.com https://*.fbcdn.net; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:* http://127.0.0.1:11434 https://generativelanguage.googleapis.com https://api.openai.com https://api.anthropic.com https://www.facebook.com https://graph.facebook.com; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
@@ -481,147 +463,6 @@
               "command": "health_check"
             },
             {
-              "command": "quick_health_check"
-            },
-            {
-              "command": "engine_get_cognition_state"
-            },
-            {
-              "command": "engine_get_singularity_state"
-            },
-            {
-              "command": "engine_get_evolution_state"
-            },
-            {
-              "command": "evolution_get_state"
-            },
-            {
-              "command": "evolution_start"
-            },
-            {
-              "command": "evolution_stop"
-            },
-            {
-              "command": "temporal_get_today_state"
-            },
-            {
-              "command": "identity_get_matrix"
-            },
-            {
-              "command": "web_search"
-            },
-            {
-              "command": "append_security_log"
-            },
-            {
-              "command": "clear_security_log"
-            },
-            {
-              "command": "export_security_log"
-            },
-            {
-              "command": "clear_permission_audit"
-            },
-            {
-              "command": "create_ia_policy"
-            },
-            {
-              "command": "delete_ia_policy"
-            },
-            {
-              "command": "toggle_ia_policy"
-            },
-            {
-              "command": "save_ia_policies"
-            },
-            {
-              "command": "memory_debug_scan"
-            },
-            {
-              "command": "auth_delete_api_key"
-            },
-            {
-              "command": "auth_generate_dev_token"
-            },
-            {
-              "command": "auth_get_api_keys"
-            },
-            {
-              "command": "auth_get_status"
-            },
-            {
-              "command": "auth_grant_role"
-            },
-            {
-              "command": "auth_revoke_dev_token"
-            },
-            {
-              "command": "auth_revoke_role"
-            },
-            {
-              "command": "auth_save_api_keys"
-            },
-            {
-              "command": "auth_validate_dev_token"
-            },
-            {
-              "command": "engine_get_harmonia_state"
-            },
-            {
-              "command": "engine_get_nexus_state"
-            },
-            {
-              "command": "engine_get_sentinel_state"
-            },
-            {
-              "command": "get_evolution_state"
-            },
-            {
-              "command": "run_evolution"
-            },
-            {
-              "command": "desktop_open_session"
-            },
-            {
-              "command": "desktop_pause_session"
-            },
-            {
-              "command": "desktop_resume_session"
-            },
-            {
-              "command": "desktop_handoff_session"
-            },
-            {
-              "command": "desktop_kill_switch"
-            },
-            {
-              "command": "ai_check_ollama_status"
-            },
-            {
-              "command": "ai_chat_send"
-            },
-            {
-              "command": "analyze_logs_intelligent"
-            },
-            {
-              "command": "conversation_generate"
-            },
-            {
-              "command": "read_json_file"
-            },
-            {
-              "command": "remote_key_create"
-            },
-            {
-              "command": "remote_key_list"
-            },
-            {
-              "command": "remote_key_revoke"
-            },
-            {
-              "command": "remote_key_rotate"
-            },
-            {
               "command": "cp_get_ai_config"
             },
             {
@@ -950,9 +791,6 @@
             },
             {
               "command": "total_dev_run_command"
-            },
-            {
-              "command": "total_dev_run_certification_profile"
             },
             {
               "command": "total_dev_read_file"
@@ -1418,69 +1256,6 @@
             },
             {
               "command": "performance_get_metrics"
-            },
-            {
-              "command": "oauth_facebook_initiate"
-            },
-            {
-              "command": "oauth_facebook_callback"
-            },
-            {
-              "command": "oauth_facebook_get_profile"
-            },
-            {
-              "command": "oauth_facebook_logout"
-            },
-            {
-              "command": "agenda_load_events"
-            },
-            {
-              "command": "agenda_save_event"
-            },
-            {
-              "command": "agenda_save_events"
-            },
-            {
-              "command": "agenda_delete_event"
-            },
-            {
-              "command": "agenda_sync"
-            },
-            {
-              "command": "delete_snapshot"
-            },
-            {
-              "command": "get_travel_stats"
-            },
-            {
-              "command": "list_snapshots"
-            },
-            {
-              "command": "restore_snapshot"
-            },
-            {
-              "command": "calibrate_titane_voice"
-            },
-            {
-              "command": "chat_mode_change"
-            },
-            {
-              "command": "chat_mode_sync"
-            },
-            {
-              "command": "evolution_save_state"
-            },
-            {
-              "command": "submit_evolution_data"
-            },
-            {
-              "command": "knowledge_ingest"
-            },
-            {
-              "command": "knowledge_save_state"
-            },
-            {
-              "command": "progression_save_state"
             }
           ],
           "deny": []
@@ -1493,9 +1268,6 @@
     }
   },
   "build": {
-    "frontendDist": "../dist",
-    "features": [
-      "custom-protocol"
-    ]
+    "frontendDist": "../dist"
   }
 }

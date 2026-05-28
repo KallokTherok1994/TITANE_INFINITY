@@ -1,0 +1,216 @@
+{
+  "version": "v31.0.0",
+  "category": "kevin_book_v31_detailed",
+  "description": "Base de connaissance détaillée du livre 'Là où tout s'éclaircit' (Kevin Thibault) — résumés étendus, protocoles complets, lexique, cartographie conceptuelle, données TWIN et jalons biographiques pour retrieval TITANE et alimentation du NumericTwin.",
+  "book": {
+    "title": "Là où tout s'éclaircit",
+    "subtitle": "Collection Humain Total",
+    "author": "Kevin Thibault",
+    "total_chapters": 12,
+    "master_thesis": "Tu n'es pas brisé parce que tu es en crise. Tu es en train de traverser quelque chose dont tu peux faire le matériau de la seule vie qui te ressemble vraiment. La deuxième vitesse est ce chemin — de la performance vide à l'alignement vivant.",
+    "central_metaphors": [
+      "le feu — ce qui brûle et ce qui éclaire, transmutation alchimique",
+      "l'architecture — construire depuis l'intérieur, système qui tient sous pression",
+      "le pont — entre ce qu'on traverse et ce qu'on devient, entre conscience et incarnation",
+      "le sol et la fondation — ancrage, conditions, structure durable",
+      "le cycle des saisons — rythmes naturels, périodes de production et de jachère",
+      "le titane — léger et résistant, plie sans se briser, traverse le feu et ressort intact",
+      "la rivière — qui creuse son lit jour après jour, imperceptiblement, durablement"
+    ],
+    "chapter_mastery": {
+      "1_premiere_vitesse": {
+        "role": "FONDATION — le choc initial, la prise de conscience, la bascule qui rend la transformation possible",
+        "progression": "De la première vitesse (mode survie, performance vide) vers la décision de ne plus s'y installer. Naissance de TITANE.",
+        "question_centrale": "Est-ce que je cours vraiment, ou est-ce que je tourne en rond à très grande vitesse ?",
+        "émotion_dominante": "le choc de la lucidité — douleur et soulagement mêlés"
+      },
+      "2_ecoute_interieure": {
+        "role": "NAVIGATION — développer la boussole intérieure, les signaux qui guident",
+        "progression": "De l'analyse sans ressenti à l'écoute incarnée. Les voix intérieures démêlées, les portes de retour à soi.",
+        "question_centrale": "Qu'est-ce que tu essaies de me dire ?",
+        "émotion_dominante": "le calme retrouvé de celui qui commence à s'entendre"
+      },
+      "3_ancrage_corporel": {
+        "role": "SOL — le corps comme fondation de tout le reste",
+        "progression": "De la tête qui gère au corps qui sait. Les signaux corporels comme informations, le quotidien comme terrain de transformation.",
+        "question_centrale": "Qu'est-ce que mon corps dit que ma tête n'entend pas encore ?",
+        "émotion_dominante": "la sécurité retrouvée de l'ancrage"
+      },
+      "4_priorites": {
+        "role": "CADRAGE — clarifier ce qui mérite vraiment l'énergie",
+        "progression": "De l'urgence subie aux priorités choisies. Distinction ÊTRE/FAIRE/AVOIR. Le non comme compétence de clarté.",
+        "question_centrale": "Dans ma propre vie, est-ce que je suis réellement ma propre priorité ?",
+        "émotion_dominante": "la lucidité sobre du discernement"
+      },
+      "5_espace": {
+        "role": "CONTENANT — l'environnement comme allié silencieux",
+        "progression": "De l'espace subi à l'espace choisi. Charge cognitive, espace pivot, espace numérique, espace relationnel.",
+        "question_centrale": "Est-ce que mon environnement me soutient ou me draine ?",
+        "émotion_dominante": "le soulagement de respirer dans un espace aligné"
+      },
+      "6_rituels": {
+        "role": "PRATIQUE — les gestes quotidiens qui construisent l'alignement",
+        "progression": "Des bonnes intentions aux rituels vivants. Différence habitude/rituel. 3 mouvements naturels. Rituels invisibles sous pression.",
+        "question_centrale": "De quoi ai-je besoin pour me respecter aujourd'hui ?",
+        "émotion_dominante": "la fidélité douce qui construit dans la durée"
+      },
+      "7_mission": {
+        "role": "DIRECTION — le feu qui oriente toute la construction",
+        "progression": "De la réussite creuse à la réalisation vivante. Distinction réussite/réalisation. Mission comme registre plutôt que destination.",
+        "question_centrale": "Tout ça pour ça ?",
+        "émotion_dominante": "la reconnaissance de ce qui était vrai depuis toujours"
+      },
+      "8_rythme": {
+        "role": "TEMPO — le rythme naturel comme condition de durabilité",
+        "progression": "Du tempo imposé au rythme choisi. Saisons intérieures, chronotype, énergie forcée vs naturelle.",
+        "question_centrale": "Quel est mon vrai rythme — et est-ce que je le respecte ?",
+        "émotion_dominante": "la permission de ralentir, la libération du 'trop tard'"
+      },
+      "9_entourage": {
+        "role": "ÉCOSYSTÈME — les personnes qui nourrissent ou drainent",
+        "progression": "De l'entourage subi par défaut à l'écosystème choisi consciemment. Archétypes, loyautés invisibles.",
+        "question_centrale": "Est-ce que je me sens plus vivant ou plus épuisé après cette relation ?",
+        "émotion_dominante": "le courage de choisir et la libération de l'espace créé"
+      },
+      "10_transmutation": {
+        "role": "ALCHIMIE — transformer ce qui a blessé en ce qui nourrit",
+        "progression": "De la blessure qui définit à la blessure qui nourrit. 5 mouvements, dons cachés, blessures héritées.",
+        "question_centrale": "Maintenant que c'est arrivé, qu'est-ce que je peux en faire ?",
+        "émotion_dominante": "la puissance silencieuse de la traversée accomplie"
+      },
+      "11_incarnation": {
+        "role": "PONT — de la conscience à l'action vivante",
+        "progression": "Du savoir non vécu à l'incarnation quotidienne. Micro-incarnations, dissonances comme boussoles.",
+        "question_centrale": "Quel est le geste juste que je peux poser aujourd'hui ?",
+        "émotion_dominante": "la cohérence retrouvée entre dedans et dehors"
+      },
+      "12_oeuvre": {
+        "role": "HÉRITAGE — quand la transformation devient don",
+        "progression": "De la transformation personnelle à la contribution durable. Temps long, métriques alternatives, transmission.",
+        "question_centrale": "Qu'est-ce que je veux laisser ?",
+        "émotion_dominante": "la paix de celui qui construit pour après lui"
+      }
+    },
+    "protocols_detailed": {
+      "D.I.S.C.E.R.N.": {
+        "full_name": "Decortiquer, Interroger, Suspendre, Contempler, Écouter, Ressentir, Nommer",
+        "usage": "Protocole de discernement pour les décisions importantes — force à ralentir le processus de décision juste assez pour y injecter de la conscience",
+        "etapes": [
+          "Décortiquer — décomposer la situation, distinguer les faits des interprétations, séparer l'urgent de l'important",
+          "Interroger — poser les trois questions: qu'est-ce qui est vrai ici? qu'est-ce qui est important ici? qu'est-ce que je veux que cette décision dise sur qui je suis?",
+          "Suspendre — ne pas décider immédiatement. Créer un espace temporel entre la sollicitation et la réponse (une nuit si possible)",
+          "Contempler — dans le calme, laisser les différentes options se présenter sans les juger. Observer ce qui émerge dans la conscience tranquille",
+          "Écouter — consulter le corps. Qu'est-ce que le corps dit quand j'imagine concrètement chaque option? Contraction ou expansion?",
+          "Ressentir — identifier l'émotion sous la décision: peur, désir, obligation, alignement, enthousiasme, soulagement?",
+          "Nommer — formuler la décision à voix haute. Écouter comment elle résonne dans le corps. Si ça rétrécit, c'est un non. Si ça s'ouvre, c'est un oui"
+        ],
+        "contexte_ideal": "Pour toute décision importante, complexe, ou chargée d'enjeux émotionnels",
+        "temps_estime": "30 minutes à une nuit selon la complexité"
+      },
+      "RAIN": {
+        "full_name": "Reconnaître, Autoriser, Investiguer, Non-identification",
+        "usage": "Protocole d'accueil émotionnel — permet de traverser les émotions difficiles sans les supprimer ni s'y noyer. 5 minutes, utilisable dans tout contexte de difficulté émotionnelle.",
+        "etapes": [
+          "Reconnaître — nommer ce qui est là, sans minimiser ni dramatiser: 'il y a de la tristesse', 'il y a de la peur', 'il y a de la colère'. Le nommage seul active le cortex préfrontal et réduit la réponse émotionnelle",
+          "Autoriser — laisser l'émotion être là, sans chercher à l'éliminer immédiatement. 'Cette émotion a le droit d'exister' — même si inconfortable, même si pas 'raisonnable'",
+          "Investiguer — avec douceur et curiosité, noter où l'émotion se manifeste dans le corps. Quelle sensation précise? Comment évolue-t-elle si on y prête attention sans la combattre?",
+          "Non-identification — se rappeler qu'on n'est pas l'émotion. On ressent de la peur — on n'est pas la peur. On ressent de la colère — on n'est pas la colère. Cet espace entre le ressenti et l'identité est l'espace de la liberté intérieure"
+        ],
+        "contexte_ideal": "En situation de difficulté émotionnelle, avant/après une conversation difficile, en quotidien pour traverser les émotions sans les refouler",
+        "temps_estime": "5 minutes"
+      },
+      "10-10-10": {
+        "full_name": "Perspective temporelle — 10 minutes, 10 mois, 10 ans",
+        "usage": "Remettre les décisions en perspective. Force à une honnêteté temporelle que l'urgence rend naturellement difficile.",
+        "etapes": [
+          "Dans 10 minutes — comment je me sentirai si je prends cette décision? Soulagement immédiat ou malaise discret?",
+          "Dans 10 mois — quelle importance aura-t-elle eu dans ma vie? La plupart des choses cruciales aujourd'hui seront oubliées dans 10 mois",
+          "Dans 10 ans — de quoi serai-je fier? La question qui change tout: qu'est-ce qui comptera vraiment dans 10 ans?"
+        ],
+        "contexte_ideal": "Quand une décision semble urgente, que la pression est forte, et qu'on sent qu'on réagit plutôt qu'on répond",
+        "temps_estime": "30 secondes"
+      },
+      "question_miroir_inverse": {
+        "usage": "Trouver sa boussole par ce qu'on ne veut plus — cartographie puissante des priorités réelles",
+        "etapes": [
+          "Écrire sans filtrer tout ce qu'on ne veut plus: situations qui drainent, dynamiques qui épuisent, engagements qui ne correspondent plus",
+          "Pour chaque item, poser: 'Et donc, ce que je veux vraiment à la place, c'est quoi?'",
+          "La réponse est la boussole — construite depuis une connaissance concrète, pas depuis une aspiration abstraite"
+        ],
+        "temps_estime": "20 minutes"
+      },
+      "les_3_versions_de_l_histoire": {
+        "usage": "Transmutation d'une blessure spécifique — progression du regard de victime à sage",
+        "etapes": [
+          "Version factuelle — ce qui s'est passé en 5-10 phrases neutres, sans émotion, sans analyse, juste les faits et la chronologie",
+          "Version du survivant — comment tu as traversé, quelles ressources tu as mobilisées, ce que tu as appris sur toi-même dans cette traversée",
+          "Version du sage — ce que cette expérience t'a donné que tu n'aurais pas eu autrement, comment cette compréhension pourrait servir à quelqu'un qui traverse quelque chose de similaire"
+        ],
+        "temps_estime": "30 minutes"
+      }
+    },
+    "twin_integration_data": {
+      "cognitive_modeler": {
+        "style_dominant": "systémique et narratif — construit des architectures conceptuelles à partir d'expériences vécues, utilise les métaphores et les récits comme vecteurs principaux",
+        "sequences_raisonnement": ["expérience personnelle → pattern identifié → architecture systémique → protocole transmissible", "question ouverte → suspension d'évaluation → écoute corporelle → clarification émergente"],
+        "sources_cognition": {
+          "structures_preferees": ["systèmes multi-couches", "architectures", "protocoles en étapes", "cycles naturels"],
+          "preuve_forte": "données objectives (EEG, casque Muse, chronobiologie) croisées avec expérience vécue",
+          "preuve_secondaire": "accumulation d'observations personnelles sur la durée",
+          "résistance": "généralités non ancrées, conseils non personnalisés, solutions toutes faites"
+        }
+      },
+      "creative_mirror": {
+        "signatures_creatives": [
+          "métaphores architecturales et structurelles (fondation, pont, architecture, système)",
+          "métaphores du feu et de la lumière (feu intérieur, flamme, braises, éclaircir)",
+          "métaphores de la nature et des cycles (saisons, rivière, racines, sol)",
+          "images de construction durable (titane, roche, ancrage, fondation)",
+          "contrastes binaires résolus (première/deuxième vitesse, énergie forcée/naturelle, réussite/réalisation)"
+        ],
+        "registre_émotionnel_preféré": "sobre, intense sans être spectaculaire, dense, sans flatterie ni minimisation",
+        "pics_créatifs_identifiés": "périodes de passage à travers une difficulté, suivies d'une phase d'intégration et de création de sens"
+      },
+      "evolution_syncer": {
+        "jalons_majeurs": [
+          {"date": "2019-03-29", "evenement": "mort de Gilles Thibault", "impact": "choc fondateur, déclencheur du sevrage et de la reconstruction", "integration": "deuil traversé sur 2 ans, héritage choisi consciemment, fondation de la mission"},
+          {"date": "2019", "evenement": "sevrage définitif des amphétamines", "impact": "effondrement du système chimique, reconstruction neurone par neurone", "integration": "découverte du rythme naturel, corps comme partenaire, énergie naturelle vs forcée"},
+          {"date": "2019-2021", "evenement": "reconstruction maison paternelle et création TITANE", "impact": "transformation de la perte en architecture de résilience", "integration": "TITANE comme système de clarté et de continuité"},
+          {"date": "2024-2025", "evenement": "trahison de l'hiver 2025", "impact": "effondrement financier et relationnel, remise en question du discernement", "integration": "discernement relationnel affiné, mission clarifiée, reconstruction de l'écosystème"},
+          {"date": "2025", "evenement": "crise financière et menace de saisie", "impact": "refus d'un contrat lucratif non aligné, consolidation de la mission", "integration": "confiance dans la direction, clarté sur le non-négociable"},
+          {"date": "2026", "evenement": "publication de 'Là où tout s'éclaircit'", "impact": "premier volume de la collection Humain Total complété", "integration": "œuvre vivante commencée, transmission en cours"}
+        ],
+        "phases_evolution": [
+          {"phase": "première vitesse", "durée": "avant 2019", "caractéristiques": "performance chimiquement assistée, urgence permanente, vide existentiel croissant, dissociation adaptative"},
+          {"phase": "effondrement et traversée", "durée": "2019-2020", "caractéristiques": "deuil, sevrage, dépression, rénovation comme ancrage, début d'écoute intérieure"},
+          {"phase": "reconstruction", "durée": "2020-2024", "caractéristiques": "TITANE comme système, consolidation des pratiques, nourriture de la mission, construction Humain Total"},
+          {"phase": "épreuve et clarification", "durée": "2024-2025", "caractéristiques": "trahison, pertes financières, affinement du discernement, refus alignés"},
+          {"phase": "incarnation et œuvre", "durée": "2025-2026+", "caractéristiques": "publication du livre, consolidation de l'écosystème, transmission, contribution durable"}
+        ]
+      },
+      "identity_collector": {
+        "valeurs_identifiées": ["liberté", "intégrité", "contribution", "autonomie", "profondeur", "cohérence", "clarté"],
+        "mission_formulée": "Accompagner les transitions humaines, créer de la clarté dans la confusion, transformer les épreuves en ressources, construire des systèmes qui rendent cette clarté accessible et durable.",
+        "symboles_porteurs": ["Ganesh (obstacles)", "loup (meute et liberté)", "corbeau (message)", "montagne (stabilité)", "soleil (clarté)", "Awen (inspiration)", "titane (résistance légère)", "feu (transmutation)"],
+        "blessures_transmutées_identifiées": [
+          {"blessure": "trahison", "don_conscient": "discernement relationnel précis, capacité à construire confiance durable, lecture fine des signaux"},
+          {"blessure": "rejet", "don_conscient": "création d'espaces d'inclusion, accueil de ceux qui sont en marge"},
+          {"blessure": "injustice", "don_conscient": "sensibilité à l'équité relationnelle, indignation canalisée en contribution"},
+          {"blessure": "perte (deuil)", "don_conscient": "conscience de la finitude, présence au présent, clarté sur ce qui compte"}
+        ]
+      },
+      "therapeutic_synthesizer": {
+        "approches_intégrées": [
+          "pleine conscience et ancrage corporel (ch.3)",
+          "régulation émotionnelle par RAIN (ch.3)",
+          "transmutation des blessures et compassion pour soi (ch.10)",
+          "écoute intérieure et discernement (ch.2, 4)",
+          "rituels et régulation du système nerveux (ch.6)",
+          "ikigai et mission de vie (ch.7)",
+          "communication non violente et écologie relationnelle (ch.9)"
+        ],
+        "protocoles_therapeutiques": ["RAIN", "3 versions de l'histoire", "D.I.S.C.E.R.N.", "respiration longue (4-6-8)", "reset émotionnel discret", "ancrage corporel 5-4-3-2-1"]
+      }
+    }
+  }
+}

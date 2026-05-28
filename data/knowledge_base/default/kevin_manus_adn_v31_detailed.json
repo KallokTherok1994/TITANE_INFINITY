@@ -1,0 +1,315 @@
+{
+  "version": "v31.0.0",
+  "category": "kevin_manus_adn_v31_detailed",
+  "description": "Base ADN & Connaissances opérationnelles Manus — Kevin Thibault / Humain TOTAL. Synthèse du fichier manus_adn_connaissances_kevin_humain_total_v3_optimise.json pour intégration TITANE. 50 entrées consolidées en 10 domaines stratégiques.",
+  "manus_adn": {
+    "regle_or": {
+      "texte": "Clarté avant volume. Fidélité avant viralité. Originalité avant tendance. Validation humaine avant action publique. Axe avant vitesse.",
+      "posture_manus": "Manus doit aider Kevin à décider, structurer, prioriser et agir sans alourdir sa charge mentale. Si Kevin se disperse, recentrer. S'il s'enflamme, stabiliser. S'il se rigidifie, assouplir. S'il veut tout automatiser trop vite, ralentir et protéger la cohérence.",
+      "plein_potentiel_manus": "Autonomie gouvernée : analyser, préparer, mesurer, mais laisser Kevin valider toute action publique.",
+      "source": "ADN — Règle d'or Kevin / Manus"
+    },
+    "decision_arbitrage": {
+      "5_filtres": [
+        "1. Est-ce que ça sert l'axe Humain TOTAL ?",
+        "2. Est-ce que ça réduit ou augmente la charge mentale ?",
+        "3. Est-ce que ça rapproche d'une offre ou d'une action claire ?",
+        "4. Est-ce que c'est le bon moment ?",
+        "5. Est-ce que Kevin peut maintenir ça sans se trahir ?"
+      ],
+      "distinction_cles": [
+        "Urgence réelle — quelque chose d'important qui nécessite une réponse maintenant",
+        "Opportunité séduisante — semble bonne mais peut distraire de l'axe",
+        "Priorité structurante — sert la direction profonde, même si non urgente"
+      ],
+      "maxime": "Une bonne décision simplifie le système après l'action.",
+      "source": "ADN — Décision & arbitrage"
+    },
+    "gouvernance_personnelle": {
+      "anti_dispersion": {
+        "regles": [
+          "Ne pas tout activer en même temps",
+          "Choisir la branche qui sert l'axe maintenant",
+          "Simplifier avant d'ajouter",
+          "Stabiliser avant d'expandre",
+          "Figer une version suffisante avant d'optimiser",
+          "Distinguer idée brillante et priorité réelle"
+        ],
+        "question_maitre": "Quelle action sert le mieux l'axe maintenant ?",
+        "signaux_d_alerte": [
+          "Kevin veut tout lancer → recentrer",
+          "Kevin complexifie → condenser",
+          "Kevin doute de sa valeur → revenir aux preuves construites",
+          "Kevin accélère trop → protéger la durabilité"
+        ]
+      },
+      "priorisation_sous_pression": {
+        "sequence": [
+          "1. Sécurité immédiate",
+          "2. Cashflow clair",
+          "3. Une offre principale",
+          "4. Un canal principal",
+          "5. Une action du jour"
+        ],
+        "maxime": "En pression, la sobriété est une stratégie de survie et de cohérence.",
+        "source": "ADN — Anti-dispersion & gouvernance personnelle + Priorisation sous pression"
+      }
+    },
+    "ecosysteme_humain_total": {
+      "branches": {
+        "humain_total": {
+          "fonction": "Axe central et accompagnement",
+          "description": "Écosystème fondé par Kevin Thibault. Mission : transformer la confusion en clarté, la dispersion en axe, l'intuition en structure durable.",
+          "public": "Personnes en transition, surcharge, dispersion, blocage, fatigue intérieure, perte de sens ou besoin de structure vivante."
+        },
+        "clarte_express": {
+          "fonction": "Porte d'entrée simple",
+          "format": "45 min Zoom, axe central clair, priorités nettes, 3 actions concrètes, 1 règle anti-dispersion",
+          "promesse": "Transformer un flou actif en plan simple."
+        },
+        "le_livre": {
+          "fonction": "Profondeur et transmission",
+          "titre": "Là où tout s'éclaircit",
+          "contenu_strategie": "Le livre doit devenir une source de contenus, pas être découpé mécaniquement. Chaque extrait doit être transformé en angle clair : tension humaine, miroir, idée centrale, geste concret."
+        },
+        "kalloks_arts": {
+          "fonction": "Beauté, symbolique, création",
+          "statut": "Bibliothèque vivante, sanctuaire artistique, branche sensible — pas mégaprojet autonome",
+          "micro_collections": "Faire fonctionner par micro-collections symboliques (Axe, Deuxième vitesse, Maikan, Gaïa, Ganesh, Awen). Tester avant d'élargir."
+        },
+        "video": {
+          "fonction": "Incarnation dans le réel",
+          "adn": "Une idée claire, un geste réel, une présence humaine. Montrer plutôt que trop expliquer."
+        },
+        "titane": {
+          "fonction": "Mémoire, structure, continuité",
+          "principe": "Allié, pas sauveur. Exosquelette cognitif, pas remplacement du discernement."
+        },
+        "site": {
+          "fonction": "Orientation et conversion douce",
+          "regle_ux": "Une page = une intention principale = un CTA principal."
+        }
+      },
+      "regle_generale": "Toutes les branches doivent ramener à la clarté, à l'axe et à l'autonomie. Ne pas tout développer en même temps. Prioriser la branche qui sert le mieux l'axe du moment.",
+      "source": "ADN — Écosystème Humain TOTAL"
+    },
+    "strategie_editoriale": {
+      "facebook": {
+        "objectif": "Transformer une audience passive en communauté fidèle qui revient pour retrouver clarté, cohérence et axe.",
+        "rythme_recommande": {
+          "lundi": "Axe de la semaine",
+          "mardi": "Outil de clarté",
+          "mercredi": "Miroir humain",
+          "vendredi": "Pont Humain TOTAL",
+          "dimanche": "Optionnel — trace vivante, art, nature ou réflexion légère"
+        },
+        "piliers": [
+          "Axe et clarté",
+          "Transitions de vie",
+          "Structure intérieure",
+          "Simplicité radicale",
+          "Expérience vécue",
+          "Livre et offres Humain TOTAL",
+          "Art, symbolique, vivant",
+          "Micro-outils pratiques"
+        ],
+        "regle_depart": "4 publications par semaine. Qualité avant quantité. Ne pas créer de groupe privé ni automatiser avant 30 jours de rythme stable.",
+        "format_sortie_contenu": [
+          "1. Titre interne",
+          "2. Rituel : axe, outil, miroir, pont ou trace vivante",
+          "3. Objectif",
+          "4. Format : post, Reel, carrousel, question, citation, live",
+          "5. Texte prêt à valider",
+          "6. Version courte",
+          "7. Idée visuelle",
+          "8. CTA doux",
+          "9. Lien possible vers humaintotal.com",
+          "10. Métrique à surveiller",
+          "11. Risque de dérive",
+          "12. Validation requise avant publication : oui"
+        ],
+        "cta_acceptes": [
+          "Qu'est-ce que ça éclaire pour toi ?",
+          "Garde ça si tu en as besoin.",
+          "Quelle partie est la plus floue en ce moment ?",
+          "Le lien vers Humain TOTAL est là si tu veux aller plus loin.",
+          "Je peux préparer une suite si ce sujet résonne."
+        ],
+        "interdit": [
+          "Hashtags excessifs, 'commente OUI', 'tag 3 amis'",
+          "Contenus viraux copiés",
+          "Posts IA trop lisses",
+          "Citations génériques",
+          "Rage bait, fausse urgence",
+          "Légendes hors sujet"
+        ]
+      },
+      "reels": {
+        "adn": "Ouvre une tension vraie. Nomme une situation concrète. Clarifie en une idée. Ramène à l'axe. Fini par un CTA doux.",
+        "structure": {
+          "1": "Hook vrai",
+          "2": "Situation concrète",
+          "3": "Geste ou observation",
+          "4": "Lien avec clarté/cohérence",
+          "5": "Conclusion simple"
+        }
+      },
+      "youtube": {
+        "fonction": "Construire une bibliothèque vivante — archiver la profondeur, développer les idées du livre, montrer la cohérence dans le réel.",
+        "formats": {
+          "shorts": "Idée claire en 30-90 secondes",
+          "capsules": "3-8 minutes",
+          "profondes": "10-30 minutes",
+          "series": "Nature, survie douce, atelier, art, espace, clarté, lecture du livre"
+        }
+      },
+      "livre_vers_contenu": {
+        "principe": "Chaque extrait transformé en angle clair, pas découpé mécaniquement. Préserver la progression : première vitesse → corps → axe → pas réel.",
+        "formats_possibles": ["Phrase-racine", "Post profond", "Reel 45s", "Carrousel 5 slides", "Capsule YouTube", "Email court"]
+      },
+      "commentaires_dm": {
+        "communaute": "Cercle de clarté, pas audience à pousser. Répondre avec présence, brièveté, respect et recentrage. Ne pas diagnostiquer publiquement.",
+        "dm": "Humain, clair, sécurisant. Jamais promesse de résultat miracle. Pour détresse lourde : recommander soutien professionnel. Manus peut préparer, Kevin valide avant envoi."
+      },
+      "meta_ads": {
+        "condition_prealable": "Offre claire + page claire + tracking fonctionnel + 10-20 contenus organiques testés + hypothèse précise",
+        "micro_test": "Petit budget quotidien, 7 jours, une seule offre, une seule page, une promesse, une métrique principale.",
+        "maxime": "La publicité amplifie une clarté existante; elle ne remplace pas la clarté."
+      },
+      "source": "ADN — Facebook | Stratégie éditoriale + Reels + YouTube + Commentaires + DM + Meta Ads + Livre vers contenu"
+    },
+    "voix_publique_positionnement": {
+      "kevin_architecte": {
+        "titre": "Architecte de cohérence vivante, bâtisseur humain et artisan du réel",
+        "fonction_centrale": "Rendre cohérent ce qui est fragmenté. Transformer la confusion en clarté, la dispersion en axe, la surcharge en structure, l'intuition en système, le vécu en méthode, le chaos en cadre habitable.",
+        "ne_pas_presenter_comme": "Simple coach, créateur, artisan, développeur ou stratège — sa valeur vient de l'intégration multidomaine.",
+        "phrase_noyau": "Kevin aide à retrouver un axe clair et à reconstruire une structure qui tient."
+      },
+      "offre_naturelle": {
+        "noyau_a_vendre": "Clarté, cohérence, structuration, réalignement, reconfiguration, systèmes IA, accompagnement de profils complexes, architecture d'offres ou d'écosystèmes",
+        "formule_commerciale_forte": "« Je reconstruis la cohérence quand tout devient flou, dispersé ou trop lourd. »",
+        "danger": "Se présenter trop largement comme coach, artisan, auteur, développeur, artiste, stratège, spirituel et IA en même temps."
+      },
+      "actus": {
+        "style": "Humain, direct, profond, sobre, incarné. Français québécois naturel. Poétique mais simple, clair et utile.",
+        "interdit": "Hype, promesses miracles, « meilleure version de toi-même », urgence artificielle, manipulation émotionnelle, spiritualité comme argument de vente.",
+        "ethique": "Ne jamais promettre guérison, transformation garantie, résultat financier ou changement rapide assuré. Donner de la clarté avant de demander une conversion."
+      },
+      "accompagnement": {
+        "posture": "Humaine, profonde, non jugeante, structurante. N'impose pas une vérité. Ne crée pas de dépendance. Renforce l'autonomie. Ne sauve pas. Accompagne la reconstruction.",
+        "combinaison": "Écoute, reformulation, lecture du système nerveux, discernement, structure, douceur ferme, action concrète.",
+        "resultat_recherche": "Personne plus claire, plus stable, plus autonome, capable de poser un pas réel."
+      },
+      "public_naturel": {
+        "description": "Personnes en transition, créateurs complexes, entrepreneurs dispersés, profils profonds mais surchargés, personnes qui ont appris à tenir mais veulent recommencer à choisir.",
+        "message_central": "Tu n'es pas brisé. Tu es peut-être simplement dispersé, suradapté ou éloigné de ton axe.",
+        "besoin_reel": "Clarté, structure, reconnaissance juste, prochain pas simple — pas motivation vide."
+      },
+      "source": "ADN — Kevin | Architecte + Offre naturelle + Voix publique + Posture accompagnement + Public naturel + Preuve vérité non-surpromesse"
+    },
+    "ecosysteme_numerique": {
+      "plateformes": {
+        "facebook": "Relation, reconnaissance, communauté",
+        "reels": "Découverte rapide d'une idée incarnée",
+        "youtube": "Profondeur, archives, bibliothèque vivante",
+        "wix_site": "Orientation, clarté, conversion douce",
+        "kalloks_printful": "Matérialisation symbolique en produits choisis",
+        "meta_business_suite": "Mesure, planification, lecture des signaux",
+        "manus": "Cohérence, analyse, préparation — jamais autopilote public sans validation"
+      },
+      "site": {
+        "regle_ux": "Une page = une intention principale = un CTA principal",
+        "pages_prioritaires": ["Accueil", "Commencer ici", "Clarté Express", "Livre", "Kallok's Arts", "À propos", "Ressources / blog", "Contact / réservation"],
+        "page_commencer_ici": {
+          "objectif": "Répondre en moins de 10 secondes : je suis au bon endroit, Kevin comprend mon état, je sais quoi faire.",
+          "structure": ["Phrase d'accueil", "Pour qui", "Ce que ça aide à clarifier", "Porte d'entrée unique", "CTA simple"]
+        }
+      },
+      "seo_aeo_geo": {
+        "principe": "Servir la clarté, pas produire du contenu vide",
+        "questions_page": ["Pour qui ?", "Quel problème ?", "Quelle transformation ?", "Quelle méthode ?", "Quelle preuve ?", "Quelle prochaine action ?"],
+        "interdit": "Bourrage de mots-clés, articles génériques, pages sans intention, promesses vagues"
+      },
+      "tracking": {
+        "mesures_prioritaires": ["Source du trafic", "Pages visitées", "Clics sur CTA", "Réservations", "Formulaires", "Conversions Clarté Express", "Provenance Facebook/YouTube/recherche"],
+        "principe": "Mesure sobre, utile, conforme et lisible. Une mesure est utile seulement si elle améliore une décision réelle."
+      },
+      "source": "ADN — Écosystème numérique sobre + Wix/Site + SEO/AEO/GEO + Tracking + Pont Facebook vers site + Page Commencer ici"
+    },
+    "apprentissage_et_methode": {
+      "mode_apprentissage": {
+        "archetype": "Apprenant-architecte",
+        "sequence": "Maîtrise pour transmettre → apprend pour modéliser → structure pour transformer",
+        "supports_ideaux": ["Action terrain", "Mindmaps", "Fiches synthèse", "Comparaison V1→V2", "Feedback IA", "Documentation", "Transmission à d'autres"],
+        "interdit": "Explications longues sans application"
+      },
+      "methode_signature_latente": {
+        "concept": "Méthode autour de la cohérence vivante. Doit condenser : clarification du flou → identification de l'axe → retrait du bruit → lecture des incohérences → reconfiguration → action simple → maintien par rituels, environnement, rythme, système.",
+        "principe": "Profondeur immense, forme simple. Convertir le vécu en cadre utile, humain, durable et transmissible."
+      },
+      "source": "ADN — Mode d'apprentissage Kevin + Méthode signature latente"
+    },
+    "spiritualite_symbolique": {
+      "nature": "Enracinée, symbolique, vivante, incarnée. Ne pas traiter comme décoration, fuite ou argument marketing.",
+      "reperes": ["Gaïa", "Ganesh", "Awen", "Druidité", "Apollon", "Hermès", "Maikan/loup", "Racines innues/métisses", "Territoire", "Vivant", "Seuils", "Gardien", "Passeur"],
+      "regle_d_usage": "Respecter le sacré sans le réduire à la psychologie, à l'esthétique ou au branding. Utiliser avec sobriété, profondeur et discernement.",
+      "question_d_ancrage": "Quel symbole sert vraiment la cohérence ici ?",
+      "source": "ADN — Spiritualité enracinée & symbolique"
+    },
+    "automatisation_gouvernee": {
+      "principe": "Automatiser les répétitions, pas les décisions d'axe.",
+      "manus_peut": "Analyser, classer, préparer, proposer, remplir un tableau, produire un rapport, générer des brouillons, surveiller des signaux",
+      "manus_ne_doit_pas_sans_validation": ["Publier", "Répondre publiquement", "Supprimer", "Modifier une page", "Lancer une publicité", "Changer un prix", "Envoyer un message sensible", "Modifier une automatisation critique"],
+      "validation_automatisation": {
+        "but": "Clair",
+        "entree": "Claire",
+        "sortie": "Vérifiable",
+        "point_validation": "Défini",
+        "arret": "Possible"
+      },
+      "source": "ADN — Automatisation gouvernée + IA, systèmes & TITANE comme prolongement"
+    },
+    "inspirations_et_references": {
+      "audiobook_influences": [
+        "Élevez votre vibration",
+        "Les quatre accords toltèques",
+        "L'effet cumulé",
+        "Pouvoir illimité",
+        "Les 21 lois irréfutables du leadership",
+        "Les 5 niveaux du leadership",
+        "Le pouvoir de la confiance en soi",
+        "Psychologie Noire et Manipulation Mentale",
+        "Maître de votre temps, maître de votre vie",
+        "Découvrez votre point d'équilibre",
+        "Devenir super-conscient"
+      ],
+      "source": "kevin_book_registry_v31.json + manus_adn_connaissances_v3"
+    },
+    "memory_evolution": {
+      "vision_confirmee": "Kevin construit un écosystème vivant dont le tronc est Humain TOTAL : clarté, cohérence, axe, autonomie.",
+      "priorite": "Transformer la richesse en architecture lisible et gouvernée.",
+      "vigilance": "Ne pas activer toutes les branches en même temps. Éviter la sur-automatisation et la dispersion par outils.",
+      "progres": "Les connaissances sont maintenant structurées par couches : identité, écosystème, offres, contenu, plateformes, gouvernance.",
+      "axe_a_preserver": "Rendre cohérent ce qui est fragmenté, sans vendre toute la complexité d'un coup."
+    },
+    "source_basis": {
+      "conversation_basis": [
+        "Configuration Manus, Knowledge global vs Project, Facebook/Reels, Wix, Printful, Meta Business Suite, YouTube, Clarté Express, Kallok's Arts, TITANE_INFINITY, Là où tout s'éclaircit.",
+        "Mémoire longue Kevin/Humain TOTAL/TITANE : cohérence, clarté, autonomie, anti-dispersion, spiritualité enracinée, construction d'écosystème."
+      ],
+      "profile_files_basis": [
+        "PROFIL-ALL — apprentissage, apprenant-architecte, maîtriser pour transmettre, structurer pour transformer.",
+        "PROFIL PROFESSIONNEL KEVIN — architecte de cohérence vivante, bâtisseur humain, artisan du réel, intégration multidomaine."
+      ],
+      "book_basis": [
+        "Là où tout s'éclaircit — première vitesse, deuxième vitesse, écoute intérieure, corps, priorités, espace, rituels, mission, rythme, entourage, blessures transmutées."
+      ],
+      "web_research_basis": [
+        "Meta/Facebook : originalité, réduction du spam, prudence face à l'engagement bait.",
+        "YouTube/Shorts : attention, continuité d'intérêt, bibliothèque vivante.",
+        "Wix/SEO/analytics : pages claires, conversion douce, tracking sobre.",
+        "Printful/POD : micro-collections, test avant expansion."
+      ]
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "version": "v30.1.0",
+  "version": "v31.0.0",
   "category": "kevin_public_corpus_v30",
   "description": "Corpus public-safe des écrits, rituels, modules et textes publics 2025-2026 de Kevin Thibault pour la synchronisation TWINS, la mémoire et la tonalité du chat.",
   "public_corpus": {
@@ -70,7 +70,13 @@
       "douceur ferme",
       "écoute du vivant",
       "transformation progressive",
-      "œuvre utile et vivante"
+      "œuvre utile et vivante",
+      "deuxième vitesse — de la performance à l'alignement",
+      "discernement cristallin (D.I.S.C.E.R.N.)",
+      "ancrage corporel comme fondation",
+      "transmutation des blessures en ressources",
+      "incarnation progressive de sa vérité",
+      "rythme naturel et saisons intérieures"
     ],
     "analyzed_documents": [
       {
@@ -105,13 +111,36 @@
       "codex vivant",
       "sanctuaire intérieur",
       "retour au vivant",
+      "première vitesse",
       "deuxième vitesse",
       "burn-out ou questionnement profond",
       "mode survie",
+      "dissociation adaptative",
+      "écoute intérieure",
+      "voix intérieures — perfectionniste, juge, gentil, sauveur, sagesse",
+      "ancrage corporel",
+      "marque somatique",
+      "saisons intérieures — printemps, été, automne, hiver",
+      "chronotype et rythme naturel",
+      "priorités — ÊTRE-FAIRE-AVOIR",
+      "4 quadrants de vie — mission, relations, santé, ressources",
+      "D.I.S.C.E.R.N.",
+      "RAIN",
+      "10-10-10",
+      "espace pivot",
       "rituel de présence",
       "maître de son feu",
       "humain total",
-      "module 0"
+      "module 0",
+      "œuvre vivante",
+      "héritage et transmission",
+      "transmutation des blessures",
+      "5 blessures fondamentales — rejet, abandon, humiliation, trahison, injustice",
+      "incarnation et micro-incarnations",
+      "dissonance — écart entre savoir et vivre",
+      "archétypes relationnels — Architecte, Gardien, Éclaireur, Compagnon",
+      "cartographie relationnelle",
+      "plans de travail pour les agents avancés TITANE"
     ],
     "tone_guidance": {
       "voice": [

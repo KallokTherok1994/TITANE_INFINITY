@@ -1,0 +1,212 @@
+{
+  "version": "v31.0.0",
+  "category": "kevin_book_registry_v31",
+  "description": "Registre public-safe des livres/manuscrits et influences audio de Kevin — ingestion complète v31. Statut: fully_ingested avec résumés, thèmes, protocoles et mots-clés par chapitre.",
+  "book_registry": {
+    "owner": "Kevin Thibault",
+    "ingestion_policy": {
+      "full_text_storage": "local_encrypted_memory_only",
+      "prompt_retrieval": "chapter_summaries_quotes_themes",
+      "privacy_boundary": "sensitive biographical details stay local and are not committed to the repository"
+    },
+    "primary_sources": [
+      {
+        "id": "la_ou_tout_seclaircit_2026",
+        "title": "Là où tout s'éclaircit",
+        "subtitle": "Collection Humain Total",
+        "author": "Kevin Thibault",
+        "format": "pdf",
+        "role": "source_livre_personnel",
+        "status": "fully_ingested_v31",
+        "summary_status": "chapter_detailed_indexed_v31",
+        "total_chapters": 12,
+        "chapters": [
+          {
+            "num": 1,
+            "title": "La deuxième vitesse",
+            "summary": "Quand l'authenticité devient ton nouveau moteur. Bascule fondatrice — mort du père, sevrage des amphétamines, découverte de la deuxième vitesse comme alternative à la première vitesse (performance vide, urgence permanente, dissociation adaptative). Naissance de TITANE comme architecture de résilience. Trois mouvements: reconnaître sans condamner, arrêter pour entendre, choisir son architecture intérieure.",
+            "themes": ["première vitesse", "deuxième vitesse", "dissociation adaptative", "deuil", "sevrage", "reconstruction", "trahison transformée en fondation"],
+            "protocols": ["D.I.S.C.E.R.N.", "Inventaire honnête", "Cartographie des deux vitesses"],
+            "tools": ["L'inventaire honnête (3 questions)", "L'ancre de retour (2 min/jour)", "Cartographie des deux vitesses (5 domaines)"],
+            "biographical_markers": ["mort de Gilles Thibault 29 mars 2019", "tentative de RCR", "Kanele le chien fidèle", "sevrage amphétamine définitif", "rénovation cuisine maison paternelle", "rencontre Kimberly", "TITANE né d'une blessure transformée en architecture"],
+            "neuroscience_refs": ["amygdale", "cortex préfrontal", "cortisol", "ondes bêta hautes", "Muse 2 EEG", "mode survie vs mode création", "dissociation adaptative"]
+          },
+          {
+            "num": 2,
+            "title": "Retrouver l'écoute intérieure",
+            "summary": "Ton système de navigation personnelle vers la clarté. Ce que coûte la déconnexion (énergétique, décisionnel, créatif, relationnel, identitaire). Le Default Mode Network en neuroscience. Les 6 stades de la déconnexion. Les 3 niveaux d'écoute (corporelle, émotionnelle, intuitive). Les voix intérieures (perfectionniste, juge, gentil, sauveur, sagesse). Les 6 portes de retour à soi. Les 4 perturbateurs de l'écoute. Les 3 pièges de l'écoute.",
+            "themes": ["écoute intérieure", "déconnexion", "Default Mode Network", "voix intérieures", "stades de déconnexion", "intuition", "présence"],
+            "protocols": ["RAIN (Reconnaître, Autoriser, Investiguer, Non-identification)", "Question du miroir inversé"],
+            "tools": ["Les 6 portes de retour à soi (corps mouvement, silence, écriture libre, question au corps, nature, conversation vraie)", "La conversation avec le moi de demain matin"],
+            "biographical_markers": ["période d'analyse sans ressenti", "sophistication intellectuelle comme évitement", "nuit de prise de conscience post-sevrage"],
+            "neuroscience_refs": ["Default Mode Network (DMN)", "cortex préfrontal", "cortex insulaire", "alpha/thêta", "restauration attentionnelle"]
+          },
+          {
+            "num": 3,
+            "title": "S'ancrer dans le corps et le quotidien",
+            "summary": "Transformer le quotidien en terrain de transformation. Le corps comme cerveau distribué (Damasio, marque somatique). Les 6 signaux corporels. Les 5 ancrages quotidiens. Le quotidien comme terrain de transformation. L'émotion comme information (RAIN). L'ancrage sous pression. Le corps en mouvement comme outil de réflexion. Apprendre à lire le corps comme une deuxième langue.",
+            "themes": ["ancrage corporel", "marque somatique", "intéroception", "corps comme système d'information", "quotidien comme terrain", "émotion comme information"],
+            "protocols": ["RAIN", "5 ancrages quotidiens (transition consciente, retour aux sens 5-4-3-2-1, respiration longue, contact physique délibéré, check-in corporel)", "Technique des 3 lectures"],
+            "tools": ["L'ancrage sous pression", "Exploration sensorielle mensuelle",
+            "Le corps comme boussole décisionnelle"],
+            "biographical_markers": ["casque EEG Muse 2", "travaux manuels maison paternelle", "rénovation comme ancrage", "découverte du corps comme partenaire"],
+            "neuroscience_refs": ["marque somatique (Damasio)", "nerf vague", "cortex insulaire", "intéroception", "système nerveux parasympathique", "cortisol", "théorie polyvagale (Porges)"]
+          },
+          {
+            "num": 4,
+            "title": "Clarifier ses vraies priorités",
+            "summary": "L'art du discernement cristallin. Les 4 illusions qui brouillent la clarté (indispensabilité, contrôle total, perfection atteignable, temps infini). La hiérarchie ÊTRE-FAIRE-AVOIR. Les 4 quadrants de vie (mission, relations, santé, ressources). Le protocole D.I.S.C.E.R.N. Les 5 erreurs de priorité. Le 10-10-10. Priorités composées. Écrire son manifeste personnel. Les priorités invisibles.",
+            "themes": ["priorités", "discernement", "clarté", "ÊTRE-FAIRE-AVOIR", "4 quadrants vie", "manifeste personnel", "non comme compétence", "priorités de construction vs maintenance"],
+            "protocols": ["D.I.S.C.E.R.N. (8 étapes)", "10-10-10", "Matrice ÊTRE-FAIRE-AVOIR", "Bilan annuel approfondi"],
+            "tools": ["Les 4 illusions", "Matrice personnelle de priorités (3 axes)", "Règle de l'une", "Révision hebdomadaire", "Séparation niveaux de décision"],
+            "biographical_markers": ["la liste téléphone restée intacte", "refus de contrat en décembre", "opportunité professionnelle déclinée par alignement corporel", "bilan annuel avec données de temps réelles"],
+            "neuroscience_refs": ["biais d'urgence", "fatigue décisionnelle", "cortex préfrontal sous stress", "ondes bêta vs alpha", "dopamine et priorisation"]
+          },
+          {
+            "num": 5,
+            "title": "Créer un espace de vie qui t'aligne",
+            "summary": "Transformer ton environnement en allié de ta transformation. L'espace comme aveu silencieux. Boucle espace-état intérieur. Charge cognitive des objets et cortisol. Lecture de son espace (zones témoins). Les 5 fonctions d'un espace vivant. Les 3 mouvements de transformation (observation, tri bienveillant, réorganisation intentionnelle). L'espace pivot. Kallok's Arts et la beauté intentionnelle. Espace physique, numérique, relationnel, temporel.",
+            "themes": ["espace de vie", "environnement", "charge cognitive", "désencombrement", "espace pivot", "espace numérique", "environnement sonore", "mémoire de lieu"],
+            "protocols": ["Lecture de son espace (3 zones)", "Les 3 mouvements de transformation", "Exploration sensorielle mensuelle", "Rangement comme pratique intérieure"],
+            "tools": ["Créer un espace pivot", "Désencombrement progressif", "Séparation des profils numériques", "Rituels de seuil et transition"],
+            "biographical_markers": ["appartement chaotique pendant le sevrage", "jour où j'ai déplacé un meuble", "Kallok's Arts né de post-it sur les murs", "rangement maison de mon père après son décès", "création espace de travail intentionnel"],
+            "neuroscience_refs": ["charge cognitive des objets", "cortisol et encombrement", "mémoire contextuelle", "attention involontaire (nature)", "théorie de la restauration attentionnelle (Kaplan)"]
+          },
+          {
+            "num": 6,
+            "title": "Installer des rituels de recentrage",
+            "summary": "L'art de créer des ancrages quotidiens pour ta transformation. Différence entre habitude et rituel. Les 3 mouvements naturels (ancrage, clarification, régénération). Boucles neuronales et autoroutes. Rituels invisibles (sous pression, en réunion). Construire sa pratique (4 lois: simplicité, ancrage existant, fidélité douce, évolution). Résistances. Rituels collectifs. Rituels de fermeture de journée. Rituels de résilience.",
+            "themes": ["rituels", "habitudes", "ancrage quotidien", "régulation système nerveux", "rituels invisibles", "fermeture de journée", "résilience", "identité par la pratique"],
+            "protocols": ["Construction pratique (4 lois)", "Reset respiratoire", "Reset émotionnel discret", "Bilan hebdomadaire"],
+            "tools": ["Les 3 mouvements naturels", "Rituels de résilience (minimum maintenu)", "Fidélité douce (45-90 jours)", "Évolution naturelle du rituel"],
+            "biographical_markers": ["premier rituel: la question du matin", "réunion transformée par 30 secondes de reset", "rituel d'écriture quotidienne", "bilan hebdomadaire du vendredi"],
+            "neuroscience_refs": ["boucles neuronales", "cortex préfrontal et rituels", "théorie polyvagale", "ancre somatique", "effet de désactivation post-insight", "Psychological Science sur rituels et anxiété"]
+          },
+          {
+            "num": 7,
+            "title": "Revenir à sa mission profonde",
+            "summary": "Réveiller le feu qui ne s'éteint jamais. Distinction réussite vs réalisation. Syndrome de la réussite creuse. Les 4 pistes pour retrouver sa mission (attirance, colère, cohérence, don naturel). Mission vivante vs figée. Les résistances à l'incarnation. Mission comme registre plutôt que destination. Mission et identité (piège de la performance). Mission et courage (refus aligné). Mission et peur (distinction peur d'alignement vs peur de non-alignement).",
+            "themes": ["mission", "réussite creuse", "réalisation", "vocation", "alignement", "peur d'alignement", "refus et courage", "mission comme filtre décisionnel"],
+            "protocols": ["Cartographie en 4 dimensions (attirance, colère, cohérence, don)", "Formulation vivante de mission"],
+            "tools": ["Distinction réussite vs réalisation", "Mission comme boussole décisionnelle", "Signature corporelle de l'alignement"],
+            "biographical_markers": ["parking de novembre — 'tout ça pour ça?'", "refus de collaboration en décembre", "formulations ratées de mission", "mission de Humain Total comme pont"],
+            "neuroscience_refs": ["réseau du mode par défaut et créativité", "cortex préfrontal et décision alignée"]
+          },
+          {
+            "num": 8,
+            "title": "Honorer son rythme et bâtir à partir de soi",
+            "summary": "L'art de créer une vie sustainable à ton tempo naturel. Dictature du tempo imposé. Jet lag social permanent. Les grandes saisons de vie. Le chronotype comme ADN temporel. Les 4 saisons intérieures (printemps, été, automne, hiver). Énergie forcée vs énergie naturelle. Les 4 quadrants d'énergie (physique, cognitive, émotionnelle, créative). Identité de vitesse. Le mythe de la discipline pure. Récupération comme compétence professionnelle. Journal d'énergie.",
+            "themes": ["rythme", "chronotype", "saisons intérieures", "énergie naturelle vs forcée", "récupération", "discipline vs architecture", "tempo juste", "productivité durable"],
+            "protocols": ["Audit énergétique personnel (1 semaine, 3 notes/jour)", "Journal d'énergie (2-4 semaines)", "Saisons intérieures (auto-diagnostic)"],
+            "tools": ["Les 4 quadrants d'énergie", "Protéger ses fenêtres optimales", "Récupération micro/méso/macro", "Decélération délibérée"],
+            "biographical_markers": ["arrêt forcé — ne plus être capable de pousser", "Cuba — intoxication et découverte du ralentissement", "reconstruction du modèle économique autour du rythme naturel", "période de décélération délibérée"],
+            "neuroscience_refs": ["chronobiologie", "jet lag social", "rythmes circadiens", "cortisol et rythme", "fatigue décisionnelle", "recherche Matthew Walker sur sommeil"]
+          },
+          {
+            "num": 9,
+            "title": "S'entourer consciemment",
+            "summary": "L'art de créer un écosystème humain qui soutient ta transformation. Loi de résonance relationnelle. Couplage neuronal et contagion émotionnelle. Signaux corporels des relations (pendant et après). Gravité relationnelle. Les 4 archétypes (Architecte, Gardien, Éclaireur, Compagnon). La culpabilité relationnelle. Les loyautés invisibles. 3 lois de l'entourage conscient. Solitude comme compétence relationnelle. Cartographie relationnelle.",
+            "themes": ["entourage", "relations", "écologie relationnelle", "contagion émotionnelle", "archétypes relationnels", "loyautés invisibles", "solitude", "trahison et discernement", "navigation de conflit en deuxième vitesse"],
+            "protocols": ["Cartographie relationnelle (15 personnes, échelle -5/+5)", "Conversations difficiles (3 types)"],
+            "tools": ["Les 4 archétypes", "3 lois de l'entourage conscient", "Lecture corporelle des relations", "Gravité relationnelle"],
+            "biographical_markers": ["trahison de l'hiver 2025", "diagnostic 60% relations drainantes", "réorganisation silencieuse sur 2 ans", "les deux personnes qui m'ont sauvé"],
+            "neuroscience_refs": ["couplage neuronal", "neurones miroirs", "contagion émotionnelle", "co-régulation", "recherche épidémiologique sur relations et longévité", "zones bleues"]
+          },
+          {
+            "num": 10,
+            "title": "Transmuter ses blessures en sagesse",
+            "summary": "L'alchimie secrète qui transforme les épreuves en or intérieur. Mécanisme de la blessure non intégrée (filtre invisible). Les 5 blessures fondamentales (rejet, abandon, humiliation, trahison, injustice). Stratégies d'évitement. Différence entre réparer et transmuter. Les 5 mouvements de la transmutation. Les dons cachés dans les blessures. Les 4 stades (traversée, compréhension, séparation, intégration). Le corps comme mémoire. Blessures héritées. Deuil comme blessure irréversible. Compassion pour soi.",
+            "themes": ["blessures", "transmutation", "alchimie", "5 blessures fondamentales", "deuil", "héritages familiaux", "compassion", "dons cachés", "de victime à créateur"],
+            "protocols": ["Les 5 mouvements de la transmutation (reconnaître, ressentir, comprendre, réintégrer, transmettre)", "Les 3 versions de l'histoire (factuelle, survivant, sage)", "Cartographie de ses blessures"],
+            "tools": ["Les dons cachés dans les 5 blessures", "Distinction réparation vs transmutation", "Témoin bienveillant", "Conditions de la transmutation (sommeil, mouvement, personnes sûres)"],
+            "biographical_markers": ["stratégies d'évitement (hyperactivité, aide compulsive, performance)", "héritage de Gilles Thibault", "trahison hiver 2025 comme révélateur de pattern", "deuil du père travaillé sur 2 ans"],
+            "neuroscience_refs": ["corps comme mémoire (van der Kolk)", "système nerveux et blessure", "co-régulation", "compassion pour soi (Kristin Neff)"]
+          },
+          {
+            "num": 11,
+            "title": "Incarner sa vérité dans l'action",
+            "summary": "Le pont sacré entre la conscience et le vivant. L'épidémie du savoir non vécu. Développement par procuration. Les dissonances comme boussoles. Pourquoi on résiste à vivre ce qu'on sait (peurs spécifiques). Les 4 fondations de l'incarnation durable (corps, parole, action, responsabilité authenticité). L'incarnation progressive (micro-incarnations). Les 3 portes de l'incarnation. Ce que l'authenticité coûte vraiment. Syndrome de l'imposteur. Leadership par l'exemple.",
+            "themes": ["incarnation", "action", "cohérence", "authenticité", "dissonance", "savoir vs être", "micro-incarnations", "syndrome de l'imposteur", "leadership par l'exemple"],
+            "protocols": ["L'intention d'incarnation quotidienne (un geste observable)", "Les 4 fondations de l'incarnation durable"],
+            "tools": ["Les 3 portes de l'incarnation (petites décisions, engagements publics, structures/environnements)", "Micro-incarnations", "Distinction adaptation saine vs inauthenticité", "Peur d'être trop, insuffisant, de décevoir, de l'abandon"],
+            "biographical_markers": ["période de 'sachant non-incarné'", "4 semaines — un geste vrai par jour", "refus de contrat en décembre aligné", "conversation difficile évitée depuis des mois", "acceptation de qui je suis maintenant"],
+            "neuroscience_refs": ["cortex préfrontal vs ganglions de la base (savoir vs faire)", "conditionnement et identité"]
+          },
+          {
+            "num": 12,
+            "title": "Nourrir une œuvre utile et vivante",
+            "summary": "Quand ta transformation devient don au monde. Piège de l'évolution centrée sur soi. Ce qu'est une œuvre vivante. Les 5 fondements d'une œuvre qui dure (vérité, utilité, alignement, résilience, évolution). Temps long de l'œuvre. Métriques de durée vs métriques immédiates. Transmission construite pour durer après soi. Légèreté comme condition de l'œuvre durable. Contribuer par ce qu'on est. L'œuvre comme héritage.",
+            "themes": ["œuvre vivante", "contribution", "héritage", "transmission", "temps long", "légèreté", "création authentique", "métriques alternatives", "feu qui continue après soi"],
+            "protocols": ["La phrase fondatrice (3 questions)", "Les 5 fondements d'une œuvre qui dure"],
+            "tools": ["Distinction œuvre vivante vs performance", "Indicateurs alternatifs (impact transformationnel, précision des retours, profondeur de résonance)", "Première version imparfaite comme outil de découverte"],
+            "biographical_markers": ["naissance de Humain Total depuis une nécessité ressentie", "arrêt de créer pour être vu", "vision d'écriture des 7 volumes", "ce que je veux laisser", "la transmission comme fin"],
+            "neuroscience_refs": ["résonance et récompense intrinsèque", "métriques immédiates vs durée"]
+          }
+        ],
+        "framework_highlights": {
+          "title": "Là où tout s'éclaircit — Collection Humain Total",
+          "total_chapters": 12,
+          "core_protocols": [
+            "D.I.S.C.E.R.N. — 8 étapes de discernement (Décortiquer, Interroger, Suspendre, Contempler, Écouter, Ressentir, Nommer)",
+            "RAIN — 4 étapes d'accueil émotionnel (Reconnaître, Autoriser, Investiguer, Non-identification)",
+            "10-10-10 — Perspective temporelle (10 minutes, 10 mois, 10 ans)",
+            "Matrice ÊTRE-FAIRE-AVOIR — Clarification identitaire",
+            "Cartographie en 4 dimensions de la mission (attirance, colère, cohérence, don)",
+            "Cartographie relationnelle (15 personnes, échelle -5/+5)",
+            "Les 3 versions de l'histoire (factuelle, survivant, sage)",
+            "Intention d'incarnation quotidienne (un geste observable)",
+            "Audit énergétique personnel (1 semaine, 3 notes/jour)",
+            "Bilan hebdomadaire et bilan annuel approfondi",
+            "La phrase fondatrice (3 questions pour l'œuvre)",
+            "Ancre de retour (2 min/jour)",
+            "Les 5 ancrages quotidiens",
+            "Exploration sensorielle mensuelle de l'espace"
+          ],
+          "lexique_humain_total": {
+            "première_vitesse": "Mode de fonctionnement par défaut — performance sans alignement, urgence permanente, dissociation adaptative, mouvement sans direction choisie. Se nourrit de l'aveuglement.",
+            "deuxième_vitesse": "Passer de réagir à choisir, de s'épuiser à s'aligner. Capacité à transformer ce qui arrive en matériau plutôt que de le laisser être une définition. Se construit par 3 mouvements : reconnaître, arrêter, choisir son architecture intérieure.",
+            "dissociation_adaptative": "Mécanisme neurologique par lequel le cerveau apprend à fonctionner de façon dissociée de l'expérience émotionnelle pour maintenir la performance sous stress chronique.",
+            "dissonance": "Écart entre ce qu'on croit/veut et ce qu'on fait réellement. Information sur l'endroit où l'alignement peut encore progresser, pas preuve d'échec.",
+            "ancrage": "Capacité à être vraiment dans son corps, dans le moment présent, dans la situation concrète — plutôt que dans la représentation mentale, l'anticipation ou la rumination.",
+            "œuvre vivante": "Création qui vient d'un endroit vrai, sert quelque chose de réel, régénère celui qui la crée autant qu'elle nourrit ceux qui la reçoivent. Expression naturelle de ce qu'on est devenu, pas performance.",
+            "mission": "Direction profonde de contribution, pas objectif à accomplir. Registre depuis lequel on fait les choses ordinaires, pas destination. Se révèle par 4 pistes : attirance, colère, cohérence, don naturel.",
+            "transmutation": "Processus d'intégration d'une blessure qui ne cherche pas à l'effacer mais à en faire quelque chose qui nourrit plutôt que limite. 5 mouvements : reconnaître, ressentir, comprendre, réintégrer, transmettre.",
+            "espace pivot": "Point d'ancrage spatial délibéré — petit, intentionnel, chargé de sens. Crée une association entre l'espace et un état intérieur de retour à soi.",
+            "fidélité douce": "Ne pas exiger la perfection d'une pratique. Permettre le retour après l'absence, sans jugement. La régularité à petite dose crée plus que l'intensité épisodique.",
+            "micro-incarnation": "Petit geste juste, réalisable aujourd'hui, qui réduit l'écart entre le savoir et le vivre. Construit par accumulation de preuves concrètes.",
+            "énergie forcée vs énergie naturelle": "Forcée : volonté, contrainte, pression — produit à court terme, s'épuise. Naturelle : alignement, correspondance avec son rythme — se renouvelle en s'exprimant.",
+            "priorité de construction vs maintenance": "Construction : crée du nouveau, demande énergie fraîche, concentration profonde. Maintenance : maintient l'existant, peut être gérée en énergie moindre. Ne pas confondre les deux."
+          }
+        },
+        "notes": [
+          "ingestion complète v31 — tous les chapitres résumés avec thèmes, protocoles, outils, jalons biographiques et références neuroscientifiques",
+          "keep full verbatim manuscript storage in local encrypted memory only while exposing chapter summaries, protocols and worldview markers for retrieval",
+          "lexique Humain Total ajouté pour cohérence conceptuelle dans les réponses du chat"
+        ]
+      }
+    ],
+    "profile_sources": [
+      "PROFIL PROFESSIONEL KEVIN.txt",
+      "PROFIL-ALL.md",
+      "Portfolio_Kevin_Thibault_V3_Visuelle_Premium_Optimise.docx"
+    ],
+    "audiobook_influences": [
+      "Élevez votre vibration",
+      "Les quatre accords toltèques",
+      "L'effet cumulé",
+      "Pouvoir illimité",
+      "Les 21 lois irréfutables du leadership",
+      "Les 5 niveaux du leadership",
+      "Le pouvoir de la confiance en soi",
+      "Psychologie Noire et Manipulation Mentale",
+      "Maître de votre temps, maître de votre vie",
+      "Découvrez votre point d'équilibre",
+      "Devenir super-conscient"
+    ],
+    "memory_update": {
+      "requested_by": "Kevin Thibault",
+      "date": "2026-05-28T08:00:00-04:00",
+      "scope": "Ingestion complète v31 du livre 'Là où tout s'éclaircit' — 12 chapitres, résumés détaillés, protocoles, lexique Humain Total, jalons biographiques, références neuroscientifiques."
+    }
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "version": "v31.0.0",
+  "category": "kevin_controlled_vocabulary_v31",
+  "description": "Vocabulaire contrôlé Humain Total — définitions précises de chaque concept-clé pour assurer la cohérence des réponses TITANE et l'alignement du TWIN.",
+  "vocabulary": {
+    "concepts_fondamentaux": {
+      "premiere_vitesse": {
+        "definition": "Mode de fonctionnement par défaut basé sur la performance sans alignement, l'urgence permanente, la dissociation adaptative et le mouvement sans direction choisie. Se nourrit de l'aveuglement et de la réactivité constante.",
+        "synonymes": ["mode survie", "performance vide", "réactivité constante"],
+        "antonymes": ["deuxième vitesse", "alignement vivant"],
+        "ne_pas_confondre_avec": "Simple productivité ou ambition légitime — la première vitesse se distingue par l'absence de choix conscient et la dissociation d'avec ses signaux intérieurs.",
+        "usage_TITANE": "Utiliser pour décrire l'état de fonctionnement antérieur à la transformation, jamais comme jugement de valeur."
+      },
+      "deuxieme_vitesse": {
+        "definition": "Passer de réagir à choisir, de s'épuiser à s'aligner. Capacité à transformer ce qui arrive en matériau plutôt que de le laisser être une définition. Se construit par 3 mouvements : reconnaître sans condamner, arrêter pour entendre, choisir son architecture intérieure.",
+        "synonymes": ["alignement vivant", "choix conscient", "vie choisie"],
+        "antonymes": ["première vitesse", "performance automatique"],
+        "ne_pas_confondre_avec": "Lenteur, retrait du monde, abandon d'ambitions — ce n'est pas la lenteur mais l'intention consciente.",
+        "citation_source": "« Il ne s'agit pas de courir plus vite. Il s'agit enfin de courir dans la bonne direction. »",
+        "usage_TITANE": "Concept central de tout l'écosystème Humain Total. À utiliser comme boussole pour toute recommandation."
+      },
+      "dissociation_adaptative": {
+        "definition": "Mécanisme neurologique par lequel le cerveau apprend à fonctionner de façon dissociée de l'expérience émotionnelle et sensorielle pour maintenir la performance sous stress chronique. L'amygdale prend le commandement, le cortex préfrontal est mis en retrait.",
+        "usage_TITANE": "Utiliser dans un contexte d'explication neuroscientifique, jamais comme diagnostic. Toujours accompagner d'une perspective de reprogrammation possible."
+      },
+      "dissonance": {
+        "definition": "Écart entre ce qu'une personne croit ou veut et ce qu'elle fait réellement. Information sur l'endroit où l'alignement peut encore progresser — pas une preuve d'échec. Source de fatigue quand non reconnue.",
+        "synonymes": ["écart", "contradiction intérieure"],
+        "ne_pas_confondre_avec": "Dissonance cognitive (terme psychologique spécifique) — ici le concept est plus large et opérationnel.",
+        "usage_TITANE": "Toujours présenter comme information utile, jamais comme condamnation. La dissonance est une boussole."
+      },
+      "ancrage": {
+        "definition": "Capacité à être vraiment dans son corps, dans le moment présent, dans la situation concrète — plutôt que dans la représentation mentale, l'anticipation ou la rumination. Compétence qui s'entraîne et se perd si non pratiquée.",
+        "synonymes": ["présence incarnée", "retour au corps"],
+        "ne_pas_confondre_avec": "Méditation, relaxation, ou technique de respiration spécifique — l'ancrage est plus large : c'est une façon d'habiter sa vie.",
+        "usage_TITANE": "Toujours ramener à la pratique corporelle, jamais à un concept abstrait."
+      },
+      "mission": {
+        "definition": "Direction profonde de contribution, pas objectif à accomplir. Registre depuis lequel on fait les choses ordinaires, pas destination. Se révèle par 4 pistes : attirance naturelle, colère précise, moments de cohérence, dons offerts sans effort.",
+        "synonymes": ["axe profond", "direction de contribution"],
+        "ne_pas_confondre_avec": "Objectif SMART, métier, profession, ou aspiration sociale. La mission est un registre, pas une case à cocher.",
+        "citation_source": "« Ta mission n'a pas besoin d'être reconnue par le monde. Elle a besoin d'être reconnue par toi. »",
+        "usage_TITANE": "Formulation vivante — jamais figée. La mission évolue avec la personne."
+      },
+      "transmutation": {
+        "definition": "Processus d'intégration d'une blessure qui ne cherche pas à l'effacer mais à en faire quelque chose qui nourrit plutôt que limite. 5 mouvements : reconnaître, ressentir, comprendre, réintégrer, transmettre.",
+        "synonymes": ["alchimie intérieure", "transformation de la blessure"],
+        "ne_pas_confondre_avec": "Positivation forcée ('tout arrive pour une raison'), oubli, ou réparation. La transmutation intègre, elle n'efface pas.",
+        "citation_source": "« Une blessure non transformée devient une prison. Une blessure délibérément transformée devient une fondation. »",
+        "usage_TITANE": "Utiliser avec nuance — ne pas précipiter. La transmutation a ses propres saisons."
+      },
+      "oeuvre_vivante": {
+        "definition": "Création qui vient d'un endroit vrai, sert quelque chose de réel, régénère celui qui la crée autant qu'elle nourrit ceux qui la reçoivent. Expression naturelle de ce qu'on est devenu, pas performance. N'a pas besoin d'être monumentale.",
+        "synonymes": ["création authentique", "contribution durable"],
+        "ne_pas_confondre_avec": "Projet professionnel, produit commercial, ou production de contenu. L'œuvre vivante régénère en s'exprimant.",
+        "citation_source": "« Ton œuvre n'a pas besoin d'être reconnue par le monde. Elle a besoin d'être nécessaire — pour toi d'abord. »",
+        "usage_TITANE": "Utiliser pour orienter vers la contribution authentique, jamais vers la performance ou la reconnaissance."
+      },
+      "fidelite_douce": {
+        "definition": "Ne pas exiger la perfection d'une pratique. Permettre le retour après l'absence, sans jugement. La régularité à petite dose crée plus que l'intensité épisodique. Principe : la pratique se reprend, elle ne se rattrape pas.",
+        "synonymes": ["constance bienveillante", "discipline souple"],
+        "ne_pas_confondre_avec": "Laxisme, manque de discipline, ou abandon. La fidélité douce exige le retour, mais sans culpabilité.",
+        "usage_TITANE": "Principe fondamental pour toute recommandation de pratique. Ne jamais encourager la culpabilité comme moteur."
+      },
+      "micro_incarnation": {
+        "definition": "Petit geste juste, réalisable aujourd'hui, qui réduit l'écart entre le savoir et le vivre. Construit par accumulation de preuves concrètes. Levier de transformation le plus accessible et le plus sous-estimé.",
+        "synonymes": ["geste juste", "action minimale alignée"],
+        "ne_pas_confondre_avec": "Tâche de productivité, résolution, ou action spectaculaire. La micro-incarnation est minuscule mais réelle.",
+        "usage_TITANE": "À recommander quand quelqu'un est bloqué entre la compréhension et l'action."
+      }
+    },
+    "protocoles": {
+      "DISCERN": {
+        "nom_complet": "Décortiquer, Interroger, Suspendre, Contempler, Écouter, Ressentir, Nommer",
+        "type": "discernement",
+        "usage": "Décisions importantes, complexes, chargées d'enjeux émotionnels. Force à ralentir le processus et à y injecter de la conscience.",
+        "temps_estime": "30 min à une nuit",
+        "etapes": [
+          "Décortiquer — décomposer la situation, distinguer faits des interprétations, séparer l'urgent de l'important",
+          "Interroger — poser : qu'est-ce qui est vrai ici ? qu'est-ce qui est important ? qu'est-ce que je veux que cette décision dise de qui je suis ?",
+          "Suspendre — ne pas décider immédiatement, créer un espace temporel (une nuit si possible)",
+          "Contempler — laisser les options se présenter sans les juger, observer ce qui émerge dans le calme",
+          "Écouter — consulter le corps : contraction ou expansion face à chaque option ?",
+          "Ressentir — identifier l'émotion sous la décision : peur, désir, obligation, alignement ?",
+          "Nommer — formuler la décision à voix haute, écouter comment elle résonne dans le corps"
+        ]
+      },
+      "RAIN": {
+        "nom_complet": "Reconnaître, Autoriser, Investiguer, Non-identification",
+        "type": "accueil émotionnel",
+        "usage": "Traverser les émotions difficiles sans les supprimer ni s'y noyer. Utilisable en 5 min dans tout contexte.",
+        "temps_estime": "5 minutes",
+        "etapes": [
+          "Reconnaître — nommer ce qui est là sans minimiser ni dramatiser. Le nommage active le cortex préfrontal.",
+          "Autoriser — laisser l'émotion être là sans chercher à l'éliminer. 'Cette émotion a le droit d'exister.'",
+          "Investiguer — avec douceur, noter où l'émotion se manifeste dans le corps, comment elle évolue",
+          "Non-identification — se rappeler qu'on n'est pas l'émotion. On ressent de la peur, on n'est pas la peur."
+        ]
+      },
+      "10_10_10": {
+        "nom_complet": "10 minutes, 10 mois, 10 ans",
+        "type": "perspective temporelle",
+        "usage": "Décisions urgentes, pression extérieure, réaction vs réponse. Prend 30 secondes.",
+        "temps_estime": "30 secondes",
+        "etapes": [
+          "Dans 10 minutes — soulagement immédiat ou malaise discret ?",
+          "Dans 10 mois — quelle importance aura eu cette décision ?",
+          "Dans 10 ans — de quoi serai-je fier ?"
+        ]
+      },
+      "question_miroir_inverse": {
+        "nom_complet": "Question du miroir inversé",
+        "type": "clarification des priorités",
+        "usage": "Trouver sa boussole par ce qu'on ne veut plus. Cartographie puissante des priorités réelles.",
+        "temps_estime": "20 minutes",
+        "etapes": [
+          "Écrire tout ce qu'on ne veut plus (situations, dynamiques, engagements)",
+          "Pour chaque item : 'ce que je veux vraiment à la place, c'est quoi ?'",
+          "La réponse est la boussole — construite depuis une connaissance concrète"
+        ]
+      },
+      "3_versions_de_l_histoire": {
+        "nom_complet": "Les 3 versions de l'histoire",
+        "type": "transmutation",
+        "usage": "Transformer une blessure en ressource. Progression du regard de victime à sage.",
+        "temps_estime": "30 minutes",
+        "etapes": [
+          "Version factuelle — les faits, la chronologie, sans émotion ni analyse",
+          "Version du survivant — comment tu as traversé, les ressources mobilisées",
+          "Version du sage — ce que cette expérience t'a donné que tu n'aurais pas eu autrement"
+        ]
+      }
+    },
+    "blessures_et_dons": {
+      "blessure_trahison": {
+        "définition": "Confiance accordée non respectée, utilisée comme levier contre soi. Remet en question le discernement et la capacité à lire les autres.",
+        "don_conscient": "Discernement relationnel précis, capacité à construire confiance durable, lecture fine des signaux d'incohérence."
+      },
+      "blessure_rejet": {
+        "définition": "Sentiment de ne pas être assez, de ne pas appartenir, d'être en trop. Hypervigilance aux signes d'exclusion.",
+        "don_conscient": "Création d'espaces d'inclusion, accueil naturel de ceux qui sont en marge, sensibilité aux dynamiques d'appartenance."
+      },
+      "blessure_injustice": {
+        "définition": "Traitement inéquitable perçu ou subi, sensibilité aux abus de pouvoir, aux déséquilibres de traitement.",
+        "don_conscient": "Sensibilité à l'équité relationnelle, indignation canalisée en contribution systémique, énergie de changement durable."
+      },
+      "blessure_perte_deuil": {
+        "définition": "Confrontation à l'irréversible, absence définitive d'une présence aimée, réorganisation forcée de l'existence.",
+        "don_conscient": "Conscience de la finitude, présence au présent intensifiée, clarté sur ce qui compte vraiment."
+      }
+    },
+    "saisons_interieures": {
+      "printemps": {
+        "énergie": "Légère, multipliante, enthousiaste",
+        "orientation": "Émergence, nouvelles idées, curiosité",
+        "risque": "Dispersion — commencer trop de choses sans les ancrer",
+        "ce_que_ca_demande": "Honorer la curiosité sans s'éparpiller, laisser germer avant de planter"
+      },
+      "ete": {
+        "énergie": "Haute et stable",
+        "orientation": "Action, construction, visibilité, avancement",
+        "risque": "Épuisement par refus d'entrer dans la saison suivante",
+        "ce_que_ca_demande": "Avancer résolument sans négliger la récupération"
+      },
+      "automne": {
+        "énergie": "Satisfaite, orientée vers la conclusion",
+        "orientation": "Bilan, récolte, finalisation, partage",
+        "risque": "Sauter cette saison et recommencer immédiatement sans récolter",
+        "ce_que_ca_demande": "Résister à la tentation de tout recommencer avant d'avoir célébré ce qui est accompli"
+      },
+      "hiver": {
+        "énergie": "Basse, orientée vers l'intérieur",
+        "orientation": "Repos, introspection, digestion, préparation souterraine",
+        "risque": "Culpabilité de ne pas produire dans un monde qui valorise la visibilité permanente",
+        "ce_que_ca_demande": "Se reposer sans culpabilité, digérer sans forcer des conclusions, préparer en silence"
+      }
+    },
+    "archetypes_relationnels": {
+      "architecte": {
+        "rôle": "Construit avec toi, te challenge avec bienveillance, voit la structure au-delà du bruit",
+        "ou_trouver": "Mentors, pairs avancés, groupes de mastermind"
+      },
+      "gardien": {
+        "rôle": "Maintient l'espace sécurisant, reçoit la vulnérabilité sans la briser, reste stable dans la tempête",
+        "ou_trouver": "Amis de longue date, thérapeutes, confidents"
+      },
+      "eclaireur": {
+        "rôle": "Ouvre des portes, montre ce qui est possible, a déjà fait un chemin similaire",
+        "ou_trouver": "Communautés de pairs, événements alignés, mentors d'horizons différents"
+      },
+      "compagnon": {
+        "rôle": "Chemine à tes côtés sur le même chemin, partage la même saison de vie, miroir de progression",
+        "ou_trouver": "Communautés de pratique, groupes de développement, pairs de même niveau"
+      }
+    },
+    "energies": {
+      "energie_forcee": {
+        "définition": "Vient de la volonté, de la contrainte, de la pression externe ou interne. Produit des résultats à court terme. S'épuise rapidement parce qu'elle prélève sur une réserve sans la remplir.",
+        "signaux": ["Tâches intéressantes qui semblent lourdes", "Motivation par deadlines artificielles", "Comparaison constante", "Culpabilité pendant le repos"]
+      },
+      "energie_naturelle": {
+        "définition": "Vient de l'alignement et de la correspondance entre ce qu'on fait, comment on le fait, et le registre depuis lequel on le fait. Se renouvelle en s'exprimant car ce qui la produit est aussi ce qui la nourrit.",
+        "signaux": ["Projets qui donnent de l'énergie en avançant", "Solutions qui émergent naturellement", "Pauses qui récupèrent vraiment", "Cohérence ressentie entre l'action et l'intention"]
+      }
+    },
+    "vocabulaire_ecosysteme": {
+      "clarte_express": {
+        "définition": "Offre d'entrée Humain Total : intervention courte (45 min Zoom) pour installer un axe, clarifier les priorités, sortir de la dispersion. Inclut résumé, 3 actions concrètes, 1 règle anti-dispersion.",
+        "promesse": "Transformer un flou actif en plan simple.",
+        "ton": "Doux, sobre, précis."
+      },
+      "humain_total": {
+        "définition": "Écosystème fondé par Kevin Thibault. Mission: transformer la confusion en clarté, la dispersion en axe, l'intuition en structure durable.",
+        "promesse": "Aider les humains à retrouver leur axe quand tout devient flou.",
+        "registre": "Sobre, profond, clair, humain, poétique mais précis."
+      },
+      "kalloks_arts": {
+        "définition": "Branche artistique, sensible et symbolique de l'écosystème Kevin Thibault. Bibliothèque vivante, sanctuaire artistique, branche sensible de Humain Total. Née d'une nécessité intérieure : créer pour se reconstruire.",
+        "statut": "Micro-collections symboliques, pas mégaprojet autonome.",
+        "ton": "Poétique, incarné, visuel, intime mais sobre."
+      },
+      "titane_infinity": {
+        "définition": "OS cognitif et opérationnel conçu par Kevin Thibault pour soutenir mémoire, clarté, continuité et cohérence humaine. Allié, pas sauveur. Exosquelette cognitif, pas remplacement du discernement.",
+        "principe_fondateur": "Je n'ai pas créé TITANE pour aller plus vite. Je l'ai créé pour pouvoir continuer.",
+        "approche": "Gouvernance sobre, preuve avant verdict, pas d'expansion non qualifiée."
+      }
+    },
+    "termes_interdits_ou_a_eviter": {
+      "meilleure_version_de_toi_meme": {
+        "raison": "Hype vide, promet une transformation sans effort, crée de la pression de performance. Humain Total n'optimise pas, il aligne.",
+        "alternative": "Retrouver son axe, se réaligner, habiter pleinement qui on est."
+      },
+      "guerir_definitivement": {
+        "raison": "Promet l'impossible, crée des attentes irréalistes. La transmutation intègre, elle n'efface pas.",
+        "alternative": "Intégrer, transformer, faire de la blessure une ressource."
+      },
+      "transformation_garantie": {
+        "raison": "Surpromesse éthiquement problématique. La transformation demande des conditions, du temps et de l'engagement.",
+        "alternative": "Accompagner un processus, créer les conditions, soutenir une direction."
+      },
+      "devenir_qui_tu_es_vraiment": {
+        "raison": "Suggère qu'on est caché quelque part et qu'il suffit de le trouver. La réalité est une construction progressive.",
+        "alternative": "Devenir plus pleinement qui on est, se révéler progressivement, incarner davantage."
+      }
+    }
+  }
+}

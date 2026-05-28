@@ -1,0 +1,125 @@
+{
+  "version": "v31.0.0",
+  "category": "kevin_knowledge_cartography_v31",
+  "description": "Cartographie des connaissances intégrées de Kevin Thibault dans TITANE — liens entre fichiers, domaines couverts, gaps identifiés, et plan d'évolution.",
+  "cartography": {
+    "knowledge_files_map": [
+      {
+        "file": "kevin_book_registry_v31.json",
+        "domain": "personal_knowledge",
+        "covers": "Structure du livre Là où tout s'éclaircit, 12 chapitres, résumés, thèmes, protocoles, lexique Humain Total",
+        "status": "fully_ingested",
+        "links_to": ["kevin_book_v31_detailed.json", "kevin_public_corpus_v30.json", "kevin_owner_profile_v30.json"]
+      },
+      {
+        "file": "kevin_book_v31_detailed.json",
+        "domain": "personal_knowledge",
+        "covers": "Protocoles complets (D.I.S.C.E.R.N., RAIN, 10-10-10), cartographie conceptuelle, progression narrative, données TWIN, jalons biographiques, métaphores centrales",
+        "status": "fully_ingested",
+        "links_to": ["kevin_book_registry_v31.json", "kevin_owner_profile_v30.json", "kevin_public_corpus_v30.json", "digital_twin_symbiosis.json"]
+      },
+      {
+        "file": "kevin_manus_adn_v31_detailed.json",
+        "domain": "personal_knowledge",
+        "covers": "50 entrées ADN consolidées en 10 domaines : règle d'or, décision, gouvernance, écosystème, stratégie éditoriale, voix publique, écosystème numérique, apprentissage, spiritualité, automatisation",
+        "status": "fully_ingested",
+        "links_to": ["kevin_book_v31_detailed.json", "kevin_public_corpus_v30.json", "kevin_workflow_v30.json"]
+      },
+      {
+        "file": "kevin_public_corpus_v30.json",
+        "domain": "personal_knowledge",
+        "covers": "Corpus public, voix, tonalité, axes dominants, retrieval triggers, guidance de ton, modules Humain Total, codex vivant, méditations",
+        "status": "updated_v31",
+        "links_to": ["kevin_book_registry_v31.json", "kevin_book_v31_detailed.json", "kevin_owner_profile_v30.json"]
+      },
+      {
+        "file": "kevin_owner_profile_v30.json",
+        "domain": "personal_knowledge",
+        "covers": "Profil propriétaire, rôles, mission, préférences, style d'interaction, symboles, identité autochtone, contexte personnel",
+        "status": "stable",
+        "links_to": ["kevin_book_v31_detailed.json", "kevin_public_corpus_v30.json", "kevin_workflow_v30.json"]
+      },
+      {
+        "file": "kevin_workflow_v30.json",
+        "domain": "personal_knowledge",
+        "covers": "Workflow canonique, séquence diagnose→plan→apply→verify→report, style d'apprentissage, planning opératoire, agenda système, signaux de dérapage",
+        "status": "stable",
+        "links_to": ["kevin_manus_adn_v31_detailed.json", "kevin_owner_profile_v30.json"]
+      },
+      {
+        "file": "digital_twin_symbiosis.json",
+        "domain": "technical_knowledge",
+        "covers": "NumericTwin Engine, 6 sous-moteurs, fusion index, valeurs, style humain, master guide, 6 approches thérapeutiques, émotion detection",
+        "status": "stable",
+        "links_to": ["kevin_book_v31_detailed.json", "kevin_owner_profile_v30.json"]
+      },
+      {
+        "file": "hyper_intelligence.json",
+        "domain": "technical_knowledge",
+        "covers": "6 modes d'intelligence (Analytical, Creative, Intuitive, Strategic, Empathetic, Integrative), niveaux de conscience simulée, mémoire de travail, raisonnement avancé",
+        "status": "stable",
+        "links_to": ["digital_twin_symbiosis.json"]
+      },
+      {
+        "file": "developpement_personnel.json",
+        "domain": "knowledge_base",
+        "covers": "Valeurs, vision, mission, ikigai, SMART, OKR, zones de génie, Eisenhower, GTD, Pomodoro, time blocking, morning routine, journaling",
+        "status": "stable",
+        "links_to": ["kevin_book_registry_v31.json"]
+      },
+      {
+        "file": "kalloks_arts_creative_kb.json",
+        "domain": "creative_knowledge",
+        "covers": "Kallok's Arts, identité artistique, produits, symbolique",
+        "status": "stable",
+        "links_to": ["kevin_manus_adn_v31_detailed.json"]
+      }
+    ],
+    "domain_coverage": {
+      "personal_knowledge": {
+        "status": "comprehensive",
+        "files": 5,
+        "description": "Profil, livre, ADN opérationnel, corpus public, workflow — couverture complète de l'identité et de l'écosystème de Kevin",
+        "gaps": ["analyse de marché détaillée", "plan financier pluriannuel détaillé"]
+      },
+      "technical_knowledge": {
+        "status": "comprehensive",
+        "files": 3,
+        "description": "TWIN, hyper-intelligence, mémoire, cognition — architecture technique bien documentée",
+        "gaps": ["documentation utilisateur de TITANE", "procédures de déploiement détaillées"]
+      },
+      "knowledge_base": {
+        "status": "extensive",
+        "files": "200+",
+        "description": "Base de connaissance générale très large — développement personnel, santé, entreprenariat, arts, sciences, technologies, spiritualité",
+        "gaps": ["consolidation des doublons thématiques", "nettoyage des entrées obsolètes"]
+      },
+      "creative_knowledge": {
+        "status": "adequate",
+        "files": 1,
+        "description": "Kallok's Arts documenté dans sa dimension créative et commerciale",
+        "gaps": ["portfolio artistique complet", "catalogue produits détaillé"]
+      },
+      "business_strategy": {
+        "status": "partial",
+        "files": 1,
+        "description": "Stratégie éditoriale, écosystème numérique et positionnement documentés dans kevin_manus_adn",
+        "gaps": ["business plan formel", "projections financières", "analyse concurrentielle"]
+      }
+    },
+    "new_files_needed": [
+      {
+        "id": "kevin_controlled_vocabulary_v31",
+        "priority": "high",
+        "raison": "Assurer la cohérence des réponses TITANE en définissant précisément chaque concept-clé de l'univers Humain Total"
+      }
+    ],
+    "optimization_opportunities": [
+      "Créer un vocabulaire contrôlé Humain Total pour cohérence terminologique dans les réponses",
+      "Ajouter des 'plans de travail agents' dans kevin_manus_adn pour les cas d'usage avancés",
+      "Enrichir les retrieval triggers du corpus public avec les nouveaux concepts de kevin_manus_adn",
+      "Standardiser les formats de date et de versioning entre tous les fichiers de connaissance",
+      "Ajouter des cross-references entre kevin_book_v31_detailed et digital_twin_symbiosis pour les données TWIN"
+    ]
+  }
+}
