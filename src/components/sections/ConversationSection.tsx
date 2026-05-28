@@ -1788,6 +1788,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       label: string;
     } | null>(null);
     const [isTranscribingBlob, setIsTranscribingBlob] = useState(false);
+    const [lastFailedContent, setLastFailedContent] = useState<string | null>(null);
     const exportMenuRef = useRef<HTMLDivElement>(null);
     const [generatedFiles, setGeneratedFiles] = useState<GeneratedFileEntry[]>([]);
     const [showToolSelector, setShowToolSelector] = useState(false);
@@ -2698,7 +2699,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       if (imageCtx) setPendingImageAttachment(null);
 
       const messageText = imageCtx
-        ? `${sanitized}\n\n[${imageCtx.label} — données base64 disponibles : ${imageCtx.data.length} caractères]`
+        ? `📸 [${imageCtx.label}]\n\n${sanitized || 'Analyse et décris cette image.'}`
         : sanitized;
       clearConversationInput();
 
@@ -2905,10 +2906,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       thinking.addStep('analysis', 'Analyse de votre message...');
       setSendTraceState('dispatching');
       setSendTraceMeta(`provider=${selectedProvider};len=${messageText.length}`);
+      setLastFailedContent(messageToSend);
 
       try {
         thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
         const response = await sendMessage(messageToSend);
+        setLastFailedContent(null);
         setSendTraceState('responded');
         setSendTraceMeta(
           `provider=${response?.meta?.provider_used ?? 'unknown'};reason=${response?.meta?.reason_code ?? 'UNKNOWN'}`
@@ -3806,13 +3809,29 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
             )}
 
             {error && (
-              <div className="conversation-error" data-testid="chat-error" role="alert">
-                <strong>❌ Erreur:</strong>{' '}
-                {error.includes('TITANE_REQUEST_TIMEOUT') || error.includes('Délai dépassé')
-                  ? "Délai dépassé — le modèle n'a pas répondu à temps. Réessaie ou vérifie que le backend est disponible."
-                  : error.includes('network')
-                    ? 'Erreur réseau — vérifie ta connexion puis réessaie.'
-                    : error}
+              <div className="conversation-error" data-testid="chat-error" role="alert" aria-live="assertive">
+                <span className="conversation-error-text">
+                  <strong>❌ Erreur:</strong>{' '}
+                  {error.includes('TITANE_REQUEST_TIMEOUT') || error.includes('Délai dépassé')
+                    ? "Délai dépassé — le modèle n'a pas répondu à temps. Réessaie ou vérifie que le backend est disponible."
+                    : error.includes('network')
+                      ? 'Erreur réseau — vérifie ta connexion puis réessaie.'
+                      : error}
+                </span>
+                {lastFailedContent && !isLoading && (
+                  <button
+                    type="button"
+                    className="conversation-error-retry-btn"
+                    onClick={() => {
+                      const content = lastFailedContent;
+                      setLastFailedContent(null);
+                      void sendMessage(content);
+                    }}
+                    aria-label="Réessayer le dernier message"
+                  >
+                    ↺ Réessayer
+                  </button>
+                )}
               </div>
             )}
 
@@ -3923,7 +3942,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
                 placeholder="Message… (Entrée ↵ envoyer · Shift+Entrée nouvelle ligne)"
                 value={inputValue}
                 onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 disabled={isLoading}
                 rows={compactConversationLayout ? 2 : 3}
               />

@@ -1911,12 +1911,39 @@
 }
 
 .conversation-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 1rem;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 8px;
   color: #f87171;
   font-size: 0.875rem;
+}
+
+.conversation-error-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-error-retry-btn {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 6px;
+  color: #f87171;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.conversation-error-retry-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.6);
 }
 
 /* Bottom chrome: groups toolbar + input as one unit, no scroll */

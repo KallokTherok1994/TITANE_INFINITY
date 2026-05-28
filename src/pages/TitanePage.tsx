@@ -367,7 +367,7 @@ export const TitanePage: React.FC = () => {
     [updateActiveTab]
   );
 
-  const isConversationTab = activeTab === 'conversation';
+  const isConversationTab = useMemo(() => activeTab === 'conversation', [activeTab]);
 
   // ═══ KEYBOARD SHORTCUTS (chat mode only) ═══
   useEffect(() => {
