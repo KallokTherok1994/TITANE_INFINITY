@@ -23,6 +23,7 @@ Cargo.lock
 # IDEs
 .vscode/
 .idea/
+.kilo/
 *.swp
 *.swo
 *~
