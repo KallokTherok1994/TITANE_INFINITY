@@ -88,7 +88,7 @@ function persistMessageInBackground(
       await Promise.resolve(saveMessage(message));
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
-      logger.warn(failureLabel);
+      logger.warn(failureLabel, { error: String(persistError) });
     }
   })();
 }
@@ -103,7 +103,7 @@ function persistAssistantMessageInBackground(
       await saveMessage(assistantAIMessage);
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
-      logger.warn(failureLabel);
+      logger.warn(failureLabel, { error: String(persistError) });
     }
   })();
 }
@@ -131,7 +131,7 @@ function persistConversationHistoryInBackground(
       );
       chatMemoryCompactor.flushPendingSaves();
     } catch (persistError) {
-      logger.warn(failureLabel);
+      logger.warn(failureLabel, { error: String(persistError) });
     }
   })();
 }
@@ -515,7 +515,7 @@ export function useConversationEngine(
           }
         }
       } catch (err) {
-        logger.warn('[useConversationEngine] ⚠️ Failed to load stored messages:');
+        logger.warn('[useConversationEngine] ⚠️ Failed to load stored messages:', { error: String(err) });
       }
     };
 
@@ -561,8 +561,7 @@ export function useConversationEngine(
         } catch (err) {
           logger.error(
             '[ConversationEngine] Health check failed:',
-            undefined,
-            err instanceof Error ? err : undefined
+            { error: String(err) }
           );
           return null;
         } finally {
@@ -1050,7 +1049,7 @@ export function useConversationEngine(
             chatMemoryCompactor.flushPendingSaves();
             patchMessageMetadata(assistantMessage.id, { saveStatus: 'saved' });
           } catch (persistError) {
-            logger.warn('[useConversationEngine] ⚠️ Failed to persist messages');
+            logger.warn('[useConversationEngine] ⚠️ Failed to persist messages', { error: String(persistError) });
             patchMessageMetadata(assistantMessage.id, { saveStatus: 'failed' });
           }
         })();
@@ -1145,15 +1144,14 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
             chatMemoryCompactor.flushPendingSaves();
             patchMessageMetadata(fallbackMessage.id, { saveStatus: 'saved' });
           } catch (persistError) {
-            logger.warn('[useConversationEngine] ⚠️ Failed to persist fallback message');
+            logger.warn('[useConversationEngine] ⚠️ Failed to persist fallback message', { error: String(persistError) });
             patchMessageMetadata(fallbackMessage.id, { saveStatus: 'failed' });
           }
         })();
 
         logger.error(
           '[ConversationEngine] Erreur finale:',
-          undefined,
-          err instanceof Error ? err : undefined
+          { error: String(err) }
         );
         return null;
       } finally {

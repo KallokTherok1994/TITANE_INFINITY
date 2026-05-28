@@ -1150,7 +1150,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             await saveMessage(userMessage);
             await saveMessage(devSudoResponse);
           } catch (persistError) {
-            logger.warn('[useChat] ⚠️ dev-sudo persistence failed', persistError);
+            logger.warn('[useChat] ⚠️ dev-sudo persistence failed', { error: String(persistError) });
           }
 
           return devSudoResponse;
@@ -1200,7 +1200,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             await saveMessage(userMessage);
             await saveMessage(cameraResponse);
           } catch (persistError) {
-            logger.warn('[useChat] ⚠️ camera persistence failed', persistError);
+            logger.warn('[useChat] ⚠️ camera persistence failed', { error: String(persistError) });
           }
 
           return cameraResponse;
@@ -1861,7 +1861,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               finalResponse = await executeStreaming();
             } catch (error) {
               streamingError = error instanceof Error ? error : new Error(String(error));
-              logger.warn('[Chat] Streaming fallback triggered:', streamingError);
+              logger.warn('[Chat] Streaming fallback triggered:', { error: String(streamingError) });
             }
           }
         }
@@ -2140,7 +2140,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             chatLogger.warn('XP award warning', { error: xpError });
           }
         } catch (memoryError) {
-          logger.warn('[Chat] Memory integration warning:', memoryError);
+          logger.warn('[Chat] Memory integration warning:', { error: String(memoryError) });
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
@@ -2155,7 +2155,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
               assistantMessage.content
             );
           } catch (voiceError) {
-            logger.warn('[Chat] Voice warning:', voiceError);
+            logger.warn('[Chat] Voice warning:', { error: String(voiceError) });
           }
         }
 
@@ -2166,7 +2166,7 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
 
         return assistantMessage;
       } catch (error) {
-        logger.error('[Chat] Engine pipeline error:', error);
+        logger.error('[Chat] Engine pipeline error:', { error: String(error) });
 
         // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
         const harmonizedError = cognitiveKernelRef.current.harmonizeError(error);
@@ -2247,7 +2247,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     try {
       clearMode();
     } catch (error) {
-      logger.warn('[OMNIS] Clear mode warning:', error);
+      logger.warn('[OMNIS] Clear mode warning:', { error: String(error) });
     }
   }, [applyMessagesSafely, clearMode]);
 
@@ -2257,7 +2257,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       try {
         setCoreMode(mode);
       } catch (error) {
-        logger.warn('[OMNIS] Set mode warning:', error);
+        logger.warn('[OMNIS] Set mode warning:', { error: String(error) });
       }
     },
     [setCoreMode]

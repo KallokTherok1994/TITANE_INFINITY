@@ -132,7 +132,7 @@ interface GeneratedFileEntry {
 
 interface ConversationMessageItem extends Pick<
   ConversationMessage,
-  'id' | 'role' | 'content' | 'metadata'
+  'id' | 'role' | 'content' | 'metadata' | 'timestamp'
 > {}
 
 interface RuntimeSignals {
@@ -1152,7 +1152,7 @@ const ConversationMessage = memo(
     onDelete: (id: string) => void;
   }) => {
     const speechMessageId =
-      message.id ?? `${message.role}-${message.content.slice(0, 64)}`;
+      message.id ?? `${message.role}-${message.timestamp}`;
     const speechState = useMessageSpeechState(
       speechMessageId,
       message.role === 'assistant' ? message.content : ''
@@ -1263,9 +1263,9 @@ const ConversationMessage = memo(
             )}
             {message.metadata?.tags && message.metadata.tags.length > 0 && (
               <div className="conversation-message-tags">
-                {message.metadata.tags.slice(0, 3).map((tag, i) => (
+                {message.metadata.tags.slice(0, 3).map(tag => (
                   <span
-                    key={i}
+                    key={tag}
                     className="conversation-tag"
                     data-testid="chat-runtime-tag"
                   >
@@ -2061,14 +2061,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       async (content: string) => {
         if (!content.trim() || isLoading) return;
         thinking.startThinking();
+        setLastFailedContent(content);
         try {
           await sendMessage(content);
+          setLastFailedContent(null);
           void refreshLTM(); // PATCH-014: refresh LTM count after message
         } finally {
           thinking.stopThinking();
         }
       },
-      [isLoading, sendMessage, thinking, refreshLTM]
+      [isLoading, sendMessage, thinking, refreshLTM, setLastFailedContent]
     );
 
     const handleSuggestionClick = useCallback(
@@ -2989,6 +2991,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
       toastSuccess,
       clearConversationInput,
       pendingImageAttachment,
+      selectedProvider,
     ]);
 
     const handleDownloadGeneratedFile = useCallback(
@@ -3187,7 +3190,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
 
     const handleFilesAnalyzed = useCallback(
       (files: AnalyzedFile[]) => {
-        sendMessage(buildImportedFilesPrompt(files));
+        void sendMessage(buildImportedFilesPrompt(files)).catch(e =>
+          pageLogger.error('File analysis send failed', { error: String(e) })
+        );
       },
       [sendMessage]
     );
@@ -3197,7 +3202,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(
         const fileNames = Array.from(files)
           .map(f => f.name)
           .join(', ');
-        sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
+        void sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`).catch(e =>
+          pageLogger.error('File import send failed', { error: String(e) })
+        );
       },
       [sendMessage]
     );
