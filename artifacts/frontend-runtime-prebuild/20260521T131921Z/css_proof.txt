@@ -1,2 +1,0 @@
--rw-r--r-- 1 Kevin 197609 615692 mai   21 09:22 dist/assets/style-CbLlCtwK.css
-1 dist/assets/style-CbLlCtwK.css
