@@ -1,0 +1,4 @@
+PHASE_LOCK_GUARD phase=GATE_16A
+current_gate=GATE_15
+p2_transition=ACTIVE
+PHASE_LOCK_GUARD=PASS

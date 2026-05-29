@@ -1,0 +1,12 @@
+=== ALLOWED DEV QWEN SCAN ===
+ALLOWED_DEV_MATCH: src\pages\TotalDevPage.tsx (count=13)
+  * Provider: QWEN Dev via Ollama (modele qwen3.5:9b)
+  description: 'Serveur Ollama + modèle qwen3.5:9b + boundary',
+  '**TOTAL_DEV — Cockpit gouverne** pret.\n\nProvider: **QWEN Dev** (qwen3.5:9b via Ollama)\nMode: ' +
+  model: 'qwen3.5:9b',
+  model: 'qwen3.5:9b',
+ALLOWED_DEV_MATCH: src\registry\uiSurfaceRegistry.ts (count=2)
+  notes: 'Uses qwen2.5-coder, not PROD model',
+  'ACTIVE_PARTIAL: GOD DEV space; unlock-gated. DEV model (qwen2.5-coder), not PROD model.',
+ALLOWED_DEV_MATCH: src\__tests__\search-prod-model-compliance.test.ts (count=1)
+  const DEV_SURFACES = ['TotalDevPage', 'VS Code MCP Copilot', 'qwen3.5:9b dev prompt'];

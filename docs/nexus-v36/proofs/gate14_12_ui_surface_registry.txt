@@ -1,0 +1,17 @@
+
+> titane-infinity@35.1.10 verify:ui-surface-registry C:\Dev\TITANE_INFINITY
+> node scripts/verify/verify-ui-surface-registry.mjs
+
+
+🔍 TITANE UI Surface Registry Verifier
+============================================================
+App.tsx canonical routes: 27
+Registry canonical routes: 30
+uiPages.po.js routes: 29
+moduleRouteContext routes: 32
+Simulated routes: 2
+
+  ✅ SIMULATED_DISCLOSURE_CONFIRMED: '/orchestration-intelligence' has banner applied
+  ✅ SIMULATED_DISCLOSURE_CONFIRMED: '/quantum-center' has banner applied
+
+✅ PASS — All surface registry checks passed

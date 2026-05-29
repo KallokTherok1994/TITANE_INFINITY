@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SurfaceDecision",
+  "description": "Schema for TITANE Surface Decision Matrix entries",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string" },
+    "phase": { "type": "string" },
+    "agent": { "type": "string", "const": "04_surface_auditor" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED_SCOPE", "UNKNOWN"]
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["route", "surface_type", "classification", "rationale"],
+        "properties": {
+          "route": { "type": "string" },
+          "surface_type": { "type": "string" },
+          "classification": {
+            "type": "string",
+            "enum": ["KEEP", "KEEP_DAILY", "ARCHIVE", "REMOVE", "SIMULATED_UI", "UNKNOWN"]
+          },
+          "rationale": { "type": "string" },
+          "action_required": { "type": "string" },
+          "kevin_approval_required": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

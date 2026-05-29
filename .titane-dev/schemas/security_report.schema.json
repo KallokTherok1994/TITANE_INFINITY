@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SecurityReport",
+  "description": "Schema for TITANE security guard scan reports",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string" },
+    "phase": { "type": "string" },
+    "agent": { "type": "string", "const": "09_security_guard" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED", "SECRET_FOUND", "BOUNDARY_VIOLATION"]
+    },
+    "secrets_scan": {
+      "type": "string",
+      "enum": ["PASS", "SECRET_FOUND", "DOC_EXAMPLE_ONLY"]
+    },
+    "qwen_boundary": {
+      "type": "string",
+      "enum": ["PASS", "BOUNDARY_VIOLATION", "UNKNOWN"]
+    },
+    "gemma_baseline": {
+      "type": "string",
+      "enum": ["PASS", "MISSING", "UNKNOWN"]
+    },
+    "simulated_ui_daily": {
+      "type": "string",
+      "enum": ["PASS", "UNSAFE_EXPOSURE"]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "pattern", "classification"],
+        "properties": {
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "pattern": { "type": "string" },
+          "matched_text": { "type": "string" },
+          "classification": {
+            "type": "string",
+            "enum": ["REAL_SECRET_SUSPECT", "DOC_EXAMPLE", "BOUNDARY_VIOLATION", "SAFE"]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

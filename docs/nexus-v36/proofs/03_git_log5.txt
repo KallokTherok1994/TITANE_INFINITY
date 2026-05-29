@@ -1,0 +1,5 @@
+6c6aa6e01 fix(i18n): fr.json onboarding section, logger migration, dead exports, stale docs (AH-0098)
+fa2e596dc test(e2e): add chat-page-complete-coverage WDIO suite — 27 sections, 90 tests (AH-0097)
+88f96f44c fix(certifier): update VITEST_UNIT_CONFIG_BOUNDARY gate for mergeConfig contract (AH-0096)
+a9536e995 fix(tsconfig+vitest+docs): remove dead excludes, delete PhysiologicalPanel, purge 7271 stale docs (AH-0091→AH-0095)
+b216c6697 chore(grand-nettoyage): untrack 12217 historical/generated files, remove dead tailwind colors (AH-0094)

@@ -1,0 +1,4 @@
+RUNTIME_PASS_MARKER_QUALIFIED: qwen3.5:9b response=[]
+EXACT_MARKER_PASS: qwen2.5-coder:14b
+EXACT_MARKER_PASS: qwen2.5-coder:7b
+EXACT_MARKER_PASS: gemma2:2b

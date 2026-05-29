@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "ollama-dev": {
+      "type": "stdio",
+      "command": "bash",
+      "args": ["scripts/mcp/start-ollama-dev-mcp.sh"],
+      "env": {
+        "OLLAMA_HOST": "http://127.0.0.1:11434",
+        "TITANE_OLLAMA_DEV_MODEL": "qwen3.5:9b"
+      }
+    }
+  }
+}

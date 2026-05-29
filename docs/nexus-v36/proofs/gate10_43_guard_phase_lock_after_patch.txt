@@ -1,0 +1,4 @@
+PHASE_LOCK_GUARD phase=UNKNOWN
+current_gate=GATE_10
+p2_transition=LOCKED
+PHASE_LOCK_GUARD=PASS

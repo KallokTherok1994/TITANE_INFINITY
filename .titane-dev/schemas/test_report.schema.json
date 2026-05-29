@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TestReport",
+  "description": "Schema for TITANE test runner reports",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string" },
+    "phase": { "type": "string" },
+    "agent": { "type": "string", "const": "08_test_runner" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED_ENV", "UNKNOWN"]
+    },
+    "suites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "pass_count", "fail_count", "exit_code"],
+        "properties": {
+          "name": { "type": "string" },
+          "pass_count": { "type": "integer" },
+          "fail_count": { "type": "integer" },
+          "skip_count": { "type": "integer" },
+          "exit_code": { "type": "integer" },
+          "duration_ms": { "type": "integer" },
+          "failing_tests": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "regressions": { "type": "array", "items": { "type": "string" } },
+    "flaky_tests": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

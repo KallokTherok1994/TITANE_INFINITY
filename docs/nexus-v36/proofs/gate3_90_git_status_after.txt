@@ -1,0 +1,4 @@
+ M .vscode/mcp.json
+?? "C\357\200\272tmpcertifier_out.txt"
+?? docs/nexus-v36/
+?? scripts/titane-dev/

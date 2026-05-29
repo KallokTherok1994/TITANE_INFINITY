@@ -1,0 +1,29 @@
+{
+  "current_gate": "HUMAN_VISUAL_REVIEW_PENDING",
+  "last_completed_gate": "GATE_16A_1",
+  "gates": {
+    "gate_0": "QUALIFIED",
+    "gate_1": "QUALIFIED",
+    "gate_2": "QUALIFIED",
+    "gate_3": "PASS",
+    "gate_4": "PASS",
+    "gate_5": "PASS",
+    "gate_6": "QUALIFIED_NO_BLOCKING_CONFLICT",
+    "gate_7": "PASS",
+    "gate_8": "PASS",
+    "gate_9": "PASS",
+    "gate_10": "PASS",
+    "gate_11": "PASS",
+    "gate_12": "PASS",
+    "gate_13": "QUALIFIED_VISUAL_WITH_NONBLOCKING_NOTES",
+    "gate_14": "QUALIFIED_PENDING_KEVIN_VISUAL_VALIDATION",
+    "gate_15": "QUALIFIED_PENDING_KEVIN_VISUAL_VALIDATION",
+    "gate_16A": "PASS",
+    "gate_16A_1": "PASS"
+  },
+  "p2_transition": "ACTIVE",
+  "visual_validation": "PENDING_KEVIN",
+  "visual_review_package": "READY",
+  "human_review_gallery": "READY",
+  "final_verdict": "QUALIFIED_PENDING_KEVIN_VISUAL_VALIDATION"
+}

@@ -1,0 +1,8 @@
+ M .vscode/mcp.json
+ M scripts/autoheal/autoheal_rules.jsonl
+?? .titane-dev/
+?? "C\357\200\272tmpcertifier_out.txt"
+?? docs/nexus-v36/
+?? scripts/titane-dev/
+?? src/lib/adapters/
+?? tests/unit/adapters/

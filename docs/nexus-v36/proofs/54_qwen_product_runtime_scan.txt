@@ -1,0 +1,18 @@
+
+src\__tests__\search-prod-model-compliance.test.ts:193:    const DEV_SURFACES = ['TotalDevPage', 'VS Code MCP Copilot', 'qwen3.5:9b dev prompt'];
+src\pages\TotalDevPage.tsx:7: * Provider: QWEN Dev via Ollama (modele qwen3.5:9b)
+src\pages\TotalDevPage.tsx:128:    description: 'Serveur Ollama + modèle qwen3.5:9b + boundary',
+src\pages\TotalDevPage.tsx:374:        '**TOTAL_DEV — Cockpit gouverne** pret.\n\nProvider: **QWEN Dev** (qwen3.5:9b via Ollama)\nMode: ' +
+src\pages\TotalDevPage.tsx:379:      model: 'qwen3.5:9b',
+src\pages\TotalDevPage.tsx:424:        model: 'qwen3.5:9b',
+src\pages\TotalDevPage.tsx:435:          : '[Aucune réponse du provider QWEN Dev. Verifiez que Ollama est actif avec qwen3.5:9b]');
+src\pages\TotalDevPage.tsx:443:        model: 'qwen3.5:9b',
+src\pages\TotalDevPage.tsx:450:        content: `**ERREUR IPC:** ${String(e)}\n\nVerifiez que Ollama est actif: ollama run qwen3.5:9b`,
+src\pages\TotalDevPage.tsx:453:        model: 'qwen3.5:9b',
+src\pages\TotalDevPage.tsx:501:              <span className="total-dev-chat-model">qwen3.5:9b</span>
+src\pages\TotalDevPage.tsx:951:        <span className="total-dev-provider-badge">qwen3.5:9b · loopback MCP</span>
+src\pages\TotalDevPage.tsx:957:          <strong>qwen3.5:9b</strong>
+src\pages\TotalDevPage.tsx:1178:          <span className="total-dev-meta-item">Provider: qwen3.5:9b</span>
+src\registry\uiSurfaceRegistry.ts:678:        notes: 'Uses qwen2.5-coder, not PROD model',
+src\registry\uiSurfaceRegistry.ts:690:      'ACTIVE_PARTIAL: GOD DEV space; unlock-gated. DEV model (qwen2.5-coder), not PROD model.',
+

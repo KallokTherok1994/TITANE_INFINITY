@@ -1,0 +1,13 @@
+FOUND: 43 occurrences of gemma2:2b in product runtime
+
+src\__tests__\chat-context-injection.test.ts:41:      model: 'gemma2:2b',
+src\__tests__\chat-context-injection.test.ts:51:    content: { models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }] },
+src\__tests__\chat-context-injection.test.ts:280:        content: { content: 'OK', model: 'gemma2:2b', latency_ms: 50 },
+src\__tests__\chat-memory-twins-omega-singularity.test.ts:151:      model: 'gemma2:2b',
+src\__tests__\chat-ollama-http-network.test.ts:23:const OLLAMA_MODEL = 'gemma2:2b';
+src\__tests__\chat-ollama-http-network.test.ts:74:  it('gemma2:2b is in the model list', async () => {
+src\__tests__\chat-provider-failover.test.ts:79:      content: { models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }] },
+src\__tests__\chat-provider-failover.test.ts:84:      content: { content: 'Réponse OK', model: 'gemma2:2b', latency_ms: 100 },
+src\__tests__\chat-provider-failover.test.ts:100:      content: { models: [{ name: 'gemma2:2b', modified_at: '', size: 0 }] },
+src\__tests__\chat-provider-failover.test.ts:122:        content: { content: 'Succès retry', model: 'gemma2:2b', latency_ms: 80 },
+

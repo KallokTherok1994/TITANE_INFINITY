@@ -1,0 +1,15 @@
+FOUND: docs\nexus-v36\00_PREFLIGHT_REPORT.md
+FOUND: docs\nexus-v36\01_OLLAMA_MODEL_REPORT.md
+FOUND: docs\nexus-v36\proofs\30_ollama_version.txt
+FOUND: docs\nexus-v36\proofs\31_ollama_list_before.txt
+FOUND: docs\nexus-v36\proofs\32_ollama_api_version.json
+FOUND: docs\nexus-v36\proofs\33_ollama_api_tags_before.json
+FOUND: docs\nexus-v36\proofs\34_ollama_api_ps_before.json
+FOUND: docs\nexus-v36\proofs\40_smoke_qwen35.json
+FOUND: docs\nexus-v36\proofs\41_smoke_qwen25_coder_14b.json
+FOUND: docs\nexus-v36\proofs\42_smoke_qwen25_coder_7b.json
+FOUND: docs\nexus-v36\proofs\43_smoke_gemma2_product.json
+FOUND: docs\nexus-v36\proofs\44_ollama_api_ps_after_smoke.json
+FOUND: docs\nexus-v36\proofs\54_qwen_product_runtime_scan.txt
+FOUND: docs\nexus-v36\proofs\55_gemma_product_runtime_scan.txt
+

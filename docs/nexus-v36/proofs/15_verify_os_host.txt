@@ -1,0 +1,10 @@
+
+> titane-infinity@35.1.10 verify:os-host C:\Dev\TITANE_INFINITY
+> node scripts/verify/verify-os-host.mjs
+
+OS_HOST=WINDOWS_11_LOCAL
+OS_FAMILY=win32
+OS_VERSION=10.0.26200
+CI=false
+SHELL_HINT=C:\Windows\system32\cmd.exe
+OS_HOST_CLASSIFICATION=PASS

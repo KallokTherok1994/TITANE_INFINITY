@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ModelMap",
+  "description": "Schema for TITANE Ollama model map records",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string" },
+    "phase": { "type": "string" },
+    "agent": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED_MODEL", "UNKNOWN"]
+    },
+    "product_chat_default": { "type": "string", "const": "gemma2:2b" },
+    "dev_orchestrator": { "type": "string" },
+    "dev_scope_sentinel": { "type": "string" },
+    "dev_runtime_architect": { "type": "string" },
+    "dev_test_runner": { "type": "string" },
+    "dev_security_guard": { "type": "string" },
+    "dev_reviewer": { "type": "string" },
+    "embeddings": { "type": "array", "items": { "type": "string" } },
+    "optional_heavy": { "type": "string" },
+    "forbidden_in_product": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Models that must never appear in product chat defaults"
+    }
+  },
+  "additionalProperties": true
+}

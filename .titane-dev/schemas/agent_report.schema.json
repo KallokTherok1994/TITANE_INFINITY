@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgentReport",
+  "description": "Schema for TITANE Dev Agent execution reports",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string", "description": "Unique identifier for this mission run" },
+    "phase": { "type": "string", "description": "Current NEXUS phase identifier" },
+    "agent": { "type": "string", "description": "Agent name that produced this report" },
+    "timestamp": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp" },
+    "scope": { "type": "string", "description": "Scope ring applied during this run" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" }, "description": "Paths allowed for mutation" },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" }, "description": "Paths explicitly forbidden" },
+    "commands_run": { "type": "array", "items": { "type": "string" }, "description": "Commands executed" },
+    "files_read": { "type": "array", "items": { "type": "string" } },
+    "files_created": { "type": "array", "items": { "type": "string" } },
+    "files_updated": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" }, "description": "Proof file paths or verbatim outputs" },
+    "blockers": { "type": "array", "items": { "type": "string" }, "description": "Active blockers" },
+    "rollback": { "type": "string", "description": "Rollback command or N/A" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED", "BLOCKED_SCOPE", "BLOCKED_ENV", "BLOCKED_MODEL", "BLOCKED_USER_STOP", "UNKNOWN", "NEEDS_HUMAN_REVIEW"]
+    }
+  },
+  "additionalProperties": false
+}

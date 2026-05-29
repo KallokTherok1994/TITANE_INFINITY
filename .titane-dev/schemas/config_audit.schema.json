@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConfigAudit",
+  "description": "Schema for TITANE Dev config audit reports (OS, toolchain, MCP, Ollama)",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string" },
+    "phase": { "type": "string" },
+    "agent": { "type": "string", "const": "02_config_auditor" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED_ENV", "UNKNOWN"]
+    },
+    "os_host": { "type": "string" },
+    "toolchain": {
+      "type": "object",
+      "properties": {
+        "node": { "type": "string" },
+        "pnpm": { "type": "string" },
+        "git": { "type": "string" },
+        "rustc": { "type": "string" },
+        "cargo": { "type": "string" }
+      }
+    },
+    "ollama_api": { "type": "string", "enum": ["PASS", "FAIL", "BLOCKED_ENV"] },
+    "mcp_config": { "type": "string", "enum": ["PASS_WINDOWS_FIRST", "QUALIFIED_BASH_DEPENDENCY", "BLOCKED"] },
+    "product_chat_default": { "type": "string" },
+    "dev_model": { "type": "string" }
+  },
+  "additionalProperties": true
+}

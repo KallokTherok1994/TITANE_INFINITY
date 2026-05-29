@@ -1,0 +1,54 @@
+mission: Implement Runtime Adapter v37 — DISABLED until explicit v37 approval from Kevin
+phase: PHASE_RUNTIME_V37_FUTURE
+
+# THIS WORKFLOW IS DISABLED UNTIL EXPLICIT V37 APPROVAL FROM KEVIN.
+# DO NOT EXECUTE THIS WORKFLOW IN ANY PHASE BEFORE V37 APPROVAL.
+status: DISABLED_UNTIL_RUNTIME_V37_APPROVAL
+
+allowed_scope:
+  - src-tauri/** (write — only after activation)
+  - src/** (write — only after activation, per approved spec)
+  - docs/nexus-v36/** (write)
+  - docs/nexus-v36/proofs/** (write)
+
+forbidden_scope:
+  - This entire workflow is forbidden until v37 approval
+  - src-tauri/** (write — during Gate 4 or 5)
+  - src/** (write — during Gate 4 or 5)
+  - package.json
+  - .github/workflows/**
+  - HTTP route creation before v37 approval
+
+agents:
+  - 00_scope_sentinel
+  - 05_runtime_architect
+  - 07_backend_http_rust_DISABLED
+  - 08_test_runner
+  - 09_security_guard
+  - 11_reviewer
+
+required_proofs:
+  - Runtime Adapter Spec PASS (from workflow 04)
+  - Surface Decision Matrix PASS (from workflow 03)
+  - Kevin explicit v37 approval (required)
+  - Security guard PASS
+  - Reviewer PASS
+  - IPC whitelist additions verified
+  - Tauri allowlist additions documented
+  - Build PASS
+  - Test suite PASS
+
+stoplines:
+  - Execution without Kevin explicit v37 approval
+  - 07_backend_http_rust_DISABLED executing without activation
+  - HTTP route creation before approval
+  - IPC mutation without security guard sign-off
+
+rollback: git restore -- src-tauri/ src/; cargo clean
+
+final_verdict_allowed:
+  - PASS
+  - QUALIFIED
+  - FAIL
+  - BLOCKED_SCOPE
+  - BLOCKED_UNTIL_APPROVAL

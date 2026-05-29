@@ -1,0 +1,48 @@
+mission: Generate Surface Decision Matrix classifying all UI routes without mutating any route
+phase: PHASE_0_3_SURFACE_DECISION_MATRIX
+
+allowed_scope:
+  - docs/ui/** (read-only)
+  - docs/CARTOGRAPHY_COMPLETE.md (read-only)
+  - docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json (read-only)
+  - UI_SURFACE_MAP.md (read-only)
+  - src/registry/** (read-only)
+  - docs/nexus-v36/** (write)
+  - docs/nexus-v36/proofs/** (write)
+
+forbidden_scope:
+  - src/** (write)
+  - src-tauri/**
+  - Route mutations of any kind
+  - Route deletions
+  - Route renames
+  - package.json
+  - .github/workflows/**
+  - Promoting SIMULATED_UI to KEEP_DAILY without Kevin approval
+
+agents:
+  - 00_scope_sentinel
+  - 04_surface_auditor
+  - 09_security_guard
+  - 11_reviewer
+
+required_proofs:
+  - Surface Decision Matrix document with one row per route
+  - Classification for each route: KEEP | KEEP_DAILY | ARCHIVE | REMOVE | SIMULATED_UI | UNKNOWN
+  - Source manifest cited for each route
+  - SIMULATED_UI list with description
+  - No source file modifications
+
+stoplines:
+  - Any route mutated during matrix generation
+  - SIMULATED_UI routes promoted to KEEP_DAILY without explicit Kevin approval
+  - Route removal without separate Kevin approval after matrix review
+
+rollback: Read-only audit. If a route was accidentally mutated: git restore -- src/
+
+final_verdict_allowed:
+  - PASS
+  - QUALIFIED
+  - FAIL
+  - BLOCKED_SCOPE
+  - UNKNOWN

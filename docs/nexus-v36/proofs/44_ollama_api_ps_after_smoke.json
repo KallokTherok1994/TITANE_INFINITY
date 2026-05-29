@@ -1,0 +1,42 @@
+{
+  "models": [
+    {
+      "name": "gemma2:2b",
+      "model": "gemma2:2b",
+      "size": 2588677120,
+      "digest": "8ccf136fdd5298f3ffe2d69862750ea7fb56555fa4d5b18c04e3fa4d82ee09d7",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "gemma2",
+        "families": [
+          "gemma2"
+        ],
+        "parameter_size": "2.6B",
+        "quantization_level": "Q4_0"
+      },
+      "expires_at": "2026-05-28T22:08:40.1410462-04:00",
+      "size_vram": 2588677120,
+      "context_length": 4096
+    },
+    {
+      "name": "qwen2.5-coder:7b",
+      "model": "qwen2.5-coder:7b",
+      "size": 4924207104,
+      "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      },
+      "expires_at": "2026-05-28T22:08:34.4335046-04:00",
+      "size_vram": 4924207104,
+      "context_length": 4096
+    }
+  ]
+}

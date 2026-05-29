@@ -1,0 +1,13 @@
+{
+    "chat.mcp.access": "all",
+    "chat.agent.maxRequests": 1000,
+    "chat.mcp.serverSampling": {
+        "TITANE_INFINITY/.vscode/mcp.json: ollama-dev": {
+            "allowedModels": [
+                "copilot/auto",
+                "copilotcli/claude-haiku-4.5",
+                "copilotcli/gpt-4o"
+            ]
+        }
+    }
+}

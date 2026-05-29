@@ -1,0 +1,4 @@
+
+> titane-infinity@35.1.10 check C:\Dev\TITANE_INFINITY
+> tsc --noEmit
+

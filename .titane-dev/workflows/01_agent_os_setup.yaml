@@ -1,0 +1,54 @@
+mission: Create and validate the local TITANE Dev Agent OS structure
+phase: GATE_4_AGENT_OS_CREATION
+
+allowed_scope:
+  - .titane-dev/**
+  - docs/nexus-v36/**
+  - docs/nexus-v36/proofs/**
+  - scripts/titane-dev/**
+
+forbidden_scope:
+  - src/**
+  - src-tauri/**
+  - package.json
+  - pnpm-lock.yaml
+  - Cargo.toml
+  - Cargo.lock
+  - .github/workflows/**
+  - .env
+  - .env.*
+  - runtime/**
+  - product Ollama defaults
+
+agents:
+  - 00_scope_sentinel
+  - 02_config_auditor
+  - 10_documentation_agent
+  - 09_security_guard
+  - 11_reviewer
+
+required_proofs:
+  - .titane-dev/agents/ contains all 12 agent files
+  - Every agent file has all 12 required sections
+  - Disabled agents (06, 07) clearly state DISABLED status and Kevin approval requirement
+  - .titane-dev/workflows/ contains all 7 workflow files
+  - .titane-dev/schemas/ contains all 7 schema files and pass JSON validation
+  - .titane-dev/memory/ contains all 8 memory files
+  - No forbidden files modified
+  - Security scan: PASS
+
+stoplines:
+  - Any src/ or src-tauri/ file modified
+  - Disabled agent missing DISABLED marker
+  - Schema JSON validation failure
+  - Any secret found in created files
+
+rollback: |
+  Remove-Item -Recurse -Force .titane-dev
+  Remove-Item -Force docs\nexus-v36\04_AGENT_OS_CREATION_REPORT.md
+
+final_verdict_allowed:
+  - PASS
+  - QUALIFIED
+  - FAIL
+  - BLOCKED_SCOPE

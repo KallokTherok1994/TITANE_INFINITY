@@ -244,9 +244,9 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
         label: 'DEV',
         icon: '🛠️',
         route: '/dev',
+        // Gate 11: /orchestration-intelligence removed — SIMULATED_UI must not highlight nav (SIM-03)
         matchRoutes: [
           '/orchestration-center',
-          '/orchestration-intelligence',
           '/singularity',
           '/sentinel',
           '/watchdog',
@@ -285,6 +285,8 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
   });
 
   it('keeps every canonical owner nav entry active across secondary and more-menu routes', async () => {
+    // Gate 11: SIMULATED routes removed from matchRoutes per SIM-03.
+    // /orchestration-intelligence and /quantum-center no longer highlight any nav item.
     const items: TopNavItem[] = [
       {
         id: 'titane',
@@ -310,7 +312,7 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
         route: '/dev',
         matchRoutes: [
           '/orchestration-center',
-          '/orchestration-intelligence',
+          // /orchestration-intelligence removed: SIMULATED_UI (SIM-03)
           '/singularity',
           '/sentinel',
           '/watchdog',
@@ -323,7 +325,12 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
         label: 'FUSION',
         icon: '✨',
         route: '/fusion',
-        matchRoutes: ['/reality-center', '/hyper-center', '/quantum-center', '/cloud'],
+        matchRoutes: [
+          '/reality-center',
+          '/hyper-center',
+          // /quantum-center removed: SIMULATED_UI (SIM-03)
+          '/cloud',
+        ],
       },
       {
         id: 'twins',
@@ -355,7 +362,7 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
       { route: '/admin', activeTestId: 'nav-admin' },
       { route: '/dev', activeTestId: 'nav-dev' },
       { route: '/orchestration-center', activeTestId: 'nav-dev' },
-      { route: '/orchestration-intelligence', activeTestId: 'nav-dev' },
+      // /orchestration-intelligence: SIMULATED_UI — excluded from routeExpectations (SIM-03)
       { route: '/singularity', activeTestId: 'nav-dev' },
       { route: '/sentinel', activeTestId: 'nav-dev' },
       { route: '/watchdog', activeTestId: 'nav-dev' },
@@ -365,7 +372,7 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
       { route: '/cloud', activeTestId: 'nav-fusion' },
       { route: '/reality-center', activeTestId: 'nav-fusion' },
       { route: '/hyper-center', activeTestId: 'nav-fusion' },
-      { route: '/quantum-center', activeTestId: 'nav-fusion' },
+      // /quantum-center: SIMULATED_UI — excluded from routeExpectations (SIM-03)
       { route: '/twins', activeTestId: 'btn-nav-more' },
       { route: '/optimization', activeTestId: 'btn-nav-more' },
       { route: '/performance', activeTestId: 'btn-nav-more' },

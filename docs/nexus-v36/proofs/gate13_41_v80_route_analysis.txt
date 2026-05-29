@@ -1,0 +1,42 @@
+GATE13_V80_ROUTE_ANALYSIS
+
+Artifact: artifacts/ui-visual/v80-production-visual-capture.jsonl
+CapturedAt: 2026-05-11T18:54:43.026Z
+ROUTES_COVERED: 29/30 (missing /multiproject)
+BLANK_PAGES: 0
+ERROR_BOUNDARIES: 0
+
+ROUTE_NAV_STATE:
+/titane              navActive=nav-titane        blankPage=false
+/time                navActive=nav-time          blankPage=false
+/admin               navActive=nav-admin         blankPage=false
+/dev                 navActive=nav-dev           blankPage=false
+/fusion              navActive=nav-fusion        blankPage=false
+/twins               navActive=btn-nav-more      blankPage=false
+/optimization        navActive=btn-nav-more      blankPage=false
+/total-dev           navActive=btn-nav-more      blankPage=false
+/experience          navActive=nav-titane        blankPage=false
+/cloud               navActive=nav-fusion        blankPage=false
+/memory              navActive=nav-titane        blankPage=false
+/doc-center          navActive=               blankPage=false
+/research            navActive=nav-titane        blankPage=false
+/orchestration-center navActive=nav-dev         blankPage=false
+/orchestration-intelligence navActive=nav-dev  blankPage=false [PRE-GATE11-SIM03-BUG]
+/reality-center      navActive=nav-fusion        blankPage=false
+/hyper-center        navActive=nav-fusion        blankPage=false
+/quantum-center      navActive=nav-fusion        blankPage=false [PRE-GATE11-SIM03-BUG]
+/singularity         navActive=nav-dev           blankPage=false
+/sentinel            navActive=nav-dev           blankPage=false
+/watchdog            navActive=nav-dev           blankPage=false
+/selfheal            navActive=nav-dev           blankPage=false
+/adaptive            navActive=nav-dev           blankPage=false
+/skills              navActive=nav-titane        blankPage=false
+/knowledge           navActive=nav-titane        blankPage=false
+/creation            navActive=nav-titane        blankPage=false
+/evolution           navActive=nav-titane        blankPage=false
+/performance         navActive=btn-nav-more      blankPage=false
+/htf                 navActive=               blankPage=false
+
+SIM03_STATUS: PRE-GATE11 (bug present in v80 capture)
+Gate 11 source fix: useTopNavigation.ts matchRoutes updated, 14/14 tests PASS
+Pixel-visual proof of SIM03 fix: PENDING_BINARY_REBUILD

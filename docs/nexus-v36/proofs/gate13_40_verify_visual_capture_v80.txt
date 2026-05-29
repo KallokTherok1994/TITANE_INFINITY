@@ -1,0 +1,55 @@
+
+> titane-infinity@35.1.10 verify:ui-visual-capture C:\Dev\TITANE_INFINITY
+> node scripts/verify/verify-ui-visual-capture.mjs
+
+
+=== TITANE: Visual Capture Artifact Verification ===
+
+Artifact: artifacts/ui-visual/v80-production-visual-capture.jsonl
+Strict Mode: OFF
+
+✓ Artifact parsed: 29 records
+
+Status Distribution:
+  ✓ VISUAL_ACTIVE: 29
+
+Critical Checks:
+  Broken pages (total): 0
+    - Classified (with blocker): 0
+    - Unclassified (no blocker): 0
+  Blank pages: 0
+  Unclassified ErrorBoundary: 0
+
+✓ All 8 main menu routes captured
+❌ Missing screenshot: screenshots/v80/production/titane.png
+❌ Missing screenshot: screenshots/v80/production/time.png
+❌ Missing screenshot: screenshots/v80/production/admin.png
+❌ Missing screenshot: screenshots/v80/production/dev.png
+❌ Missing screenshot: screenshots/v80/production/fusion.png
+❌ Missing screenshot: screenshots/v80/production/twins.png
+❌ Missing screenshot: screenshots/v80/production/optimization.png
+❌ Missing screenshot: screenshots/v80/production/total-dev.png
+❌ Missing screenshot: screenshots/v80/production/experience.png
+❌ Missing screenshot: screenshots/v80/production/cloud.png
+❌ Missing screenshot: screenshots/v80/production/memory.png
+❌ Missing screenshot: screenshots/v80/production/doc-center.png
+❌ Missing screenshot: screenshots/v80/production/research.png
+❌ Missing screenshot: screenshots/v80/production/orchestration-center.png
+❌ Missing screenshot: screenshots/v80/production/orchestration-intelligence.png
+❌ Missing screenshot: screenshots/v80/production/reality-center.png
+❌ Missing screenshot: screenshots/v80/production/hyper-center.png
+❌ Missing screenshot: screenshots/v80/production/quantum-center.png
+❌ Missing screenshot: screenshots/v80/production/singularity.png
+❌ Missing screenshot: screenshots/v80/production/sentinel.png
+❌ Missing screenshot: screenshots/v80/production/watchdog.png
+❌ Missing screenshot: screenshots/v80/production/selfheal.png
+❌ Missing screenshot: screenshots/v80/production/adaptive.png
+❌ Missing screenshot: screenshots/v80/production/skills.png
+❌ Missing screenshot: screenshots/v80/production/knowledge.png
+❌ Missing screenshot: screenshots/v80/production/creation.png
+❌ Missing screenshot: screenshots/v80/production/evolution.png
+❌ Missing screenshot: screenshots/v80/production/performance.png
+❌ Missing screenshot: screenshots/v80/production/htf.png
+
+❌ FAIL: 29 screenshot files missing
+ ELIFECYCLE  Command failed with exit code 1.

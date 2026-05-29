@@ -1,0 +1,9 @@
+NAME                        ID              SIZE      MODIFIED     
+qwen2.5-coder:14b           9ec8897f747e    9.0 GB    25 hours ago    
+qwen2.5-coder:7b            dae161e27b0e    4.7 GB    25 hours ago    
+mxbai-embed-large:latest    468836162de7    669 MB    25 hours ago    
+qwen2.5-coder:1.5b-base     02e0f2817a89    986 MB    28 hours ago    
+llama3.1:8b                 46e0c10c039e    4.9 GB    29 hours ago    
+nomic-embed-text:latest     0a109f422b47    274 MB    9 days ago      
+qwen3.5:9b                  6488c96fa5fa    6.6 GB    9 days ago      
+gemma2:2b                   8ccf136fdd52    1.6 GB    9 days ago      

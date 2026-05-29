@@ -1,0 +1,49 @@
+mission: Verify all preconditions before any NEXUS v36/v37 work begins
+phase: PRE_NEXUS_READINESS
+
+allowed_scope:
+  - .titane-dev/**
+  - docs/nexus-v36/**
+  - scripts/titane-dev/**
+  - .vscode/mcp.json (read/update)
+
+forbidden_scope:
+  - src/**
+  - src-tauri/**
+  - package.json
+  - .github/workflows/**
+  - .env
+  - runtime/**
+  - product Ollama defaults
+
+agents:
+  - 00_scope_sentinel
+  - 02_config_auditor
+  - 03_instruction_layer_auditor
+  - 09_security_guard
+  - 11_reviewer
+
+required_proofs:
+  - OS_HOST=WINDOWS_11_LOCAL confirmation
+  - Toolchain versions (node, pnpm, rustc, cargo, git)
+  - Ollama API /api/version response
+  - All required models in ollama list
+  - MCP preflight PASS
+  - No secrets in MCP config
+  - No qwen contamination in product defaults
+  - gemma2:2b present as product baseline
+
+stoplines:
+  - Any agent proceeds without scope_sentinel PASS
+  - NEXUS implementation starts before all proofs are collected
+  - MCP trust bypassed without Kevin confirmation
+
+rollback: Remove docs/nexus-v36/ and .titane-dev/ created artifacts; restore .vscode/mcp.json via git restore
+
+final_verdict_allowed:
+  - PASS
+  - QUALIFIED
+  - BLOCKED
+  - BLOCKED_ENV
+  - BLOCKED_MODEL
+  - FAIL

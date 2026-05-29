@@ -1,0 +1,3 @@
+SURFACE_MATRIX_GUARD phase=GATE_5
+PRE_MATRIX_PHASE: Surface Decision Matrix not required before Gate 7.
+SURFACE_MATRIX_GUARD=PASS

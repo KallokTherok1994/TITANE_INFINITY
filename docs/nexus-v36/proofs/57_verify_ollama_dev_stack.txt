@@ -1,0 +1,23 @@
+
+> titane-infinity@35.1.10 verify:ollama:dev:stack C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-ollama-dev-stack.sh
+
+[STACK] Worktree
+?? "C\357\200\272tmpcertifier_out.txt"
+?? docs/nexus-v36/
+[STACK] MCP security
+
+> titane-infinity@35.1.10 verify:mcp:security C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-mcp-security-boundary.sh
+
+PASS: MCP_SECURITY_BOUNDARY
+[STACK] Live Ollama Dev
+
+> titane-infinity@35.1.10 verify:ollama:dev:live C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-ollama-dev-live.sh
+
+[OLLAMA_DEV_LIVE] host=http://127.0.0.1:11434 model=qwen3.5:9b keep_alive=10m num_ctx=2048 strict_timeout=30s
+
+> titane-infinity@35.1.10 verify:ollama:boundary C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-ollama-copilot-boundary.sh
+

@@ -1,0 +1,15 @@
+PASS: REVIEW_START_HERE.html exists
+PASS: viewer/daily.html exists
+PASS: viewer/system.html exists
+PASS: viewer/dev.html exists
+PASS: viewer/lab.html exists
+PASS: viewer/all.html exists
+PASS: viewer/missing.html exists
+PASS: viewer/review.css exists
+PASS: viewer/review.js exists
+PASS: All 116 image refs valid (0 missing, 0 zero-byte)
+PASS: annotation_legend.json valid (5 entries)
+PASS: manifest.json valid (59 entries)
+PASS: originals/ has 58 PNGs
+
+SUMMARY: FAIL=0

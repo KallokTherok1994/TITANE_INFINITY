@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PatchPlan",
+  "description": "Schema for TITANE approved patch plans before any src/ or src-tauri/ mutation",
+  "type": "object",
+  "required": [
+    "mission_id",
+    "phase",
+    "agent",
+    "timestamp",
+    "scope",
+    "allowed_paths",
+    "forbidden_paths",
+    "proofs",
+    "blockers",
+    "rollback",
+    "verdict"
+  ],
+  "properties": {
+    "mission_id": { "type": "string" },
+    "phase": { "type": "string" },
+    "agent": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "allowed_paths": { "type": "array", "items": { "type": "string" } },
+    "forbidden_paths": { "type": "array", "items": { "type": "string" } },
+    "proofs": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "rollback": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "QUALIFIED", "FAIL", "BLOCKED_SCOPE", "BLOCKED_UNTIL_APPROVAL"]
+    },
+    "patch_id": { "type": "string" },
+    "target_files": { "type": "array", "items": { "type": "string" } },
+    "description": { "type": "string" },
+    "preconditions": {
+      "type": "object",
+      "properties": {
+        "surface_matrix_pass": { "type": "boolean" },
+        "runtime_adapter_spec_pass": { "type": "boolean" },
+        "scope_sentinel_pass": { "type": "boolean" },
+        "security_guard_pass": { "type": "boolean" },
+        "reviewer_pass": { "type": "boolean" },
+        "kevin_approval": { "type": "boolean" }
+      }
+    },
+    "diff_summary": { "type": "string" },
+    "test_plan": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,14 @@
+RUNTIME_ADAPTER_SCAN phase=GATE_12
+Files scanned: 831
+Direct invoke occurrences: 9
+DIRECT_INVOKE_FOUND (scan only — no mutation):
+ src/components/ChatErrorBoundary.tsx:358 :: // await invoke('report_chat_error', {
+ src/components/ErrorBoundary.tsx:140 :: // 4. Tauri command: invoke('watchdog:report_ui_error', { errorReport })
+ src/services/api/index.ts:130 :: * grep -r "invoke(" src/ --include="*.ts" --include="*.tsx"
+ src/services/api/index.ts:136 :: *    `invoke('memory_get_active_projects')`
+ src/services/api/index.ts:140 :: *    `invoke('conversation_generate', { args: { message, conversationId, mode } })`
+ src/services/api/index.ts:144 :: *    `invoke('speak', { text })`
+ src/services/api/index.ts:148 :: *    `invoke('persona_get_multipliers')`
+ src/services/api/index.ts:152 :: *    `invoke('system_get_status')`
+ src/services/evolutionEngine/index.ts:254 :: // await invoke('sync_evolution_state', { snapshot });
+RUNTIME_ADAPTER_SCAN=PASS (scan-only, no mutation)

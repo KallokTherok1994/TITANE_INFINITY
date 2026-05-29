@@ -257,3 +257,17 @@ For documentation, setup, and agent instructions work assume the following bound
 - **Do not** remove Linux/WSL support or convert Bash-only docs into PowerShell without a scoped mission.
 - **Do not** claim Windows PROD is SEALED without explicit Windows build/artifact proofs and logs (classify as `UNKNOWN` until proven).
 - **Stoplines**: Do not suggest `npm install`, do not change `pnpm-lock.yaml` in docs-only patches, and do not touch runtime/source files during documentation updates. When editing Windows docs, link to `docs/windows/WINDOWS_PRIMARY_DEV_PROD_GUIDE.md`.
+
+## NEXUS v36/v37 Governance (Gates 0–14)
+
+NEXUS v36/v37 is the navigation shell + runtime adapter reform for TITANE_INFINITY. It is governed gate-by-gate via `.titane-dev/state/nexus_gate_state.json` and documented in `docs/nexus-v36/`. Proof pack: `proof_packs/nexus-v36-final-seal/`.
+
+**Key invariants (never bypass):**
+- 30 classified routes: 0 deletions, 0 renames, 0 alias deletions allowed.
+- SIMULATED_UI routes (`/orchestration-intelligence`, `/quantum-center`) must never appear in Daily navigation (SIM-03).
+- Product model: `gemma2:2b` only. Dev model: `qwen3.5:9b` (MCP, dev context, never product).
+- MCP shell: PowerShell (not bash). Wrapper: `scripts/titane-dev/start-ollama-dev-mcp.ps1`.
+- P2 gate-by-gate approval required. See `MASTER_GATE_LEDGER.md`.
+- No SEALED without real screenshots + Kevin visual validation.
+- Final verdict as of 2026-05-29: `QUALIFIED_PENDING_KEVIN_VISUAL_VALIDATION`. Screenshots: `artifacts/ui-visual/screenshots/v79/production/` (58 PNGs).
+- Approval phrase: `KEVIN_VISUAL_APPROVED_NEXUS_V36`.

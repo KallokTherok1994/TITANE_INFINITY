@@ -1,0 +1,26 @@
+
+> titane-infinity@35.1.10 verify:ollama:dev:live C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-ollama-dev-live.sh
+
+[OLLAMA_DEV_LIVE] host=http://127.0.0.1:11434 model=qwen3.5:9b keep_alive=10m num_ctx=2048 strict_timeout=30s
+
+> titane-infinity@35.1.10 verify:ollama:boundary C:\Dev\TITANE_INFINITY
+> bash scripts/verify/verify-ollama-copilot-boundary.sh
+
+PASS product ollama runtime baseline aligned
+PASS development ollama doctrine aligned
+PASS boundary validator wired in package
+PASS MCP Ollama Dev config present and aligned
+PASS MCP runtime settings and transport wired correctly (chat.mcp configured)
+PASS active cline workflow references removed
+PASS PROD_OLLAMA_MODEL_GUARD: chat_orchestrator fallback locked to gemma2:2b
+
+ RUN  v4.1.4 C:/Dev/TITANE_INFINITY
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  22:05:14
+   Duration  1.47s (transform 88ms, setup 596ms, import 25ms, tests 14ms, environment 644ms)
+
+PASS: OLLAMA_DEV_LIVE_READY

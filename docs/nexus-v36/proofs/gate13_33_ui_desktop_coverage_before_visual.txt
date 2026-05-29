@@ -1,0 +1,91 @@
+
+> titane-infinity@35.1.10 verify:ui-desktop-coverage C:\Dev\TITANE_INFINITY
+> node scripts/verify/verify-ui-desktop-coverage.mjs
+
+
+=== TITANE UI Desktop Coverage Verifier v50 ===
+
+Gate 1: Required Test Files
+  ✅ Test file exists: e2e/desktop/ui-desktop-all-routes.wdio.test.js
+  ✅ Test file exists: e2e/desktop/ui-desktop-all-tabs.wdio.test.js
+  ✅ Test file exists: e2e/desktop/ui-desktop-control-inventory.wdio.test.js
+  ✅ Test file exists: e2e/desktop/ui-desktop-safe-actions.wdio.test.js
+  ✅ Test file exists: e2e/desktop/ui-desktop-agent-chat-context.wdio.test.js
+  ✅ Test file exists: e2e/desktop/ui-desktop-error-boundary-and-empty-state.wdio.test.js
+  ✅ Test file exists: e2e/desktop/ui-desktop-sensitive-actions-guarded.wdio.test.js
+
+Gate 2: Required Helper Files
+  ✅ Helper exists: e2e/desktop/helpers/uiDesktopManifest.js
+  ✅ Helper exists: e2e/desktop/helpers/uiDesktopSelectors.js
+  ✅ Helper exists: e2e/desktop/helpers/uiDesktopActions.js
+  ✅ Helper exists: e2e/desktop/helpers/uiDesktopAssertions.js
+  ✅ Helper exists: e2e/desktop/helpers/uiDesktopScreenshots.js
+
+Gate 3: Required Docs / Manifests
+  ✅ Doc exists: docs/ui/desktop/UI_DESKTOP_FULL_COVERAGE_v50_STARTUP_AUDIT.md
+  ✅ Doc exists: docs/ui/desktop/generated/UI_DESKTOP_ROUTE_MANIFEST_v50.json
+  ✅ Doc exists: docs/ui/desktop/generated/UI_DESKTOP_CONTROL_INVENTORY_v50.json
+  ✅ Doc exists: docs/ui/desktop/generated/UI_DESKTOP_CONTROL_INVENTORY_v50.md
+  ✅ Doc exists: docs/ui/desktop/generated/UI_DESKTOP_ACTION_CLASSIFICATION_v50.md
+  ✅ Doc exists: docs/ui/desktop/generated/UI_DESKTOP_FRONTEND_BACKEND_MAP_v50.md
+  ✅ Doc exists: docs/ui/desktop/generated/UI_DESKTOP_TEST_COVERAGE_MATRIX_v50.md
+
+Gate 4: Manifest Integrity
+  ✅ Manifest has routeCount field
+  ✅ Manifest routeCount = 30
+  ✅ Manifest tabCount = 22
+  ✅ Manifest aliasCount = 65
+  ✅ Manifest mission = UI_DESKTOP_FULL_COVERAGE_v50
+  ✅ Manifest has routes array
+  ✅ Manifest routes.length = 30
+  ✅ All routes have rootTestId
+  ✅ All routes have truthClass
+  ✅ All truthClass values are valid
+  ✅ All routes have pageId
+  ✅ All routes have pageComponent
+  ✅ Exactly 2 SIMULATED_UI routes
+  ✅ /orchestration-intelligence is simulated
+  ✅ /quantum-center is simulated
+  ✅ Exactly 4 routes have tabs
+  ✅ Total tab count = 22 (got 22)
+  ✅ All actions have safeActionPolicy
+  ✅ All safeActionPolicy values are valid
+  ✅ Safe actions = 38 (got 38)
+  ✅ Sensitive actions = 13 (got 13)
+  ✅ All routes have testCoverage.routeTest
+
+Gate 5: Registry Consistency
+  ✅ Registry still has 30 routes (got 30)
+  ✅ Registry has 2 SIMULATED_UI routes (got 2)
+
+Gate 6: Test File Content Checks
+  ✅ e2e/desktop/ui-desktop-all-routes.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-all-routes.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-all-routes.wdio.test.js: has L1 static tests
+  ✅ e2e/desktop/ui-desktop-all-tabs.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-all-tabs.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-all-tabs.wdio.test.js: has L1 static tests
+  ✅ e2e/desktop/ui-desktop-control-inventory.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-control-inventory.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-control-inventory.wdio.test.js: has L1 static tests
+  ✅ e2e/desktop/ui-desktop-safe-actions.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-safe-actions.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-safe-actions.wdio.test.js: has L1 static tests
+  ✅ e2e/desktop/ui-desktop-agent-chat-context.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-agent-chat-context.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-agent-chat-context.wdio.test.js: has L1 static tests
+  ✅ e2e/desktop/ui-desktop-error-boundary-and-empty-state.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-error-boundary-and-empty-state.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-error-boundary-and-empty-state.wdio.test.js: has L1 static tests
+  ✅ e2e/desktop/ui-desktop-sensitive-actions-guarded.wdio.test.js: has describe blocks
+  ✅ e2e/desktop/ui-desktop-sensitive-actions-guarded.wdio.test.js: has test cases (it)
+  ✅ e2e/desktop/ui-desktop-sensitive-actions-guarded.wdio.test.js: has L1 static tests
+
+=== VERIFICATION SUMMARY ===
+
+  PASS:     64
+  WARN:     0
+  FAIL:     0
+
+VERDICT: PASS
+[verify-ui-desktop-coverage] All gates passed.

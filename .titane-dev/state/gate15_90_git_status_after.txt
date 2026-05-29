@@ -1,0 +1,18 @@
+ M .github/copilot-instructions.md
+ M .vscode/mcp.json
+ M scripts/autoheal/autoheal_rules.jsonl
+ M scripts/verify/verify_kernel_budget.sh
+ M src/__tests__/ui/ui-navigation.test.ts
+ M src/components/palette/commands/routes.ts
+ M src/hooks/useTopNavigation.ts
+?? .titane-dev/
+?? "C\357\200\272tmpcertifier_out.txt"
+?? docs/nexus-v36/
+?? scripts/titane-dev/
+?? src/components/NexusShell/
+?? src/lib/adapters/
+?? src/lib/navigationMode.ts
+?? src/lib/routeIndex.ts
+?? tests/unit/adapters/
+?? tests/unit/navigation/
+

@@ -1,0 +1,34 @@
+=== MCP SECURITY SCAN ===
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: API_KEY
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: SECRET
+  # 6. No secret patterns in wrapper
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+  $secretFound = $false
+  foreach ($pat in $secretPatterns) {
+  if ($content -match $pat) { $secretFound = $true; break }
+  $scanResult = if ($secretFound) { "SUSPECT_FOUND" } else { "CLEAN" }
+  Check "WRAPPER_NO_SECRETS" (-not $secretFound) ("secret scan: " + $scanResult)
+  Check "WRAPPER_NO_SECRETS" $false "wrapper not found - skipped"
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: PASSWORD
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: TOKEN
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: PRIVATE_KEY
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: ACCESS_KEY
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: VITE_OPENAI
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: VITE_GEMINI
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+SECRET_SUSPECT: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1 :: VITE_ANTHROPIC
+  $secretPatterns = @("API_KEY","SECRET","PASSWORD","TOKEN","PRIVATE_KEY","ACCESS_KEY","VITE_OPENAI","VITE_GEMINI","VITE_ANTHROPIC")
+
+=== SECURITY CLASSIFICATION ===
+All matches found in: scripts\titane-dev\test-ollama-dev-mcp-preflight.ps1
+Match context: single line containing $secretPatterns = @("API_KEY","SECRET",...) — the script's own pattern list.
+No actual credential values assigned. No KEY=<value> format. No secrets present.
+
+MCP_SECRETS_CLASSIFICATION=DOC_EXAMPLE
+MCP_SECRETS=PASS

@@ -1,0 +1,16 @@
+PASS: OLLAMA_API_VERSION :: http://127.0.0.1:11434/api/version reachable
+PASS: MODEL_INSTALLED :: qwen3.5:9b in ollama list: True
+PASS: PNPM_COREPACK :: pnpm version: 10.30.2
+PASS: WRAPPER_FILE_EXISTS :: path: scripts\titane-dev\start-ollama-dev-mcp.ps1
+PASS: WRAPPER_PINNED_PACKAGE :: contains ollama-mcp@2.1.0: True
+PASS: WRAPPER_NO_SECRETS :: secret scan: CLEAN
+
+=== PREFLIGHT SUMMARY ===
+PASS: OLLAMA_API_VERSION :: http://127.0.0.1:11434/api/version reachable
+PASS: MODEL_INSTALLED :: qwen3.5:9b in ollama list: True
+PASS: PNPM_COREPACK :: pnpm version: 10.30.2
+PASS: WRAPPER_FILE_EXISTS :: path: scripts\titane-dev\start-ollama-dev-mcp.ps1
+PASS: WRAPPER_PINNED_PACKAGE :: contains ollama-mcp@2.1.0: True
+PASS: WRAPPER_NO_SECRETS :: secret scan: CLEAN
+
+MCP_PREFLIGHT=PASS

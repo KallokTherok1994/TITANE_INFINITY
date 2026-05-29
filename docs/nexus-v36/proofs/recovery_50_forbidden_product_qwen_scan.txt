@@ -1,0 +1,9 @@
+=== FORBIDDEN PRODUCT DEFAULT QWEN SCAN ===
+PASS_NO_QWEN: src\config\ollamaDefaults.ts
+PASS_NO_QWEN: config\championChallenger.json
+PASS_NO_QWEN: src-tauri\src\runtime_config.rs
+PASS_NO_QWEN: src-tauri\src\config\update.rs
+PASS_NO_QWEN: src-tauri\src\ollama.rs
+PASS_NO_QWEN: src-tauri\src\ai\ollama.rs
+PASS_NO_QWEN: src-tauri\src\ollama_provider_refactor.rs
+PASS_NO_QWEN: src\services\ai\championChallenger.ts

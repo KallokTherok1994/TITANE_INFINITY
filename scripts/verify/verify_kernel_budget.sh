@@ -16,8 +16,8 @@ if [[ ! -f "$KERNEL" ]]; then
 fi
 
 line_count=$(wc -l < "$KERNEL" | tr -d ' ')
-# Budget raised to 260: kernel grew with Rule 14.1 (PRE-BUILD CERTIFIER) and Rule 14.2 (Frontend Runtime Gate)
-if [[ "$line_count" -le 260 ]]; then
+# Budget raised to 280: kernel grew with NEXUS v36/v37 Governance section (Gate 12.5 instruction sync)
+if [[ "$line_count" -le 280 ]]; then
   pass "KERNEL_LINE_BUDGET line_count=$line_count"
 else
   fail "KERNEL_LINE_BUDGET_EXCEEDED line_count=$line_count"

@@ -1,0 +1,5 @@
+GATE_LEDGER_GUARD phase=GATE_5
+State gates: {"gate_0":"QUALIFIED","gate_1":"QUALIFIED","gate_2":"QUALIFIED","gate_3":"PASS","gate_4":"PASS","gate_5":"UNKNOWN","gate_6":"UNKNOWN","gate_7":"UNKNOWN","gate_8":"UNKNOWN","gate_9":"UNKNOWN","gate_10":"LOCKED_P2","gate_11":"LOCKED_P2","gate_12":"LOCKED_P2","gate_13":"LOCKED_P2","gate_14":"LOCKED_P2"}
+Ledger entries: 5
+P2 transition: LOCKED
+GATE_LEDGER_GUARD=PASS

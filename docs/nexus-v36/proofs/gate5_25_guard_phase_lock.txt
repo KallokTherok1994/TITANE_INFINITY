@@ -1,0 +1,4 @@
+PHASE_LOCK_GUARD phase=GATE_5
+current_gate=GATE_5
+p2_transition=LOCKED
+PHASE_LOCK_GUARD=PASS

@@ -1,0 +1,2 @@
+SCOPE_GUARD=PASS
+No forbidden paths modified.

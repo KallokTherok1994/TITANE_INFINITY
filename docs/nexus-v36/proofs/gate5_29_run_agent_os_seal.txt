@@ -1,0 +1,60 @@
+--- SCOPE_GUARD ---
+SCOPE_GUARD=PASS
+No forbidden paths modified.
+--- SECRETS_GUARD ---
+SECRETS_GUARD=PASS
+Scanned .titane-dev, scripts/titane-dev, .vscode, docs/nexus-v36 — no real secrets found.
+--- AGENT_OS_GUARD ---
+AGENT_OS_GUARD=PASS
+All 12 agents present with all 12 required sections.
+Disabled agents correctly marked.
+--- MODEL_BOUNDARY_GUARD ---
+MODEL_BOUNDARY_GUARD=PASS
+Product baseline gemma2:2b: confirmed.
+No dev model contamination in product config files.
+--- MCP_CONFIG_GUARD ---
+MCP_CONFIG_GUARD=PASS
+command=powershell, wrapper=start-ollama-dev-mcp.ps1, host=http://127.0.0.1:11434, model=qwen3.5:9b
+No secrets in mcp.json.
+--- PHASE_LOCK_GUARD ---
+PHASE_LOCK_GUARD phase=GATE_5
+current_gate=GATE_5
+p2_transition=LOCKED
+PHASE_LOCK_GUARD=PASS
+--- SURFACE_MATRIX_GUARD ---
+SURFACE_MATRIX_GUARD phase=GATE_5
+PRE_MATRIX_PHASE: Surface Decision Matrix not required before Gate 7.
+SURFACE_MATRIX_GUARD=PASS
+--- RUNTIME_ADAPTER_SCAN ---
+RUNTIME_ADAPTER_SCAN phase=GATE_5
+Files scanned: 831
+Direct invoke occurrences: 9
+DIRECT_INVOKE_FOUND (scan only — no mutation):
+ src/components/ChatErrorBoundary.tsx:358 :: // await invoke('report_chat_error', {
+ src/components/ErrorBoundary.tsx:140 :: // 4. Tauri command: invoke('watchdog:report_ui_error', { errorReport })
+ src/services/api/index.ts:130 :: * grep -r "invoke(" src/ --include="*.ts" --include="*.tsx"
+ src/services/api/index.ts:136 :: *    `invoke('memory_get_active_projects')`
+ src/services/api/index.ts:140 :: *    `invoke('conversation_generate', { args: { message, conversationId, mode } })`
+ src/services/api/index.ts:144 :: *    `invoke('speak', { text })`
+ src/services/api/index.ts:148 :: *    `invoke('persona_get_multipliers')`
+ src/services/api/index.ts:152 :: *    `invoke('system_get_status')`
+ src/services/evolutionEngine/index.ts:254 :: // await invoke('sync_evolution_state', { snapshot });
+RUNTIME_ADAPTER_SCAN=PASS (scan-only, no mutation)
+--- GATE_LEDGER_GUARD ---
+GATE_LEDGER_GUARD phase=GATE_5
+State gates: {"gate_0":"QUALIFIED","gate_1":"QUALIFIED","gate_2":"QUALIFIED","gate_3":"PASS","gate_4":"PASS","gate_5":"UNKNOWN","gate_6":"UNKNOWN","gate_7":"UNKNOWN","gate_8":"UNKNOWN","gate_9":"UNKNOWN","gate_10":"LOCKED_P2","gate_11":"LOCKED_P2","gate_12":"LOCKED_P2","gate_13":"LOCKED_P2","gate_14":"LOCKED_P2"}
+Ledger entries: 5
+P2 transition: LOCKED
+GATE_LEDGER_GUARD=PASS
+
+=== AGENT OS SEAL SUMMARY ===
+SCOPE_GUARD=PASS
+SECRETS_GUARD=PASS
+RUNTIME_ADAPTER_SCAN=PASS
+GATE_LEDGER_GUARD=PASS
+AGENT_OS_GUARD=PASS
+SURFACE_MATRIX_GUARD=PASS
+MODEL_BOUNDARY_GUARD=PASS
+PHASE_LOCK_GUARD=PASS
+MCP_CONFIG_GUARD=PASS
+AGENT_OS_SEAL=PASS

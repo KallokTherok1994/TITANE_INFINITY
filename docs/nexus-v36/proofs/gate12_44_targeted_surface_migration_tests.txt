@@ -1,0 +1,9 @@
+
+ RUN  v4.1.4 C:/Dev/TITANE_INFINITY
+
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  00:37:14
+   Duration  941ms (transform 83ms, setup 316ms, import 96ms, tests 13ms, environment 363ms)
+

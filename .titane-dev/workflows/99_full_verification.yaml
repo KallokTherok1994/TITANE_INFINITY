@@ -1,0 +1,55 @@
+mission: Full cross-gate verification — run all audit and proof agents without product mutation
+phase: FULL_VERIFICATION
+
+allowed_scope:
+  - src/** (read-only)
+  - src-tauri/** (read-only)
+  - .vscode/** (read-only)
+  - scripts/** (read-only; execute verify scripts)
+  - .titane-dev/** (read + write for reports)
+  - docs/nexus-v36/** (write)
+  - docs/nexus-v36/proofs/** (write)
+
+forbidden_scope:
+  - src/** (write)
+  - src-tauri/** (write)
+  - package.json (write)
+  - .github/workflows/**
+  - .env (write)
+  - Route mutations
+  - IPC mutations
+  - build / tauri build / release
+
+agents:
+  - 00_scope_sentinel
+  - 02_config_auditor
+  - 03_instruction_layer_auditor
+  - 04_surface_auditor
+  - 08_test_runner
+  - 09_security_guard
+  - 11_reviewer
+
+required_proofs:
+  - Config audit report
+  - Instruction layer audit report
+  - Surface Decision Matrix (if phase >= 03)
+  - Test suite output
+  - Security scan: no secrets, no boundary violations
+  - All agent field validations PASS
+  - All schema JSON validations PASS
+  - No forbidden files modified
+
+stoplines:
+  - Any agent writing to src/** or src-tauri/**
+  - Security guard finding unresolved REAL_SECRET
+  - Test runner modifying test files
+
+rollback: Verification-only run. If any file was accidentally modified during verification: git restore -- <file>
+
+final_verdict_allowed:
+  - PASS
+  - QUALIFIED
+  - FAIL
+  - BLOCKED
+  - BLOCKED_ENV
+  - UNKNOWN

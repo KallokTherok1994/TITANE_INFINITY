@@ -1,0 +1,4 @@
+PHASE_LOCK_GUARD phase=GATE_11
+current_gate=GATE_11
+p2_transition=ACTIVE
+PHASE_LOCK_GUARD=PASS

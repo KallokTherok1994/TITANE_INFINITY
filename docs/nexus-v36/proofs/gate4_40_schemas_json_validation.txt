@@ -1,0 +1,7 @@
+JSON_PASS: agent_report.schema.json
+JSON_PASS: config_audit.schema.json
+JSON_PASS: model_map.schema.json
+JSON_PASS: patch_plan.schema.json
+JSON_PASS: security_report.schema.json
+JSON_PASS: surface_decision.schema.json
+JSON_PASS: test_report.schema.json
