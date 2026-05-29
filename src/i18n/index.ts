@@ -6,7 +6,7 @@
  */
 
 // YOLO OPT-7: Export lazy loader instead of initialized instance
-export { getI18n, initI18nAsync, isI18nLoaded, getI18nIfLoaded } from './i18nLazyLoader';
+export { getI18n, initI18nAsync } from './i18nLazyLoader';
 
 // For backward compatibility, export a dummy instance
 // Real i18n will be loaded via getI18n()

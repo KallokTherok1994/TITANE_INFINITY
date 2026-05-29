@@ -7,6 +7,9 @@
  */
 
 import type i18n from 'i18next';
+import { createLogger } from '@/utils/logger';
+
+const logger = createLogger('[I18N-LAZY]');
 
 let i18nInstance: typeof i18n | null = null;
 let loadingPromise: Promise<typeof i18n> | null = null;
@@ -27,7 +30,7 @@ export async function getI18n(): Promise<typeof i18n> {
   }
 
   // Start lazy loading
-  console.warn('[i18n LAZY] ⚡ Lazy-loading i18n...');
+  logger.info('Lazy-loading i18n...');
 
   loadingPromise = (async () => {
     try {
@@ -67,11 +70,11 @@ export async function getI18n(): Promise<typeof i18n> {
       i18nInstance = i18nLib;
       loadingPromise = null;
 
-      console.warn('[i18n LAZY] ✅ i18n loaded successfully');
+      logger.info('i18n loaded successfully');
       return i18nLib;
     } catch (error) {
       loadingPromise = null;
-      console.error('[i18n LAZY] ❌ Failed to load i18n:', error);
+      logger.error('Failed to load i18n', { error: String(error) });
       throw error;
     }
   })();
@@ -86,21 +89,8 @@ export async function getI18n(): Promise<typeof i18n> {
 export function initI18nAsync(): void {
   // Start loading i18n in background
   getI18n().catch(error => {
-    console.error('[i18n LAZY] Async initialization failed:', error);
+    logger.error('Async initialization failed', { error: String(error) });
   });
 }
 
-/**
- * Check if i18n is already loaded
- */
-export function isI18nLoaded(): boolean {
-  return i18nInstance !== null;
-}
 
-/**
- * Get i18n instance if loaded, or undefined
- * Use this for optional i18n features
- */
-export function getI18nIfLoaded(): typeof i18n | undefined {
-  return i18nInstance ?? undefined;
-}

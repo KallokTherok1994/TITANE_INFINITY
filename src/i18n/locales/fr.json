@@ -15,6 +15,28 @@
     "messages_label": "Messages de conversation",
     "send_message": "Envoyer un message"
   },
+  "onboarding": {
+    "welcome": {
+      "title": "Bienvenue sur TITANE",
+      "description": "Votre assistant IA personnel qui fonctionne entièrement sur votre machine."
+    },
+    "privacy": {
+      "title": "Votre vie privée d'abord",
+      "guarantee_local": "Toutes vos conversations sont stockées localement",
+      "guarantee_no_cloud": "Aucune donnée n'est envoyée à des serveurs externes"
+    },
+    "features": {
+      "title": "Ce que TITANE peut faire",
+      "conversation": "Conversations naturelles",
+      "writing": "Aide à la rédaction",
+      "brainstorming": "Brainstorming",
+      "code": "Aide au code"
+    },
+    "ready": {
+      "title": "Vous êtes prêt !",
+      "start_button": "Commencer"
+    }
+  },
   "settings": {
     "title": "Paramètres",
     "general": "Général",
